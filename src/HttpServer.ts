@@ -1,13 +1,19 @@
-import express, { Express } from "express";
+import express from "express";
 import dotenv from "dotenv";
-
 dotenv.config();
 
-const app: Express = express();
-const port = process.env.PORT;
+export default class HttpServer {
+  private static instance: HttpServer = new HttpServer();
+  private express = express();
+  private port = process.env.HTTP_SERVER_PORT;
 
-app.use(express.json());
+  private constructor() {
+    this.express.listen(this.port, () => {
+      console.log(`Server is running at http://localhost:${this.port}`);
+    });
+  }
 
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});
+  public static getInstance(): HttpServer {
+    return this.instance;
+  }
+}
