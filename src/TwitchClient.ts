@@ -2,45 +2,33 @@ import dotenv from "dotenv";
 dotenv.config();
 import {
   AccessToken,
-  AuthProvider,
   StaticAuthProvider,
+  refreshUserToken,
 } from "@twurple/auth";
 import { ChatClient, ChatMessage } from "@twurple/chat";
-import { readFileSync } from "fs";
-import { join } from "path";
+import TokenUtil from "./TokenUtil";
 
 export default class TwitchClient {
   private static instance: TwitchClient = new TwitchClient();
   private readonly TWITCH_CLIENT_ID: string = process.env.TWITCH_CLIENT_ID || "";
+  private readonly TWITCH_CLIENT_SECRET: string = process.env.TWITCH_CLIENT_SECRET || "";
   private readonly TWITCH_CHANNEL: string = process.env.TWITCH_CHANNEL || "";
   private readonly TWITCH_BOT_NAME: string = process.env.TWITCH_BOT_NAME || "";
   private readonly COMMAND_PREFIX: string = "!";
-  private chatClient: ChatClient;
-  private authProvider: AuthProvider;
-  private accessToken: AccessToken;
+  private tokenUtil: TokenUtil = TokenUtil.getInstance();
+  private chatClient!: ChatClient;
 
   private constructor() {
-    this.accessToken = this.readAccessTokenFromFile();
-    this.authProvider = new StaticAuthProvider(
-      this.TWITCH_CLIENT_ID,
-      this.accessToken
-    );
-
     this.chatClient = new ChatClient({
-      authProvider: this.authProvider,
+      authProvider: new StaticAuthProvider(
+        this.TWITCH_CLIENT_ID,
+        this.tokenUtil.readAccessTokenFromFile()
+      ),
       channels: [this.TWITCH_CHANNEL],
       webSocket: true,
     });
-    
-    this.setMessageListenerBehavior();
 
-    this.chatClient.onConnect(() => {
-      this.chatClient.say(
-        this.TWITCH_CHANNEL,
-        "I have connected to the chat! :)"
-      );
-    });
-
+    this.setChatClientListeners();
     this.chatClient.connect();
   }
 
@@ -48,11 +36,31 @@ export default class TwitchClient {
     return this.instance;
   }
 
-  private setMessageListenerBehavior(): void {
+  private setChatClientListeners(): void {
+    this.chatClient.onTokenFetchFailure(async () => {
+      const newAccessToken: AccessToken = await refreshUserToken(
+        this.TWITCH_CLIENT_ID,
+        this.TWITCH_CLIENT_SECRET,
+        this.tokenUtil.readAccessTokenFromFile().refreshToken as string
+      );
+      this.tokenUtil.writeAccessTokenToFile(newAccessToken);
+      console.log("The token has been refreshed");
+      this.chatClient.quit();
+    });
+
+    this.chatClient.onDisconnect(() => {
+      console.log("I have been disconected from the chat :(");
+    })
+
+    this.chatClient.onConnect(() => {
+      console.log("I have connected to the chat! :)");
+      this.chatClient.say(this.TWITCH_CHANNEL,"I have connected to the chat! :)");
+    });
+
     this.chatClient.onMessage(async (channel: string, user: string, text: string, msg: ChatMessage) => {
         text = text.trim().toLowerCase();
 
-        if (!text.startsWith(this.COMMAND_PREFIX) || user === this.TWITCH_BOT_NAME) return;
+        if (!text.startsWith(this.COMMAND_PREFIX) ||user === this.TWITCH_BOT_NAME) return;
 
         const [commandName, ...commandParameters] = text.split(" ");
 
@@ -65,11 +73,5 @@ export default class TwitchClient {
         }
       }
     );
-  }
-
-  private readAccessTokenFromFile(): AccessToken {
-    return JSON.parse(
-      readFileSync(join(__dirname, "../authToken.json"), "utf-8")
-    ) as AccessToken;
   }
 }
