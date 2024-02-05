@@ -12,7 +12,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@twurple/api": "^7.0.8",
     "@twurple/auth": "^7.0.8",
+    "@twurple/chat": "^7.0.8",
+    "@twurple/eventsub-ws": "^7.0.8",
     "axios": "^1.6.5",
     "dotenv": "^16.3.2",
     "express": "^4.18.2",
