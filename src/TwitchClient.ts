@@ -49,7 +49,7 @@ export default class TwitchClient {
     });
 
     this.chatClient.onDisconnect(() => {
-      console.log("I have been disconected from the chat :(");
+      console.log("I have been disconnected from the chat :(");
     })
 
     this.chatClient.onConnect(() => {
