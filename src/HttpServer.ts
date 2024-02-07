@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export default class HttpServer {
-  private static instance: HttpServer = new HttpServer();
   private express = express();
   private port = process.env.HTTP_SERVER_PORT;
 
@@ -13,7 +12,4 @@ export default class HttpServer {
     });
   }
 
-  public static getInstance(): HttpServer {
-    return this.instance;
-  }
 }
