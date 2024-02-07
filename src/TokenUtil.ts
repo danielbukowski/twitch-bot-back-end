@@ -6,14 +6,10 @@ import { join } from "path";
 
 export default class TokenUtil {
   private readonly PATH_TO_TOKEN = "../authToken.json";
-  private static instance: TokenUtil = new TokenUtil();
+
 
   public constructor(clientId: string) {
     this.clientId = clientId;
-  }
-
-  public static getInstance(): TokenUtil {
-    return this.instance;
   }
 
   public readAccessTokenFromFile(): AccessToken {
