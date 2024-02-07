@@ -130,4 +130,5 @@ dist
 .pnp.*
 
 #custom
-authToken.json
+secrets/
+.idea
