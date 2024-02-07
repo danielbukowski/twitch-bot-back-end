@@ -47,10 +47,10 @@ export default class TwitchClient {
       console.log("I have been disconnected from the chat :(");
     })
 
-    this.chatClient.onConnect(() => {
+    this.chatClient.onJoin((channel: string, user: string) => {
       console.log("I have connected to the chat! :)");
-      this.chatClient.say(this.TWITCH_CHANNEL,"I have connected to the chat! :)");
-    });
+      this.chatClient.say(channel, "I have connected to the chat! :)");
+    })
 
     this.chatClient.onMessage(async (channel: string, user: string, text: string, msg: ChatMessage) => {
         text = text.trim().toLowerCase();
