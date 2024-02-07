@@ -9,7 +9,6 @@ import { ChatClient, ChatMessage } from "@twurple/chat";
 import TokenUtil from "./TokenUtil";
 
 export default class TwitchClient {
-  private static instance: TwitchClient = new TwitchClient();
   private readonly TWITCH_CLIENT_ID: string = process.env.TWITCH_CLIENT_ID || "";
   private readonly TWITCH_CLIENT_SECRET: string = process.env.TWITCH_CLIENT_SECRET || "";
   private readonly TWITCH_CHANNEL: string = process.env.TWITCH_CHANNEL || "";
@@ -30,10 +29,6 @@ export default class TwitchClient {
 
     this.setChatClientListeners();
     this.chatClient.connect();
-  }
-
-  public static getInstance(): TwitchClient {
-    return this.instance;
   }
 
   private setChatClientListeners(): void {
