@@ -1,14 +1,14 @@
 import express from "express";
-import dotenv from "dotenv";
-dotenv.config();
+import ManageableClass from "./ManageableClass";
 
-export default class HttpServer {
+export default class HttpServer implements ManageableClass {
   private express = express();
-  private port = process.env.HTTP_SERVER_PORT;
 
-  private constructor() {
+  constructor(private port: string) { }
+
+  async init(): Promise<void> {
     this.express.listen(this.port, () => {
-      console.log(`Server is running at http://localhost:${this.port}`);
+        console.log(`Server is running at http://localhost:${this.port}`);
     });
   }
 
