@@ -23,9 +23,12 @@ export default class ConfigInitializer {
     }
 
     checkConfigurationVariables(): never | void {
+        console.log("Checking configuration variables...");
+        
         for (const key in this.config) {
            const value = this.config[key as keyof Config];
            if(!value) throw Error(`The ${key as keyof Config} enviroment variable is not set :C`);
         }
+        console.log("The configuration variable are checked!");
     }
 }
