@@ -1,48 +1,39 @@
-import dotenv from "dotenv";
-dotenv.config();
-import {
-  AccessToken,
-  StaticAuthProvider,
-  refreshUserToken,
-} from "@twurple/auth";
+import { AccessToken, RefreshingAuthProvider } from "@twurple/auth";
 import { ChatClient, ChatMessage } from "@twurple/chat";
+import ManageableClass from "./ManageableClass";
 import TokenUtil from "./TokenUtil";
 
-export default class TwitchClient {
-  private readonly TWITCH_CLIENT_ID: string = process.env.TWITCH_CLIENT_ID || "";
-  private readonly TWITCH_CLIENT_SECRET: string = process.env.TWITCH_CLIENT_SECRET || "";
-  private readonly TWITCH_CHANNEL: string = process.env.TWITCH_CHANNEL || "";
-  private readonly TWITCH_BOT_NAME: string = process.env.TWITCH_BOT_NAME || "";
+export default class TwitchClient implements ManageableClass{
   private readonly COMMAND_PREFIX: string = "!";
-  private tokenUtil: TokenUtil = TokenUtil.getInstance();
   private chatClient!: ChatClient;
+  private botName: string | undefined;
+  private authProvider: RefreshingAuthProvider;
+  private tokenUtil: TokenUtil;
 
-  private constructor() {
+  public constructor(authProvider: RefreshingAuthProvider, tokenUtil: TokenUtil) {
+    this.authProvider = authProvider;
+    this.tokenUtil = tokenUtil;
     this.chatClient = new ChatClient({
-      authProvider: new StaticAuthProvider(
-        this.TWITCH_CLIENT_ID,
-        this.tokenUtil.readAccessTokenFromFile()
-      ),
-      channels: [this.TWITCH_CHANNEL],
+      authProvider: authProvider,
+      channels: [],
       webSocket: true,
+      authIntents: ["chatbot"]
     });
+  }
+
+  public async init(): Promise<void> {
+    console.log("Initializing the TwitchClient...");
+    
+    this.botName = await this.tokenUtil.getUsernameByAccessToken((await this.authProvider.getAccessTokenForIntent("chatbot")) as AccessToken);
+
+    if(this.botName === undefined) throw new Error("Could not fetch a chatbot's info")
 
     this.setChatClientListeners();
     this.chatClient.connect();
+    console.log("Initilized the TwitchClient!");
   }
 
   private setChatClientListeners(): void {
-    this.chatClient.onTokenFetchFailure(async () => {
-      const newAccessToken: AccessToken = await refreshUserToken(
-        this.TWITCH_CLIENT_ID,
-        this.TWITCH_CLIENT_SECRET,
-        this.tokenUtil.readAccessTokenFromFile().refreshToken as string
-      );
-      this.tokenUtil.writeAccessTokenToFile(newAccessToken);
-      console.log("The token has been refreshed");
-      this.chatClient.quit();
-    });
-
     this.chatClient.onDisconnect(() => {
       console.log("I have been disconnected from the chat :(");
     })
@@ -53,9 +44,9 @@ export default class TwitchClient {
     })
 
     this.chatClient.onMessage(async (channel: string, user: string, text: string, msg: ChatMessage) => {
-        text = text.trim().toLowerCase();
+        text = text.trim().toLowerCase();        
 
-        if (!text.startsWith(this.COMMAND_PREFIX) ||user === this.TWITCH_BOT_NAME) return;
+        if (!text.startsWith(this.COMMAND_PREFIX) || user === this.botName) return;
 
         const [commandName, ...commandParameters] = text.split(" ");
 
