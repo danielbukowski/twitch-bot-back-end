@@ -5,10 +5,14 @@ const configInitializer = new ConfigInitializer();
 const objectManager = new ObjectManager(configInitializer);
 
 
-
-try {
-	configInitializer.checkConfigurationVariables();
-	objectManager.initManageableClasses();
-} catch (e: unknown) {
-	console.log(`An error occurred when running the application, reason: ${e instanceof Error ? e.message : "Unknown"}`);
-}
+(async() => {
+	try {
+		await configInitializer.checkConfigurationVariables();
+		await objectManager.initManageableClasses();
+	} catch (e: unknown) {
+		if(e instanceof Error) {
+			console.log(`An error occurred when running the application, reason: ${ e.message}`);
+			console.log(e.stack);
+		}
+	}
+})();

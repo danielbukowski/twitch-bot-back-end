@@ -1,3 +1,3 @@
 export default abstract class ManageableClass {
-  abstract init(): void;
+  abstract init(): Promise<void>;
 }
