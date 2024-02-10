@@ -18,8 +18,14 @@ export default class ObjectManager {
     }
 
     public async initManageableClasses() {
-        for (const manageableClass of this.manageableClasses.values()) {
-            await manageableClass.init();
+        try {
+            for (const manageableClass of this.manageableClasses.values()) {
+                await manageableClass.init();
+            }
+        } catch (e: unknown) {
+            if(e instanceof Error) {
+                throw new Error(e.message);
+            }
         }
     }
 
