@@ -7,7 +7,7 @@ const objectManager = new ObjectManager(configInitializer);
 
 (async() => {
 	try {
-		await configInitializer.checkConfigurationVariables();
+		configInitializer.checkConfigurationVariables();
 		await objectManager.initManageableClasses();
 	} catch (e: unknown) {
 		if(e instanceof Error) {

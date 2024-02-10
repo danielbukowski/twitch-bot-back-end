@@ -22,7 +22,7 @@ export default class ConfigInitializer {
         return this.config;
     }
 
-    async checkConfigurationVariables(): Promise<void> {
+    checkConfigurationVariables(): void {
         console.log("Checking configuration variables...");
         
         for (const key in this.config) {
