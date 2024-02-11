@@ -2,6 +2,7 @@ import { AccessToken, RefreshingAuthProvider } from "@twurple/auth";
 import { ChatClient, ChatMessage } from "@twurple/chat";
 import ManageableClass from "./ManageableClass";
 import TokenUtil from "./TokenUtil";
+import YoutubeClient from "./YoutubeClient";
 
 export default class TwitchClient implements ManageableClass{
   private readonly COMMAND_PREFIX: string = "!";
@@ -9,10 +10,12 @@ export default class TwitchClient implements ManageableClass{
   private botName: string | undefined;
   private authProvider: RefreshingAuthProvider;
   private tokenUtil: TokenUtil;
+  private youtubeClient: YoutubeClient;
 
-  public constructor(authProvider: RefreshingAuthProvider, tokenUtil: TokenUtil) {
+  public constructor(authProvider: RefreshingAuthProvider, tokenUtil: TokenUtil, youtubeClient: YoutubeClient) {
     this.authProvider = authProvider;
     this.tokenUtil = tokenUtil;
+    this.youtubeClient = youtubeClient;
     this.chatClient = new ChatClient({
       authProvider: authProvider,
       channels: [],
