@@ -80,8 +80,6 @@ export default class TwitchClient implements ManageableClass{
               }
 
               const videoDetails: VideoDetails = await this.youtubeClient.getVideoDetailsById(videoId);
-              
-              if(!videoDetails) throw new Error("YouTube API has returned an empty result");
 
               if(Number.parseInt(videoDetails.statistics.viewCount) < this.MIN_VIDEO_VIEWS) throw new Error("Your video has not enough views!");
               
