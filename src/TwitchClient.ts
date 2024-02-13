@@ -3,9 +3,13 @@ import { ChatClient, ChatMessage } from "@twurple/chat";
 import ManageableClass from "./ManageableClass";
 import TokenUtil from "./TokenUtil";
 import YoutubeClient from "./YoutubeClient";
+import { VideoDetails } from "./YoutubeClient";
+import { Duration } from "luxon";
 
 export default class TwitchClient implements ManageableClass{
   private readonly COMMAND_PREFIX: string = "!";
+  private readonly MIN_VIDEO_VIEWS: number = 18_000;
+  private readonly MAX_VIDEO_DURATION_IN_MINUTES: number = 6;
   private chatClient!: ChatClient;
   private botName: string | undefined;
   private authProvider: RefreshingAuthProvider;
@@ -55,6 +59,45 @@ export default class TwitchClient implements ManageableClass{
         switch (commandName.toLowerCase()) {
           case `${this.COMMAND_PREFIX}hello`:
             this.chatClient.say(channel, `Hello @${user}`);
+            break;
+          case `${this.COMMAND_PREFIX}sr`:
+            const songRequestParameters: string = commandParameters.join(" ");
+
+            if(!songRequestParameters) {
+              return;
+            }
+
+            try {
+              let videoId: string;
+              
+              if(songRequestParameters.startsWith("https://www.youtube.com/watch")) {
+                const regexpToSplitUrlParameters: RegExp = /[?=]/;
+                const splitVideoLink = songRequestParameters.split(regexpToSplitUrlParameters);
+                
+                videoId = splitVideoLink[(splitVideoLink.findIndex((v) => v === "v") + 1)];
+              } else {
+                videoId = await this.youtubeClient.getVideoIdByName(songRequestParameters);
+              }
+
+              const videoDetails: VideoDetails = await this.youtubeClient.getVideoDetailsById(videoId);
+              
+              if(!videoDetails) throw new Error("YouTube API has returned an empty result");
+
+              if(Number.parseInt(videoDetails.statistics.viewCount) < this.MIN_VIDEO_VIEWS) throw new Error("Your video has not enough views!");
+              
+              const videoDurationInMinutes: number = Duration.fromISO(videoDetails.contentDetails.duration).as('minutes');
+              
+              if(videoDurationInMinutes > this.MAX_VIDEO_DURATION_IN_MINUTES) throw new Error("Your video is too long :(");
+              
+              //TODO: add a song request queue
+
+              this.chatClient.say(channel, "I successfully added your song to the queue! ;)")
+            } catch (e: unknown) {
+              if(e instanceof Error) {
+                //TODO: change this message to more helpful
+                this.chatClient.say(channel, "Something is wrong with your song request, I could not add your song :(")
+              }
+            }
             break;
           default:
             break;
