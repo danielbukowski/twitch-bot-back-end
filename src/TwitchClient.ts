@@ -47,13 +47,12 @@ export default class TwitchClient implements ManageableClass{
     })
 
     this.chatClient.onMessage(async (channel: string, user: string, text: string, msg: ChatMessage) => {
-        text = text.trim().toLowerCase();        
-
+        text = text.trim();
         if (!text.startsWith(this.COMMAND_PREFIX) || user === this.botName) return;
 
         const [commandName, ...commandParameters] = text.split(" ");
 
-        switch (commandName) {
+        switch (commandName.toLowerCase()) {
           case `${this.COMMAND_PREFIX}hello`:
             this.chatClient.say(channel, `Hello @${user}`);
             break;
