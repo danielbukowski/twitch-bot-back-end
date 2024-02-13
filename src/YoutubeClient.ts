@@ -7,6 +7,7 @@ export default class YoutubeClient implements ManageableClass {
   constructor(youtubeApikey: string) {
     this.youtubeApiKey = youtubeApikey;
   }
+
   async init(): Promise<void> {
     console.log("Initializing the YoutubeClient...");
     console.log("Initialized the YoutubeClient...");
@@ -34,26 +35,18 @@ export default class YoutubeClient implements ManageableClass {
       .then((response) => response.data.items[0].id.videoId);
   }
 
-  async getVideoDetailsById(videoId: string) {
+  async getVideoDetailsById(videoId: string): Promise<VideoDetails> {
     return await axios.get<{
-      items: [
-        snippet: {
-          title: string
-        },
-        contentDetails: {
-          duration: string
-        },
-        statistics: {
-          viewCount: string
-        }
-      ]
+      items: VideoDetails[];
     }>("https://www.googleapis.com/youtube/v3/videos", {
-      params: { 
-        id: videoId,   
+      params: {
+        id: videoId,
         key: this.youtubeApiKey,
-        fields: "items(snippet/title,contentDetails/duration,statistics/viewCount)",
+        fields:
+          "items(snippet/title,contentDetails/duration,statistics/viewCount)",
         part: "snippet,contentDetails,statistics",
       },
-    });
+    })
+    .then(r => r.data.items[0]);
   }
 }
