@@ -1,6 +1,18 @@
 import axios from "axios";
 import ManageableClass from "./ManageableClass";
 
+export interface VideoDetails {
+  snippet: {
+    title: string;
+  };
+  contentDetails: {
+    duration: string;
+  };
+  statistics: {
+    viewCount: string;
+  };
+}
+
 export default class YoutubeClient implements ManageableClass {
   private readonly youtubeApiKey: string;
 
