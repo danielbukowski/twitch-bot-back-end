@@ -74,10 +74,10 @@ export default class TwitchClient implements ManageableClass{
               let videoId: string;
               
               if(songRequestParameters.startsWith("https://www.youtube.com/watch")) {
-                const regexpToSplitUrlParameters: RegExp = /[?=]/;
-                const splitVideoLink = songRequestParameters.split(regexpToSplitUrlParameters);
+                const regexpToSplitUrlParameters: RegExp = /[?=&]/;
+                const splitVideoLink: string[] = songRequestParameters.split(regexpToSplitUrlParameters);
                 
-                videoId = splitVideoLink[(splitVideoLink.findIndex((v) => v === "v") + 1)];
+                videoId = splitVideoLink[(splitVideoLink.findIndex((v) => v === "v") + 1)].trim();
               } else {
                 videoId = await this.youtubeClient.getVideoIdByName(songRequestParameters);
               }

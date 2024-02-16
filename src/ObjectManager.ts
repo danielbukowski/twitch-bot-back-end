@@ -33,7 +33,7 @@ export default class ObjectManager {
             }
         } catch (e: unknown) {
             if(e instanceof Error) {
-                throw new Error(e.message);
+                throw e;
             }
         }
     }
