@@ -5,6 +5,7 @@ import TokenUtil from "./TokenUtil";
 import YoutubeClient from "./YoutubeClient";
 import { VideoDetails } from "./YoutubeClient";
 import { Duration } from "luxon";
+import SongRequestManager from "./SongRequestManager";
 
 export default class TwitchClient implements ManageableClass{
   private readonly COMMAND_PREFIX: string = "!";
@@ -15,11 +16,13 @@ export default class TwitchClient implements ManageableClass{
   private authProvider: RefreshingAuthProvider;
   private tokenUtil: TokenUtil;
   private youtubeClient: YoutubeClient;
+  private songRequestManager: SongRequestManager;
 
-  public constructor(authProvider: RefreshingAuthProvider, tokenUtil: TokenUtil, youtubeClient: YoutubeClient) {
+  public constructor(authProvider: RefreshingAuthProvider, tokenUtil: TokenUtil, youtubeClient: YoutubeClient, songRequestManager: SongRequestManager) {
     this.authProvider = authProvider;
     this.tokenUtil = tokenUtil;
     this.youtubeClient = youtubeClient;
+    this.songRequestManager = songRequestManager;
     this.chatClient = new ChatClient({
       authProvider: authProvider,
       channels: [],
