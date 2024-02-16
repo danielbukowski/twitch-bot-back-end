@@ -25,40 +25,47 @@ export default class YoutubeClient implements ManageableClass {
     console.log("Initialized the YoutubeClient...");
   }
 
-  async getVideoIdByName(name: string): Promise<string> {
-    return axios
-      .get<{
-        items: [
-          {
-            id: {
-              videoId: string;
-            };
-          }
-        ];
-      }>("https://youtube.googleapis.com/youtube/v3/search", {
-        params: {
-          maxResults: 1,
-          part: "id",
-          fields: "items/id/videoId",
-          q: name,
-          key: this.youtubeApiKey,
-        },
-      })
-      .then((response) => response.data.items[0].id.videoId);
+  async getVideoIdByName(name: string): Promise<string | undefined> {
+      try {
+        const response = await axios
+        .get<{
+          items: [
+            {
+              id: {
+                videoId: string;
+              };
+            }
+          ];
+        }>("https://youtube.googleapis.com/youtube/v3/search", {
+          params: {
+            maxResults: 1,
+            part: "id",
+            fields: "items/id/videoId",
+            q: name,
+            key: this.youtubeApiKey,
+          },
+        });
+        return response.data.items[0].id.videoId;
+      } catch (error) {
+        return undefined
+      }
   }
 
-  async getVideoDetailsById(videoId: string): Promise<VideoDetails> {
-    return axios.get<{
-      items: VideoDetails[];
-    }>("https://www.googleapis.com/youtube/v3/videos", {
-      params: {
-        id: videoId,
-        key: this.youtubeApiKey,
-        fields:
-          "items(snippet/title,contentDetails/duration,statistics/viewCount)",
-        part: "snippet,contentDetails,statistics",
-      },
-    })
-    .then(r => r.data.items[0]);
+  async getVideoDetailsById(videoId: string): Promise<VideoDetails | undefined> {
+    try {
+      const response = await axios.get<{ items: VideoDetails[] }>(
+        "https://www.googleapis.com/youtube/v3/videos", {
+        params: {
+          id: videoId,
+          key: this.youtubeApiKey,
+          fields:
+            "items(snippet/title,contentDetails/duration,statistics/viewCount)",
+          part: "snippet,contentDetails,statistics",
+        },
+      });
+      return response.data.items[0];
+    } catch (error) {
+      return undefined;
+    }
   }
 }
