@@ -9,7 +9,7 @@ import { Duration } from "luxon";
 export default class TwitchClient implements ManageableClass{
   private readonly COMMAND_PREFIX: string = "!";
   private readonly MIN_VIDEO_VIEWS: number = 18_000;
-  private readonly MAX_VIDEO_DURATION_IN_MINUTES: number = 6;
+  private readonly MAX_VIDEO_DURATION_IN_SECONDS: number = 360;
   private chatClient!: ChatClient;
   private botName: string | undefined;
   private authProvider: RefreshingAuthProvider;
@@ -82,11 +82,11 @@ export default class TwitchClient implements ManageableClass{
               const videoDetails: VideoDetails = await this.youtubeClient.getVideoDetailsById(videoId);
 
               if(Number.parseInt(videoDetails.statistics.viewCount) < this.MIN_VIDEO_VIEWS) throw new Error("Your video has not enough views!");
-              
-              const videoDurationInMinutes: number = Duration.fromISO(videoDetails.contentDetails.duration).as('minutes');
-              
-              if(videoDurationInMinutes > this.MAX_VIDEO_DURATION_IN_MINUTES) throw new Error("Your video is too long :(");
-              
+
+              const videoDurationInSeconds: number = Duration.fromISO(videoDetails.contentDetails.duration).as('seconds');
+
+              if(videoDurationInSeconds > this.MAX_VIDEO_DURATION_IN_SECONDS) throw new Error("Your video is too long :(");
+
               //TODO: add a song request queue
 
               this.chatClient.say(channel, "I successfully added your song to the queue! ;)")
