@@ -100,6 +100,10 @@ export default class TwitchClient implements ManageableClass{
                  title: songDetails.snippet.title,
                  durationInSeconds: videoDurationInSeconds,
                });
+
+               this.chatClient.say(channel,
+                 `I have successfully added your song '${songDetails.snippet.title}' to the queue at #${queueMetadata.length} position!`
+               );
              } catch (e: unknown) {
               if(e instanceof SongRequestError) {
                 this.chatClient.say(channel, e.message)
