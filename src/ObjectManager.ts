@@ -37,9 +37,4 @@ export default class ObjectManager {
             }
         }
     }
-
-    public getInstance(name: string): ManageableClass | undefined {
-        return this.manageableClasses.get(name);
-    }
-
 }
