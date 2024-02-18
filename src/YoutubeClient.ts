@@ -63,7 +63,9 @@ export default class YoutubeClient implements ManageableClass {
           part: "snippet,contentDetails,statistics",
         },
       });
-      return response.data.items[0];
+
+      //YouTube Data API likes to return an empty list with 200 status code
+      return response.data.items.length > 0 ? response.data.items[0] : undefined;
     } catch (error) {
       return undefined;
     }
