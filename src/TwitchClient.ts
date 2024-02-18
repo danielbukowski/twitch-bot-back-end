@@ -6,6 +6,7 @@ import YoutubeClient from "./YoutubeClient";
 import { VideoDetails } from "./YoutubeClient";
 import { Duration } from "luxon";
 import SongRequestManager from "./SongRequestManager";
+import SongRequestError from "./SongRequestError";
 
 export default class TwitchClient implements ManageableClass{
   private readonly COMMAND_PREFIX: string = "!";
@@ -71,7 +72,7 @@ export default class TwitchClient implements ManageableClass{
             }
 
             try {
-              let videoId: string;
+              let videoId: string | undefined;
               
               if(songRequestParameters.startsWith("https://www.youtube.com/watch")) {
                 const regexpToSplitUrlParameters: RegExp = /[?=&]/;
@@ -82,22 +83,25 @@ export default class TwitchClient implements ManageableClass{
                 videoId = await this.youtubeClient.getVideoIdByName(songRequestParameters);
               }
 
-              const videoDetails: VideoDetails = await this.youtubeClient.getVideoDetailsById(videoId);
+              if(videoId === undefined) throw new SongRequestError("Sorry, but I Could not find your song :(")
 
-              if(Number.parseInt(videoDetails.statistics.viewCount) < this.MIN_VIDEO_VIEWS) throw new Error("Your video has not enough views!");
+              const songDetails: VideoDetails | undefined = await this.youtubeClient.getVideoDetailsById(videoId);
 
-              const videoDurationInSeconds: number = Duration.fromISO(videoDetails.contentDetails.duration).as('seconds');
+              if(songDetails === undefined) throw new SongRequestError("Sorry, but I cannot add this song :(");
 
-              if(videoDurationInSeconds > this.MAX_VIDEO_DURATION_IN_SECONDS) throw new Error("Your video is too long :(");
+              if(Number.parseInt(songDetails.statistics.viewCount) < this.MIN_VIDEO_VIEWS) throw new SongRequestError("Your song has not enough views!");
 
-              //TODO: add a song request queue
+              const videoDurationInSeconds: number = Duration.fromISO(songDetails.contentDetails.duration).as('seconds');
 
-              this.chatClient.say(channel, "I successfully added your song to the queue! ;)")
-            } catch (e: unknown) {
-              if(e instanceof Error) {
-                //TODO: change this message to more helpful
-                this.chatClient.say(channel, "Something is wrong with your song request, I could not add your song :(")
+              if(videoDurationInSeconds > this.MAX_VIDEO_DURATION_IN_SECONDS) throw new SongRequestError("Your song is too long :(");
+              
+             } catch (e: unknown) {
+              if(e instanceof SongRequestError) {
+                this.chatClient.say(channel, e.message)
               }
+              else if(e instanceof Error) {
+                this.chatClient.say(channel, "Something is wrong with your song :|");
+              } 
             }
             break;
           default:
