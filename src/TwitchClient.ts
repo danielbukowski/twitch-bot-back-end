@@ -94,7 +94,12 @@ export default class TwitchClient implements ManageableClass{
               const videoDurationInSeconds: number = Duration.fromISO(songDetails.contentDetails.duration).as('seconds');
 
               if(videoDurationInSeconds > this.MAX_VIDEO_DURATION_IN_SECONDS) throw new SongRequestError("Your song is too long :(");
-              
+
+               const queueMetadata = this.songRequestManager.addSongToQueue({
+                 videoId: videoId,
+                 title: songDetails.snippet.title,
+                 durationInSeconds: videoDurationInSeconds,
+               });
              } catch (e: unknown) {
               if(e instanceof SongRequestError) {
                 this.chatClient.say(channel, e.message)
