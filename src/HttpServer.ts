@@ -1,15 +1,19 @@
 import express from "express";
 import ManageableClass from "./ManageableClass";
+import { createServer, Server } from "node:http"
 
 export default class HttpServer implements ManageableClass {
-  private express = express();
+  private app = express();
+  private httpServer = createServer(this.app);
 
-  constructor(private port: string) { }
+  constructor(private port: string) { 
+    this.port = port;
+  }
 
   async init(): Promise<void> {
     console.log("Initializing the HttpServer...");
     
-    this.express.listen(this.port, () => {
+    this.httpServer.listen(this.port, () => {
         console.log(`Server is running at http://localhost:${this.port}`);
     });
 
