@@ -19,9 +19,7 @@ interface TwitchUser {
 export default class TokenUtil implements ManageableClass{
   private clientId: string;
 
-  public constructor(clientId: string) {
-    this.clientId = clientId;
-  }
+  public constructor(private clientId: string) { }
   
   async init(): Promise<void> {
     console.log("Initializing the TokenUtil...");

@@ -10,7 +10,7 @@ import YoutubeClient from "./YoutubeClient";
 export default class ObjectManager {
     private manageableClasses: Map<string, ManageableClass> = new Map();
 
-    public constructor(configInitializer: ConfigInitializer) {
+    public constructor(private configInitializer: ConfigInitializer) {
         const config = configInitializer.getConfig();
         this.manageableClasses.set(AuthManager.name, new AuthManager(config.twitchAppClientId, config.twitchAppClientSecret));
         this.manageableClasses.set(YoutubeClient.name, new YoutubeClient(config.youtubeApiKey));

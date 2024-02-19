@@ -14,12 +14,14 @@ export default class TwitchClient implements ManageableClass{
   private readonly MAX_VIDEO_DURATION_IN_SECONDS: number = 360;
   private chatClient!: ChatClient;
   private botName: string | undefined;
-  private authProvider: RefreshingAuthProvider;
-  private tokenUtil: TokenUtil;
-  private youtubeClient: YoutubeClient;
-  private songRequestManager: SongRequestManager;
 
-  public constructor(private twitchChannel: string, authProvider: RefreshingAuthProvider, tokenUtil: TokenUtil, youtubeClient: YoutubeClient, songRequestManager: SongRequestManager) {
+  public constructor(
+    private twitchChannel: string,
+    private authProvider: RefreshingAuthProvider,
+    private tokenUtil: TokenUtil,
+    private youtubeClient: YoutubeClient,
+    private songRequestManager: SongRequestManager
+  ) {
     this.authProvider = authProvider;
     this.tokenUtil = tokenUtil;
     this.youtubeClient = youtubeClient;
