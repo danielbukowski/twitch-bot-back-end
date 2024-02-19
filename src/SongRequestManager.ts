@@ -1,5 +1,11 @@
 import ManageableClass from "./ManageableClass";
 
+export interface Song {
+    videoId: string;
+    title: string;
+    durationInSeconds: number;
+  }
+
 export default class SongRequestManager implements ManageableClass {
 
     constructor() { }
