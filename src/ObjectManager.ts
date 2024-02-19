@@ -17,6 +17,7 @@ export default class ObjectManager {
         this.manageableClasses.set(TokenUtil.name, new TokenUtil(config.twitchAppClientId));
         this.manageableClasses.set(SongRequestManager.name, new SongRequestManager())
         this.manageableClasses.set(TwitchClient.name, new TwitchClient(
+            config.twitchChannel,
             (this.manageableClasses.get(AuthManager.name) as AuthManager).getAuthProvider(), 
             this.manageableClasses.get(TokenUtil.name) as TokenUtil,
             this.manageableClasses.get(YoutubeClient.name) as YoutubeClient,

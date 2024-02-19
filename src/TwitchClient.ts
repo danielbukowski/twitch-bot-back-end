@@ -19,14 +19,14 @@ export default class TwitchClient implements ManageableClass{
   private youtubeClient: YoutubeClient;
   private songRequestManager: SongRequestManager;
 
-  public constructor(authProvider: RefreshingAuthProvider, tokenUtil: TokenUtil, youtubeClient: YoutubeClient, songRequestManager: SongRequestManager) {
+  public constructor(private twitchChannel: string, authProvider: RefreshingAuthProvider, tokenUtil: TokenUtil, youtubeClient: YoutubeClient, songRequestManager: SongRequestManager) {
     this.authProvider = authProvider;
     this.tokenUtil = tokenUtil;
     this.youtubeClient = youtubeClient;
     this.songRequestManager = songRequestManager;
     this.chatClient = new ChatClient({
       authProvider: authProvider,
-      channels: [],
+      channels: [twitchChannel],
       webSocket: true,
       authIntents: ["chatbot"]
     });
