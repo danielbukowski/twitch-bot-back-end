@@ -65,7 +65,9 @@ export default class YoutubeClient implements ManageableClass {
       });
 
       //YouTube Data API likes to return an empty list with 200 status code
-      return response.data.items.length > 0 ? response.data.items[0] : undefined;
+      if(!response.data.items.length) throw new Error("YouTube Data API has returned an empty item list")
+
+      return response.data.items[0];
     } catch (error) {
       return undefined;
     }
