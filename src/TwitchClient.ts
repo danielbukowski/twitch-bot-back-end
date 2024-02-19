@@ -39,11 +39,11 @@ export default class TwitchClient implements ManageableClass{
     
     this.botName = await this.tokenUtil.getUsernameByAccessToken((await this.authProvider.getAccessTokenForIntent("chatbot")) as AccessToken);
 
-    if(this.botName === undefined) throw new Error("Could not fetch a chatbot's info")
+    if(this.botName === undefined) throw new Error("Could not get a username from the access token")
 
     this.setChatClientListeners();
     this.chatClient.connect();
-    console.log("Initilized the TwitchClient!");
+    console.log("Initialized the TwitchClient!");
   }
 
   private setChatClientListeners(): void {
