@@ -7,7 +7,8 @@ export interface Song {
   }
 
 export default class SongRequestManager implements ManageableClass {
-
+    private songQueue: Song[] = [];
+    
     constructor() { }
 
     async init(): Promise<void> {
