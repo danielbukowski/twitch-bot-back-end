@@ -103,8 +103,18 @@ export default class TwitchClient implements ManageableClass{
                  durationInSeconds: videoDurationInSeconds,
                });
 
-               this.chatClient.say(channel,
-                 `I have successfully added your song '${songDetails.snippet.title}' to the queue at #${queueMetadata.length} position!`
+               const songMinutes: number = Math.trunc(queueMetadata.duration / 60);
+               const songSeconds: number = queueMetadata.duration % 60;
+
+               this.chatClient.say(
+                 channel,
+                 `I have successfully added your song '${songDetails.snippet.title}' to the queue at #${queueMetadata.length} position!
+                 (playing in ~ ${songMinutes === 0 
+                 ? "" 
+                 : songMinutes > 1 
+                 ? `${songMinutes} minutes and` 
+                 : `${songMinutes} minute and`} 
+                 ${songSeconds} seconds)`,
                );
              } catch (e: unknown) {
               if(e instanceof SongRequestError) {
