@@ -16,8 +16,7 @@ interface TwitchUser {
   created_at: string;
 }
 
-export default class TokenUtil implements ManageableClass{
-  private clientId: string;
+export default class TokenUtil implements ManageableClass {
 
   public constructor(private clientId: string) { }
   
