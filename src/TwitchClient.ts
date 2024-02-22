@@ -26,16 +26,17 @@ export default class TwitchClient implements ManageableClass{
     this.tokenUtil = tokenUtil;
     this.youtubeClient = youtubeClient;
     this.songRequestManager = songRequestManager;
-    this.chatClient = new ChatClient({
-      authProvider: authProvider,
-      channels: [twitchChannel],
-      webSocket: true,
-      authIntents: ["chatbot"]
-    });
   }
 
   public async init(): Promise<void> {
     console.log("Initializing the TwitchClient...");
+    
+    this.chatClient = new ChatClient({
+      authProvider: this.authProvider,
+      channels: [this.twitchChannel],
+      webSocket: true,
+      authIntents: ["chatbot"]
+    });
     
     this.botName = await this.tokenUtil.getUsernameByAccessToken((await this.authProvider.getAccessTokenForIntent("chatbot")) as AccessToken);
 
