@@ -19,4 +19,8 @@ export default class HttpServer implements ManageableClass {
 
     console.log("Initialized the HttpServer!");
   }
+
+  public getHttpServer(): Server {
+    return this.httpServer;
+  }
 }
