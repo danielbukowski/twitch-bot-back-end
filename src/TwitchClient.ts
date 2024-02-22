@@ -8,7 +8,7 @@ import { Duration } from "luxon";
 import SongRequestManager from "./SongRequestManager";
 import SongRequestError from "./SongRequestError";
 
-export default class TwitchClient implements ManageableClass{
+export default class TwitchClient implements ManageableClass {
   private readonly COMMAND_PREFIX: string = "!";
   private readonly MIN_VIDEO_VIEWS: number = 18_000;
   private readonly MAX_VIDEO_DURATION_IN_SECONDS: number = 360;
@@ -30,7 +30,7 @@ export default class TwitchClient implements ManageableClass{
 
   public async init(): Promise<void> {
     console.log("Initializing the TwitchClient...");
-    
+
     this.chatClient = new ChatClient({
       authProvider: this.authProvider,
       channels: [this.twitchChannel],
@@ -44,6 +44,7 @@ export default class TwitchClient implements ManageableClass{
 
     this.setChatClientListeners();
     this.chatClient.connect();
+    
     console.log("Initialized the TwitchClient!");
   }
 
@@ -59,6 +60,7 @@ export default class TwitchClient implements ManageableClass{
 
     this.chatClient.onMessage(async (channel: string, user: string, text: string, msg: ChatMessage) => {
         text = text.trim();
+
         if (!text.startsWith(this.COMMAND_PREFIX) || user === this.botName) return;
 
         const [commandName, ...commandParameters] = text.split(" ");

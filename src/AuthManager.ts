@@ -14,6 +14,7 @@ export default class AuthManager implements ManageableClass {
 
   public async init() {
     console.log("Initializing the AuthManager...");
+
     const chatbotAccessToken = (await readdir("./secrets/chatbot/"))[0];
 
     if(!chatbotAccessToken) throw new Error("The chatbot's access token is missing :(");
@@ -30,6 +31,7 @@ export default class AuthManager implements ManageableClass {
           { encoding: "utf-8" }
         )
     );
+    
     console.log("Initialized the AuthManager!");
   }
 

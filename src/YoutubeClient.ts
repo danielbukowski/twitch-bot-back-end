@@ -24,8 +24,7 @@ export default class YoutubeClient implements ManageableClass {
 
   async getVideoIdByName(name: string): Promise<string | undefined> {
       try {
-        const response = await axios
-        .get<{
+        const response = await axios.get<{
           items: [
             {
               id: {
@@ -55,8 +54,7 @@ export default class YoutubeClient implements ManageableClass {
         params: {
           id: videoId,
           key: this.youtubeApiKey,
-          fields:
-            "items(snippet/title,contentDetails/duration,statistics/viewCount)",
+          fields: "items(snippet/title,contentDetails/duration,statistics/viewCount)",
           part: "snippet,contentDetails,statistics",
         },
       });
