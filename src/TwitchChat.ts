@@ -8,7 +8,7 @@ import { Duration } from "luxon";
 import SongRequestManager from "./SongRequestManager";
 import SongRequestError from "./SongRequestError";
 
-export default class TwitchClient implements ManageableClass {
+export default class TwitchChat implements ManageableClass {
   private readonly COMMAND_PREFIX: string = "!";
   private readonly MIN_VIDEO_VIEWS: number = 18_000;
   private readonly MAX_VIDEO_DURATION_IN_SECONDS: number = 360;
