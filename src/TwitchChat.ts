@@ -36,8 +36,8 @@ export default class TwitchChat implements ManageableClass {
       webSocket: true,
       authIntents: ["chat"]
     });
-    
-    this.botName = await this.tokenUtil.getUsernameByAccessToken((await this.authProvider.getAccessTokenForIntent("chatbot")) as AccessToken);
+
+    this.botName = await this.twitchClient.getChatbotUsername();
 
     if(this.botName === undefined) throw new Error("Could not get a username from the access token")
 
