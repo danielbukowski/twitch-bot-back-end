@@ -1,7 +1,6 @@
 import { AccessToken, RefreshingAuthProvider } from "@twurple/auth";
 import { ChatClient, ChatMessage } from "@twurple/chat";
 import ManageableClass from "./ManageableClass";
-import TokenUtil from "./TokenUtil";
 import YoutubeClient from "./YoutubeClient";
 import { VideoDetails } from "./YoutubeClient";
 import { Duration } from "luxon";
@@ -19,13 +18,11 @@ export default class TwitchChat implements ManageableClass {
   public constructor(
     private twitchChannel: string,
     private authProvider: RefreshingAuthProvider,
-    private tokenUtil: TokenUtil,
     private youtubeClient: YoutubeClient,
     private songRequestManager: SongRequestManager,
     private twitchClient: TwitchClient
   ) {
     this.authProvider = authProvider;
-    this.tokenUtil = tokenUtil;
     this.youtubeClient = youtubeClient;
     this.songRequestManager = songRequestManager;
   }
