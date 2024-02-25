@@ -24,22 +24,4 @@ export default class TokenUtil implements ManageableClass {
     console.log("Initializing the TokenUtil...");
     console.log("Initialized the TokenUtil!");
   }
-
-  public async getUsernameByAccessToken(accessToken: AccessToken): Promise<string | undefined> {
-    try {
-      const response = await axios.get<{ data: TwitchUser[] }>(
-        "https://api.twitch.tv/helix/users",
-        {
-          headers: {
-            "Client-Id": this.clientId,
-            Authorization: `Bearer ${accessToken.accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      return response.data.data[0].display_name.toLowerCase();
-    } catch (error) {
-      return undefined;
-    }
-  }
 }
