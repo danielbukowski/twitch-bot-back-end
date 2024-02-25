@@ -6,6 +6,8 @@ import SocketClient from "./SocketClient";
 import SongRequestManager from "./SongRequestManager";
 import TokenUtil from "./TokenUtil";
 import TwitchChat from "./TwitchChat";
+import TwitchClient from "./TwitchClient";
+import TwitchEventListener from "./TwitchEventListener";
 import YoutubeClient from "./YoutubeClient";
 
 export default class ObjectManager {
@@ -16,6 +18,10 @@ export default class ObjectManager {
         this.manageableClasses.set(AuthManager.name, new AuthManager(config.twitchAppClientId, config.twitchAppClientSecret));
         this.manageableClasses.set(YoutubeClient.name, new YoutubeClient(config.youtubeApiKey));
         this.manageableClasses.set(TokenUtil.name, new TokenUtil(config.twitchAppClientId));
+        this.manageableClasses.set(TwitchClient.name, new TwitchClient(
+            (this.manageableClasses.get(AuthManager.name) as AuthManager).getAuthProvider()
+            )
+        );
         this.manageableClasses.set(TwitchChat.name, new TwitchChat(
             config.twitchChannel,
             (this.manageableClasses.get(AuthManager.name) as AuthManager).getAuthProvider(), 
@@ -26,7 +32,15 @@ export default class ObjectManager {
             )
         );
         this.manageableClasses.set(HttpServer.name, new HttpServer(config.httpServerPort));
-        this.manageableClasses.set(SocketClient.name, new SocketClient((this.manageableClasses.get(HttpServer.name) as HttpServer).getHttpServer()))
+        this.manageableClasses.set(SocketClient.name, new SocketClient(
+            (this.manageableClasses.get(HttpServer.name) as HttpServer).getHttpServer()
+            )
+        );
+        this.manageableClasses.set(TwitchEventListener.name, new TwitchEventListener(
+            this.manageableClasses.get(SocketClient.name) as SocketClient,
+            (this.manageableClasses.get(TwitchClient.name) as TwitchClient).getApiClient(),
+            (this.manageableClasses.get(AuthManager.name) as AuthManager).getAuthProvider()
+        ))
     } 
 
     public async initManageableClasses() {
