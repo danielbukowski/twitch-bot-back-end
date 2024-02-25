@@ -7,6 +7,7 @@ import { VideoDetails } from "./YoutubeClient";
 import { Duration } from "luxon";
 import SongRequestManager from "./SongRequestManager";
 import SongRequestError from "./SongRequestError";
+import TwitchClient from "./TwitchClient";
 
 export default class TwitchChat implements ManageableClass {
   private readonly COMMAND_PREFIX: string = "!";
@@ -20,7 +21,8 @@ export default class TwitchChat implements ManageableClass {
     private authProvider: RefreshingAuthProvider,
     private tokenUtil: TokenUtil,
     private youtubeClient: YoutubeClient,
-    private songRequestManager: SongRequestManager
+    private songRequestManager: SongRequestManager,
+    private twitchClient: TwitchClient
   ) {
     this.authProvider = authProvider;
     this.tokenUtil = tokenUtil;
