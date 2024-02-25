@@ -1,4 +1,4 @@
-import { AccessToken, RefreshingAuthProvider } from "@twurple/auth";
+import { RefreshingAuthProvider } from "@twurple/auth";
 import { ChatClient, ChatMessage } from "@twurple/chat";
 import ManageableClass from "./ManageableClass";
 import YoutubeClient from "./YoutubeClient";
