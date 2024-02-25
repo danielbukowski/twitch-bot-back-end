@@ -34,7 +34,7 @@ export default class TwitchChat implements ManageableClass {
       authProvider: this.authProvider,
       channels: [this.twitchChannel],
       webSocket: true,
-      authIntents: ["chatbot"]
+      authIntents: ["chat"]
     });
     
     this.botName = await this.tokenUtil.getUsernameByAccessToken((await this.authProvider.getAccessTokenForIntent("chatbot")) as AccessToken);
