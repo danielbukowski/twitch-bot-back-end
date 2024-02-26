@@ -1,11 +1,12 @@
 import { AccessToken, RefreshingAuthProvider } from "@twurple/auth";
 import { writeFile, readFile, readdir } from "fs/promises";
 import ManageableClass from "./ManageableClass";
+import TokenUtil from "./TokenUtil";
 
 export default class AuthManager implements ManageableClass {
   private authProvider: RefreshingAuthProvider;
 
-  constructor(private clientId: string, private clientSecret: string) {
+  constructor(private clientId: string, private clientSecret: string, private tokenUtil: TokenUtil) {
     this.authProvider = new RefreshingAuthProvider({
       clientId,
       clientSecret,

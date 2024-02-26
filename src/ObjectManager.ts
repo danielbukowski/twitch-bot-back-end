@@ -15,9 +15,13 @@ export default class ObjectManager {
 
     public constructor(private configInitializer: ConfigInitializer) {
         const config = configInitializer.getConfig();
-        this.manageableClasses.set(AuthManager.name, new AuthManager(config.twitchAppClientId, config.twitchAppClientSecret));
-        this.manageableClasses.set(YoutubeClient.name, new YoutubeClient(config.youtubeApiKey));
         this.manageableClasses.set(TokenUtil.name, new TokenUtil(config.twitchAppClientId));
+        this.manageableClasses.set(AuthManager.name, new AuthManager(
+            config.twitchAppClientId, 
+            config.twitchAppClientSecret,
+            this.manageableClasses.get(TokenUtil.name) as TokenUtil
+            ));
+        this.manageableClasses.set(YoutubeClient.name, new YoutubeClient(config.youtubeApiKey));
         this.manageableClasses.set(TwitchClient.name, new TwitchClient(
             (this.manageableClasses.get(AuthManager.name) as AuthManager).getAuthProvider()
             )
