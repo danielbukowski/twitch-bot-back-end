@@ -19,7 +19,7 @@ export default class YoutubeClient implements ManageableClass {
 
   async init(): Promise<void> {
     console.log("Initializing the YoutubeClient...");
-    console.log("Initialized the YoutubeClient...");
+    console.log("Initialized the YoutubeClient!");
   }
 
   async getVideoIdByName(name: string): Promise<string | undefined> {
