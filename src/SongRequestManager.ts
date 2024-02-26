@@ -27,4 +27,8 @@ export default class SongRequestManager implements ManageableClass {
             duration
         }
     }
+
+    public removeSongFromQueue(): Song | undefined {
+        return this.songQueue.shift();
+    }
 }
