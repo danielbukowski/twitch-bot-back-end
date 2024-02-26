@@ -28,7 +28,7 @@ export default class TwitchChat implements ManageableClass {
   }
 
   public async init(): Promise<void> {
-    console.log("Initializing the TwitchClient...");
+    console.log("Initializing the TwitchChat...");
 
     this.chatClient = new ChatClient({
       authProvider: this.authProvider,
@@ -44,7 +44,7 @@ export default class TwitchChat implements ManageableClass {
     this.setChatClientListeners();
     this.chatClient.connect();
     
-    console.log("Initialized the TwitchClient!");
+    console.log("Initialized the TwitchChat!");
   }
 
   private setChatClientListeners(): void {
