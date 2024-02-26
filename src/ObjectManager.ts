@@ -37,8 +37,7 @@ export default class ObjectManager {
         );
         this.manageableClasses.set(TwitchEventListener.name, new TwitchEventListener(
             this.manageableClasses.get(SocketClient.name) as SocketClient,
-            (this.manageableClasses.get(TwitchClient.name) as TwitchClient).getApiClient(),
-            (this.manageableClasses.get(AuthManager.name) as AuthManager).getAuthProvider()
+            this.manageableClasses.get(TwitchClient.name) as TwitchClient,
         ))
     } 
 

@@ -3,11 +3,15 @@ import ManageableClass from "./ManageableClass";
 import SocketClient from "./SocketClient";
 import { ApiClient } from "@twurple/api";
 import { RefreshingAuthProvider } from "@twurple/auth";
+import TwitchClient from "./TwitchClient";
 
 export default class TwitchEventListener implements ManageableClass {
     private eventSub!: EventSubWsListener;
 
-    constructor(private socketClient: SocketClient, private apiClient: ApiClient, private authProvider: RefreshingAuthProvider) { }
+  constructor(
+    private socketClient: SocketClient,
+    private twitchClient: TwitchClient
+  ) {}
 
     async init(): Promise<void> {
         console.log("Initializing the TwitchEventListener...");
