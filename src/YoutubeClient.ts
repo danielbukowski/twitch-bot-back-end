@@ -15,7 +15,7 @@ export interface VideoDetails {
 
 export default class YoutubeClient implements ManageableClass {
 
-  constructor(private youtubeApiKey: string) { }
+  constructor(private readonly youtubeApiKey: string) { }
 
   async init(): Promise<void> {
     console.log("Initializing the YoutubeClient...");

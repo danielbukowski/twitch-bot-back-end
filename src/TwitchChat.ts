@@ -16,11 +16,11 @@ export default class TwitchChat implements ManageableClass {
   private botName: string | undefined;
 
   public constructor(
-    private twitchChannel: string,
-    private authProvider: RefreshingAuthProvider,
-    private youtubeClient: YoutubeClient,
-    private songRequestManager: SongRequestManager,
-    private twitchClient: TwitchClient
+    private readonly twitchChannel: string,
+    private readonly authProvider: RefreshingAuthProvider,
+    private readonly youtubeClient: YoutubeClient,
+    private readonly songRequestManager: SongRequestManager,
+    private readonly twitchClient: TwitchClient
   ) {
     this.authProvider = authProvider;
     this.youtubeClient = youtubeClient;

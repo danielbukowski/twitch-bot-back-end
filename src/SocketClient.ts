@@ -6,7 +6,7 @@ import { Server } from "node:http"
 export default class SocketClient implements ManageableClass {
   private io!: SocketServer;
 
-  constructor(private httpServer: Server) { }
+  constructor(private readonly httpServer: Server) { }
 
   async init(): Promise<void> {
     console.log("Initializing the SocketClient...");

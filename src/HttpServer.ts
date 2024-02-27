@@ -6,7 +6,7 @@ export default class HttpServer implements ManageableClass {
   private app = express();
   private httpServer = createServer(this.app);
 
-  constructor(private port: string) { 
+  constructor(private readonly port: string) { 
     this.port = port;
   }
 

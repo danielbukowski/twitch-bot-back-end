@@ -13,7 +13,7 @@ import YoutubeClient from "./YoutubeClient";
 export default class ObjectManager {
     private manageableClasses: Map<string, ManageableClass> = new Map();
 
-    public constructor(private configInitializer: ConfigInitializer) {
+    public constructor(private readonly configInitializer: ConfigInitializer) {
         const config = configInitializer.getConfig();
 
         this.manageableClasses.set(TokenUtil.name, 

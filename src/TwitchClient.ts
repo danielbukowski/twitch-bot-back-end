@@ -5,7 +5,7 @@ import { RefreshingAuthProvider } from "@twurple/auth";
 export default class TwitchClient implements ManageableClass  {
     private apiClient!: ApiClient;
 
-    constructor(private authProvider: RefreshingAuthProvider) {
+    constructor(private readonly authProvider: RefreshingAuthProvider) {
         this.apiClient = new ApiClient({
             authProvider: this.authProvider
         });

@@ -6,7 +6,11 @@ import TokenUtil from "./TokenUtil";
 export default class AuthManager implements ManageableClass {
   private authProvider: RefreshingAuthProvider;
 
-  constructor(private clientId: string, private clientSecret: string, private tokenUtil: TokenUtil) {
+  constructor(
+    private readonly clientId: string, 
+    private readonly clientSecret: string, 
+    private readonly tokenUtil: TokenUtil
+  ) {
     this.authProvider = new RefreshingAuthProvider({
       clientId,
       clientSecret,

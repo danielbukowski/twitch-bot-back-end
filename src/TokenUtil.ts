@@ -5,7 +5,7 @@ import ManageableClass from "./ManageableClass";
 
 export default class TokenUtil implements ManageableClass {
 
-  public constructor(private clientId: string) { }
+  public constructor(private readonly clientId: string) { }
   
   async init(): Promise<void> {
     console.log("Initializing the TokenUtil...");
