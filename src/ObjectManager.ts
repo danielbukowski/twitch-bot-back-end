@@ -29,6 +29,9 @@ export default class ObjectManager {
         this.manageableClasses.set(YoutubeClient.name, 
             new YoutubeClient(config.youtubeApiKey)
         );
+        this.manageableClasses.set(SongRequestManager.name, 
+            new SongRequestManager()
+        );
         this.manageableClasses.set(TwitchClient.name, 
             new TwitchClient(
                 (this.manageableClasses.get(AuthManager.name) as AuthManager).getAuthProvider()
