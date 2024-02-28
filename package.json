@@ -2,10 +2,10 @@
   "name": "twitch-bot-back-end",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/Main.js",
   "scripts": {
     "build": "rimraf ./dist && npx tsc",
-    "start": "npm run build && node dist/index.js",
+    "start": "npm run build && node dist/Main.js",
     "dev": "npx nodemon",
     "lint": "eslint . --ext .ts"
   },
