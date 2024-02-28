@@ -1,7 +1,7 @@
 import { AccessToken, RefreshingAuthProvider } from "@twurple/auth";
-import { writeFile, readFile, readdir } from "fs/promises";
+import { writeFile } from "fs/promises";
 import ManageableClass from "./ManageableClass";
-import TokenUtil from "./TokenUtil";
+import TokenUtil, { TokenIntent } from "./TokenUtil";
 
 export default class AuthManager implements ManageableClass {
   private authProvider: RefreshingAuthProvider;
@@ -17,21 +17,17 @@ export default class AuthManager implements ManageableClass {
     });
   }
 
-  public async init() {
+  public async init(): Promise<void> {
     console.log("Initializing the AuthManager...");
 
-    const chatbotAccessToken = (await readdir("./secrets/chatbot/"))[0];
+    await this.initTokenForIntent("chat");
+    await this.initTokenForIntent("events");
 
-    if(!chatbotAccessToken) throw new Error("The chatbot's access token is missing :(");
+    const idOfAccessTokenForChat: string = await this.tokenUtil.findIdOfAccessTokenInDirectory("chat");
 
-    const chatbotId = chatbotAccessToken.split(/[-\\.]/)[1];
-
-    await this.authProvider.addUserForToken(await this.fetchChatbotAccessToken(chatbotId), ["chatbot"])
-
-    this.authProvider.onRefresh(
-      async (userId: string, newTokenData: AccessToken) =>
+    this.authProvider.onRefresh(async (userId: string, newTokenData: AccessToken) =>
         await writeFile(
-          `./secrets/${chatbotId === userId ? "chatbot/" : ""}acccessToken-${userId}.json`,
+          `./access-tokens/${idOfAccessTokenForChat === userId ? "chat" : "events"}accessToken-${userId}.json`,
           JSON.stringify(newTokenData, null, 4),
           { encoding: "utf-8" }
         )
@@ -40,13 +36,10 @@ export default class AuthManager implements ManageableClass {
     console.log("Initialized the AuthManager!");
   }
 
-  private async fetchChatbotAccessToken(chatbotId: string): Promise<AccessToken> {
-    return JSON.parse(
-      await readFile(
-        `./secrets/chatbot/acccessToken-${chatbotId}.json`, 
-        { encoding: "utf-8" }
-      )
-    ) as AccessToken;
+  private async initTokenForIntent(tokenIntent: TokenIntent): Promise<void> {
+    const accessTokenIdForIntent: string = await this.tokenUtil.findIdOfAccessTokenInDirectory(tokenIntent);
+    const accessTokenForIntent: AccessToken = await this.tokenUtil.readAccessTokenFromDirectory(accessTokenIdForIntent, tokenIntent);
+    await this.authProvider.addUserForToken(accessTokenForIntent, [tokenIntent]);
   }
 
   public getAuthProvider(): RefreshingAuthProvider {
