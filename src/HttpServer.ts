@@ -10,6 +10,10 @@ export default class HttpServer implements ManageableClass {
     this.port = port;
   }
 
+  public getHttpServer(): Server {
+    return this.httpServer;
+  }
+
   async init(): Promise<void> {
     console.log("Initializing the HttpServer...");
     
@@ -18,9 +22,5 @@ export default class HttpServer implements ManageableClass {
     });
 
     console.log("Initialized the HttpServer!");
-  }
-
-  public getHttpServer(): Server {
-    return this.httpServer;
   }
 }

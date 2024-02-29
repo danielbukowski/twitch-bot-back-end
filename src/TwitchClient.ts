@@ -11,15 +11,15 @@ export default class TwitchClient implements ManageableClass  {
         });
     }
 
+    public getApiClient(): ApiClient {
+        return this.apiClient;
+    }
+
     async init(): Promise<void> {
         console.log("Initializing the TwitchClient...");
         console.log("Initialized the TwitchClient!");
     }
 
-    public getApiClient(): ApiClient {
-        return this.apiClient;
-    }
-    
     public async getChatbotUsername(): Promise<string> {
         try {
             return this.apiClient.asIntent(["chat"], async (ctx) => {

@@ -17,6 +17,10 @@ export default class AuthManager implements ManageableClass {
     });
   }
 
+  public getAuthProvider(): RefreshingAuthProvider {
+    return this.authProvider;
+  }
+
   public async init(): Promise<void> {
     console.log("Initializing the AuthManager...");
 
@@ -40,9 +44,5 @@ export default class AuthManager implements ManageableClass {
     const accessTokenIdForIntent: string = await this.tokenUtil.findIdOfAccessTokenInDirectory(tokenIntent);
     const accessTokenForIntent: AccessToken = await this.tokenUtil.readAccessTokenFromDirectory(accessTokenIdForIntent, tokenIntent);
     await this.authProvider.addUserForToken(accessTokenForIntent, [tokenIntent]);
-  }
-
-  public getAuthProvider(): RefreshingAuthProvider {
-    return this.authProvider;
   }
 }
