@@ -19,4 +19,8 @@ export default class SocketClient implements ManageableClass {
   public handleFirstSubscription(username: string): void {
     this.io.emit("alert", "firstSubscription", username)
   }
+
+  public handleResubscription(userName: string, subStreakInMonths: number) {
+    this.io.emit("alert", "reSubscription", userName, subStreakInMonths)
+  }
 }
