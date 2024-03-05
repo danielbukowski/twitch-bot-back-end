@@ -1,6 +1,7 @@
 import { ApiClient } from "@twurple/api";
 import ManageableClass from "./ManageableClass";
 import { RefreshingAuthProvider } from "@twurple/auth";
+import { TokenIntent } from "./TokenUtil";
 
 export default class TwitchClient implements ManageableClass  {
     private apiClient: ApiClient;
@@ -27,6 +28,16 @@ export default class TwitchClient implements ManageableClass  {
             });
         } catch (e: unknown) {
             throw new Error("Could not get a username from the chatbot's access token :/");
+        }
+    }
+
+    public async getIdFromAccessTokenForIntent(tokenIntent: TokenIntent): Promise<string> {
+        try {
+            return this.apiClient.asIntent([tokenIntent], async (ctx) => {
+                return (await ctx.getTokenInfo()).userId as string;
+            });
+        } catch (e: unknown) {
+            throw new Error(`Could not get id for intent \'${tokenIntent}\' :/`);
         }
     }
 }
