@@ -16,7 +16,7 @@ export default class SocketClient implements ManageableClass {
     console.log("Initialized the SocketClient!");
   }
 
-  public sendFirstSubscriptionAlert(username: string): void {
+  public handleFirstSubscription(username: string): void {
     this.io.emit("alert", "firstSubscription", username)
   }
 }
