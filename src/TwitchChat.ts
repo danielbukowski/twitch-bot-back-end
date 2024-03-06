@@ -20,7 +20,7 @@ export default class TwitchChat implements ManageableClass {
     private readonly authProvider: RefreshingAuthProvider,
     private readonly youtubeClient: YoutubeClient,
     private readonly songRequestManager: SongRequestManager,
-    private readonly twitchClient: TwitchClient
+    private readonly twitchClient: TwitchClient,
   ) {
     this.authProvider = authProvider;
     this.youtubeClient = youtubeClient;
@@ -34,31 +34,33 @@ export default class TwitchChat implements ManageableClass {
       authProvider: this.authProvider,
       channels: [this.twitchChannel],
       webSocket: true,
-      authIntents: ["chat"]
+      authIntents: ["chat"],
     });
 
     this.botName = await this.twitchClient.getChatbotUsername();
 
     this.setChatClientListeners();
     this.chatClient.connect();
-    
+
     console.log("Initialized the TwitchChat!");
   }
 
   private setChatClientListeners(): void {
     this.chatClient.onDisconnect(() => {
       console.log("I have been disconnected from the chat :(");
-    })
+    });
 
     this.chatClient.onJoin((channel: string, user: string) => {
       console.log("I have connected to the chat! :)");
       this.chatClient.say(channel, "I have connected to the chat! :)");
-    })
+    });
 
-    this.chatClient.onMessage(async (channel: string, user: string, text: string, msg: ChatMessage) => {
+    this.chatClient.onMessage(
+      async (channel: string, user: string, text: string, msg: ChatMessage) => {
         text = text.trim();
 
-        if (!text.startsWith(this.COMMAND_PREFIX) || user === this.botName) return;
+        if (!text.startsWith(this.COMMAND_PREFIX) || user === this.botName)
+          return;
 
         const [commandName, ...commandParameters] = text.split(" ");
 
@@ -69,66 +71,97 @@ export default class TwitchChat implements ManageableClass {
           case `${this.COMMAND_PREFIX}sr`:
             const songRequestParameters: string = commandParameters.join(" ");
 
-            if(!songRequestParameters) {
+            if (!songRequestParameters) {
               return;
             }
 
             try {
               let videoId: string | undefined;
-              
-              if(songRequestParameters.startsWith("https://www.youtube.com/watch")) {
+
+              if (
+                songRequestParameters.startsWith(
+                  "https://www.youtube.com/watch",
+                )
+              ) {
                 const regexpToSplitUrlParameters: RegExp = /[?=&]/;
-                const splitVideoLink: string[] = songRequestParameters.split(regexpToSplitUrlParameters);
-                
-                videoId = splitVideoLink[(splitVideoLink.findIndex((v) => v === "v") + 1)].trim();
+                const splitVideoLink: string[] = songRequestParameters.split(
+                  regexpToSplitUrlParameters,
+                );
+
+                videoId =
+                  splitVideoLink[
+                    splitVideoLink.findIndex((v) => v === "v") + 1
+                  ].trim();
               } else {
-                videoId = await this.youtubeClient.getVideoIdByName(songRequestParameters);
+                videoId = await this.youtubeClient.getVideoIdByName(
+                  songRequestParameters,
+                );
               }
 
-              if(videoId === undefined) throw new SongRequestError("Sorry, but I Could not find your song :(")
+              if (videoId === undefined)
+                throw new SongRequestError(
+                  "Sorry, but I Could not find your song :(",
+                );
 
-              const songDetails: VideoDetails | undefined = await this.youtubeClient.getVideoDetailsById(videoId);
+              const songDetails: VideoDetails | undefined =
+                await this.youtubeClient.getVideoDetailsById(videoId);
 
-              if(songDetails === undefined) throw new SongRequestError("Sorry, but I cannot add this song :(");
+              if (songDetails === undefined)
+                throw new SongRequestError(
+                  "Sorry, but I cannot add this song :(",
+                );
 
-              if(Number.parseInt(songDetails.statistics.viewCount) < this.MIN_VIDEO_VIEWS) throw new SongRequestError("Your song has not enough views!");
+              if (
+                Number.parseInt(songDetails.statistics.viewCount) <
+                this.MIN_VIDEO_VIEWS
+              )
+                throw new SongRequestError("Your song has not enough views!");
 
-              const videoDurationInSeconds: number = Duration.fromISO(songDetails.contentDetails.duration).as('seconds');
+              const videoDurationInSeconds: number = Duration.fromISO(
+                songDetails.contentDetails.duration,
+              ).as("seconds");
 
-              if(videoDurationInSeconds > this.MAX_VIDEO_DURATION_IN_SECONDS) throw new SongRequestError("Your song is too long :(");
+              if (videoDurationInSeconds > this.MAX_VIDEO_DURATION_IN_SECONDS)
+                throw new SongRequestError("Your song is too long :(");
 
-               const queueMetadata = this.songRequestManager.addSongToQueue({
-                 videoId: videoId,
-                 title: songDetails.snippet.title,
-                 durationInSeconds: videoDurationInSeconds,
-               });
+              const queueMetadata = this.songRequestManager.addSongToQueue({
+                videoId: videoId,
+                title: songDetails.snippet.title,
+                durationInSeconds: videoDurationInSeconds,
+              });
 
-               const songMinutes: number = Math.trunc(queueMetadata.duration / 60);
-               const songSeconds: number = queueMetadata.duration % 60;
+              const songMinutes: number = Math.trunc(
+                queueMetadata.duration / 60,
+              );
+              const songSeconds: number = queueMetadata.duration % 60;
 
-               this.chatClient.say(
-                 channel,
-                 `I have successfully added your song '${songDetails.snippet.title}' to the queue at #${queueMetadata.length} position!
-                 (playing in ~ ${songMinutes === 0 
-                 ? "" 
-                 : songMinutes > 1 
-                 ? `${songMinutes} minutes and` 
-                 : `${songMinutes} minute and`} 
+              this.chatClient.say(
+                channel,
+                `I have successfully added your song '${songDetails.snippet.title}' to the queue at #${queueMetadata.length} position!
+                 (playing in ~ ${
+                   songMinutes === 0
+                     ? ""
+                     : songMinutes > 1
+                       ? `${songMinutes} minutes and`
+                       : `${songMinutes} minute and`
+                 } 
                  ${songSeconds} seconds)`,
-               );
-             } catch (e: unknown) {
-              if(e instanceof SongRequestError) {
-                this.chatClient.say(channel, e.message)
+              );
+            } catch (e: unknown) {
+              if (e instanceof SongRequestError) {
+                this.chatClient.say(channel, e.message);
+              } else if (e instanceof Error) {
+                this.chatClient.say(
+                  channel,
+                  "Something is wrong with your song :|",
+                );
               }
-              else if(e instanceof Error) {
-                this.chatClient.say(channel, "Something is wrong with your song :|");
-              } 
             }
             break;
           default:
             break;
         }
-      }
+      },
     );
   }
 }

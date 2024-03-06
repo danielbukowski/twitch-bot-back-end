@@ -4,12 +4,12 @@ import SocketClient from "./SocketClient";
 import TwitchClient from "./TwitchClient";
 
 export default class TwitchEventListener implements ManageableClass {
-    private eventSub!: EventSubWsListener;
+  private eventSub!: EventSubWsListener;
 
   constructor(
     private readonly socketClient: SocketClient,
-    private readonly twitchClient: TwitchClient
-  ) { }
+    private readonly twitchClient: TwitchClient,
+  ) {}
 
   async init(): Promise<void> {
     console.log("Initializing the TwitchEventListener...");
@@ -18,7 +18,8 @@ export default class TwitchEventListener implements ManageableClass {
       apiClient: this.twitchClient.getApiClient(),
     });
 
-    const channelId: string = await this.twitchClient.getIdFromAccessTokenForIntent("events");
+    const channelId: string =
+      await this.twitchClient.getIdFromAccessTokenForIntent("events");
 
     this.eventSub.onChannelSubscription(channelId, (e) => {
       const userName = e.userDisplayName;
@@ -30,7 +31,7 @@ export default class TwitchEventListener implements ManageableClass {
       const userName = e.userDisplayName;
       const subStreakInMonths = e.streakMonths ?? 0;
 
-      this.socketClient.handleResubscription(userName, subStreakInMonths)
+      this.socketClient.handleResubscription(userName, subStreakInMonths);
     });
 
     this.eventSub.start();

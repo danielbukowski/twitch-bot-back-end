@@ -1,12 +1,11 @@
-import { Server as SocketServer} from "socket.io";
+import { Server as SocketServer } from "socket.io";
 import ManageableClass from "./ManageableClass";
-import { Server } from "node:http"
-
+import { Server } from "node:http";
 
 export default class SocketClient implements ManageableClass {
   private io!: SocketServer;
 
-  constructor(private readonly httpServer: Server) { }
+  constructor(private readonly httpServer: Server) {}
 
   async init(): Promise<void> {
     console.log("Initializing the SocketClient...");
@@ -17,10 +16,10 @@ export default class SocketClient implements ManageableClass {
   }
 
   public handleFirstSubscription(username: string): void {
-    this.io.emit("alert", "firstSubscription", username)
+    this.io.emit("alert", "firstSubscription", username);
   }
 
   public handleResubscription(userName: string, subStreakInMonths: number) {
-    this.io.emit("alert", "reSubscription", userName, subStreakInMonths)
+    this.io.emit("alert", "reSubscription", userName, subStreakInMonths);
   }
 }
