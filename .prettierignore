@@ -5,4 +5,4 @@ nodemon.json
 prettier.config.js
 node_modules/
 dist/
-.prettierrc.js
+.prettierrc
