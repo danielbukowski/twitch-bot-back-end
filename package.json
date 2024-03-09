@@ -1,7 +1,7 @@
 {
   "name": "twitch-bot-back-end",
   "version": "1.0.0",
-  "description": "",
+  "description": "This is a back-end project for my personal Twitch bot ;)",
   "main": "dist/Main.js",
   "scripts": {
     "build": "rimraf ./dist && npx tsc",
@@ -11,7 +11,12 @@
     "prettier": "prettier . --write --ignore-unknown"
   },
   "author": "Daniel Bukowski",
-  "license": "ISC",
+  "license": "MIT",
+  "private": true,
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/danielbukowski/twitch-bot-back-end.git"
+  },
   "dependencies": {
     "@twurple/api": "^7.0.8",
     "@twurple/auth": "^7.0.8",
