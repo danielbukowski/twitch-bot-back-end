@@ -1,5 +1,6 @@
 import axios from "axios";
 import ManageableClass from "./ManageableClass";
+import ytdl from "ytdl-core";
 
 export interface VideoDetails {
   snippet: {
@@ -71,5 +72,25 @@ export default class YoutubeClient implements ManageableClass {
     } catch (error) {
       return undefined;
     }
+  }
+
+  async downloadYouTubeAudio(audioUrl: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const buffers: Buffer[] = [];
+      ytdl(audioUrl, {
+        quality: "highestaudio",
+        filter: "audioonly",
+      })
+        .on("data", (chunk: Buffer) => {
+          buffers.push(chunk);
+        })
+        .on("end", () => {
+          const data = Buffer.concat(buffers);
+          resolve(`data:audio/mp3;base64,${data.toString("base64")}`);
+        })
+        .on("error", () => {
+          reject();
+        });
+    });
   }
 }
