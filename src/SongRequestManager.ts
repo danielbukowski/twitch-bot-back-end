@@ -1,4 +1,6 @@
 import ManageableClass from "./ManageableClass";
+import SocketClient from "./SocketClient";
+import YoutubeClient from "./YoutubeClient";
 
 export interface Song {
   videoId: string;
@@ -9,7 +11,10 @@ export interface Song {
 export default class SongRequestManager implements ManageableClass {
   private songQueue: Song[] = [];
 
-  constructor() {}
+  constructor(
+    private readonly youTubeClient: YoutubeClient,
+    private readonly socketClient: SocketClient,
+  ) {}
 
   async init(): Promise<void> {
     console.log("Initializing the SongRequestClient...");

@@ -33,8 +33,23 @@ export default class ObjectManager {
       new YoutubeClient(config.youtubeApiKey),
     );
     this.manageableClasses.set(
+      HttpServer.name,
+      new HttpServer(config.httpServerPort),
+    );
+    this.manageableClasses.set(
+      SocketClient.name,
+      new SocketClient(
+        (
+          this.manageableClasses.get(HttpServer.name) as HttpServer
+        ).getHttpServer(),
+      ),
+    );
+    this.manageableClasses.set(
       SongRequestManager.name,
-      new SongRequestManager(),
+      new SongRequestManager(
+        this.manageableClasses.get(YoutubeClient.name) as YoutubeClient,
+        this.manageableClasses.get(SocketClient.name) as SocketClient,
+      ),
     );
     this.manageableClasses.set(
       TwitchClient.name,
@@ -56,18 +71,6 @@ export default class ObjectManager {
           SongRequestManager.name,
         ) as SongRequestManager,
         this.manageableClasses.get(TwitchClient.name) as TwitchClient,
-      ),
-    );
-    this.manageableClasses.set(
-      HttpServer.name,
-      new HttpServer(config.httpServerPort),
-    );
-    this.manageableClasses.set(
-      SocketClient.name,
-      new SocketClient(
-        (
-          this.manageableClasses.get(HttpServer.name) as HttpServer
-        ).getHttpServer(),
       ),
     );
     this.manageableClasses.set(
