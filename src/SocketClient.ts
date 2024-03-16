@@ -13,7 +13,9 @@ export default class SocketClient implements ManageableClass {
     this.io = new SocketServer(this.httpServer);
 
     this.io.on("connection", (socket) => {
-      console.log(`A user has connected to the socket with ID: ${socket.id}`);
+      console.log(
+        `A user has connected to the websocket with ID: ${socket.id}`
+      );
     });
 
     console.log("Initialized the SocketClient!");
