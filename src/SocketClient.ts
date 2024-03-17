@@ -35,4 +35,11 @@ export default class SocketClient implements ManageableClass {
       subStreakInMonths,
     });
   }
+  
+  public handelNextSongRequest(audioData: string): void {
+    this.io.emit("songRequest", {
+      type: "nextSong",
+      data: audioData
+    })
+  }
 }
