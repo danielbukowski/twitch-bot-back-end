@@ -74,7 +74,7 @@ export default class YoutubeClient implements ManageableClass {
     }
   }
 
-  async downloadYouTubeAudio(audioUrl: string): Promise<string> {
+  async downloadYouTubeAudio(audioUrl: string): Promise<string | undefined> {
     return new Promise((resolve, reject) => {
       const buffers: Buffer[] = [];
       ytdl(audioUrl, {
@@ -89,7 +89,7 @@ export default class YoutubeClient implements ManageableClass {
           resolve(`data:audio/mp3;base64,${data.toString("base64")}`);
         })
         .on("error", () => {
-          reject();
+          reject(undefined);
         });
     });
   }
