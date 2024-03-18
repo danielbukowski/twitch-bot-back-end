@@ -48,4 +48,10 @@ export default class SocketClient implements ManageableClass {
       type: "pauseSong"
     })
   }
+
+  public handlePlaySongRequest(): void {
+    this.io.emit("songRequest", {
+      type: "playSong"
+    })
+  }
 }
