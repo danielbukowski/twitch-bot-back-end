@@ -36,7 +36,7 @@ export default class SocketClient implements ManageableClass {
     });
   }
   
-  public handelNextSongRequest(audioData: string): void {
+  public handleNextSongRequest(audioData: string): void {
     this.io.emit("songRequest", {
       type: "nextSong",
       data: audioData
