@@ -22,7 +22,7 @@ export default class YoutubeClient implements ManageableClass {
     console.log("Initialized the YoutubeClient!");
   }
 
-  async getVideoIdByName(name: string): Promise<string | undefined> {
+  public async getVideoIdByName(name: string): Promise<string | undefined> {
     try {
       const response = await axios.get<{
         items: [
@@ -47,7 +47,7 @@ export default class YoutubeClient implements ManageableClass {
     }
   }
 
-  async getVideoDetailsById(
+  public async getVideoDetailsById(
     videoId: string,
   ): Promise<VideoDetail | undefined> {
     try {
@@ -74,7 +74,7 @@ export default class YoutubeClient implements ManageableClass {
     }
   }
 
-  async downloadYouTubeAudio(audioId: string): Promise<string | undefined> {
+  public async downloadYouTubeAudio(audioId: string): Promise<string | undefined> {
     return new Promise((resolve, reject) => {
       const buffers: Buffer[] = [];
       ytdl(`https://www.youtube.com/watch?v=${audioId}`, {
