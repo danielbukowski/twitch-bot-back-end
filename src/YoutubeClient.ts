@@ -2,7 +2,7 @@ import axios from "axios";
 import ManageableClass from "./ManageableClass";
 import ytdl from "ytdl-core";
 
-export interface VideoDetails {
+export interface VideoDetail {
   snippet: {
     title: string;
   };
@@ -49,9 +49,9 @@ export default class YoutubeClient implements ManageableClass {
 
   async getVideoDetailsById(
     videoId: string,
-  ): Promise<VideoDetails | undefined> {
+  ): Promise<VideoDetail | undefined> {
     try {
-      const response = await axios.get<{ items: VideoDetails[] }>(
+      const response = await axios.get<{ items: VideoDetail[] }>(
         "https://www.googleapis.com/youtube/v3/videos",
         {
           params: {

@@ -2,7 +2,7 @@ import { RefreshingAuthProvider } from "@twurple/auth";
 import { ChatClient, ChatMessage } from "@twurple/chat";
 import ManageableClass from "./ManageableClass";
 import YoutubeClient from "./YoutubeClient";
-import { VideoDetails } from "./YoutubeClient";
+import { VideoDetail } from "./YoutubeClient";
 import { Duration } from "luxon";
 import SongRequestManager from "./SongRequestManager";
 import SongRequestError from "./SongRequestError";
@@ -109,7 +109,7 @@ export default class TwitchChat implements ManageableClass {
       if (videoId === undefined)
         throw new SongRequestError("Sorry, but I Could not find your song :(");
 
-      const songDetails: VideoDetails | undefined =
+      const songDetails: VideoDetail | undefined =
         await this.youtubeClient.getVideoDetailsById(videoId);
 
       if (songDetails === undefined)
