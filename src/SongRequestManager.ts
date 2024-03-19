@@ -29,6 +29,10 @@ export default class SongRequestManager implements ManageableClass {
     this.socketClient.requestToPlaySong();
   }
 
+  public pauseSong(): void {
+    this.socketClient.requestToPauseSong();
+  }
+
   public removeSongFromQueue(): Song | undefined {
     return this.songQueue.shift();
   }
