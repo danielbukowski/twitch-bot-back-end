@@ -74,10 +74,10 @@ export default class YoutubeClient implements ManageableClass {
     }
   }
 
-  async downloadYouTubeAudio(audioUrl: string): Promise<string | undefined> {
+  async downloadYouTubeAudio(audioId: string): Promise<string | undefined> {
     return new Promise((resolve, reject) => {
       const buffers: Buffer[] = [];
-      ytdl(audioUrl, {
+      ytdl(`https://www.youtube.com/watch?v=${audioId}`, {
         quality: "highestaudio",
         filter: "audioonly",
       })
