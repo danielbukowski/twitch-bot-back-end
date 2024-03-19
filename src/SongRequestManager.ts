@@ -33,6 +33,16 @@ export default class SongRequestManager implements ManageableClass {
     this.socketClient.requestToPauseSong();
   }
 
+  public async sendSongFromQueue(): Promise<void> {
+      const song: Song | undefined = this.removeSongFromQueue();
+      if(!song) return;
+
+      const audioData: string | undefined = await this.youTubeClient.downloadYouTubeAudio(song.videoId);
+      if(!audioData) return;
+
+      this.socketClient.sendSong(audioData, song.title);
+  }
+
   public removeSongFromQueue(): Song | undefined {
     return this.songQueue.shift();
   }
