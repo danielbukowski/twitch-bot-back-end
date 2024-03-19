@@ -71,6 +71,9 @@ export default class TwitchChat implements ManageableClass {
           case `${this.COMMAND_PREFIX}sr`:
             this.handleSrCommand(channel, commandParameters);
             break;
+          case `${this.COMMAND_PREFIX}srpause`:
+            this.songRequestManager.pauseSong();
+            break;
           default:
             break;
         }
