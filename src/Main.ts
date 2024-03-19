@@ -15,5 +15,6 @@ const objectManager = new ObjectManager(configInitializer);
       );
       console.log(e.stack);
     }
+    process.exit(1);
   }
 })();
