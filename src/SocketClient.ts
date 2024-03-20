@@ -22,36 +22,39 @@ export default class SocketClient implements ManageableClass {
   }
 
   public handleFirstSubscription(username: string): void {
-    this.io.emit("alert", {
-      type: "firstSub",
+    this.io.emit("twitch-alert-message", {
+      type: "FIRST_SUB",
       username,
     });
   }
 
-  public handleResubscription(username: string, subStreakInMonths: number) {
-    this.io.emit("alert", {
-      type: "reSub",
+  public handleResubscription(username: string, subStreakInMonths: number): void {
+    this.io.emit("twitch-alert-message", {
+      type: "RE_SUB",
       username,
       subStreakInMonths,
     });
   }
   
-  public handleNextSongRequest(audioData: string): void {
-    this.io.emit("songRequest", {
-      type: "nextSong",
-      data: audioData
+  public sendSong(base64AudioData: string, songTitle: string): Promise<void> {
+    this.io.emit("song-request-message", {
+      type: "PLAY_NEXT_SONG",
+      data: {
+        title: songTitle,
+        audio: base64AudioData
+      }
     })
   }
 
-  public handlePauseSongRequest(): void {
-    this.io.emit("songRequest", {
-      type: "pauseSong"
+  public requestToPauseSong(): void {
+    this.io.emit("song-request-message", {
+      type: "PAUSE"
     })
   }
 
-  public handlePlaySongRequest(): void {
-    this.io.emit("songRequest", {
-      type: "playSong"
+  public requestToPlaySong(): void {
+    this.io.emit("song-request-message", {
+      type: "PLAY"
     })
   }
 }
