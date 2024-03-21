@@ -1,5 +1,5 @@
 import ManageableClass from "./ManageableClass";
-import SocketClient from "./SocketClient";
+import SocketServer from "./SocketServer";
 import YoutubeClient from "./YoutubeClient";
 
 export interface Song {
@@ -13,7 +13,7 @@ export default class SongRequestManager implements ManageableClass {
 
   constructor(
     private readonly youTubeClient: YoutubeClient,
-    private readonly socketClient: SocketClient,
+    private readonly socketServer: SocketServer,
   ) {}
 
   async init(): Promise<void> {
@@ -26,11 +26,11 @@ export default class SongRequestManager implements ManageableClass {
   }
 
   public playSong(): void {
-    this.socketClient.requestToPlaySong();
+    this.socketServer.requestToPlaySong();
   }
 
   public pauseSong(): void {
-    this.socketClient.requestToPauseSong();
+    this.socketServer.requestToPauseSong();
   }
 
   public async sendSongFromQueue(): Promise<void> {
@@ -40,7 +40,7 @@ export default class SongRequestManager implements ManageableClass {
       const audioData: string | undefined = await this.youTubeClient.downloadYouTubeAudio(song.videoId);
       if(!audioData) return;
 
-      this.socketClient.sendSong(audioData, song.title);
+      this.socketServer.sendSong(audioData, song.title);
   }
 
   public removeSongFromQueue(): Song | undefined {

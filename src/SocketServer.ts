@@ -1,16 +1,16 @@
-import { Server as SocketServer } from "socket.io";
+import { Server as SocketIOServer } from "socket.io";
 import ManageableClass from "./ManageableClass";
 import { Server } from "node:http";
 
-export default class SocketClient implements ManageableClass {
-  private io!: SocketServer;
+export default class SocketServer implements ManageableClass {
+  private io!: SocketIOServer;
 
   constructor(private readonly httpServer: Server) {}
 
   async init(): Promise<void> {
     console.log("Initializing the SocketClient...");
 
-    this.io = new SocketServer(this.httpServer);
+    this.io = new SocketIOServer(this.httpServer);
 
     this.io.on("connection", (socket) => {
       console.log(
@@ -36,7 +36,7 @@ export default class SocketClient implements ManageableClass {
     });
   }
   
-  public sendSong(base64AudioData: string, songTitle: string): Promise<void> {
+  public async sendSong(base64AudioData: string, songTitle: string): Promise<void> {
     this.io.emit("song-request-message", {
       type: "PLAY_NEXT_SONG",
       data: {

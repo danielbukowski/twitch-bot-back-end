@@ -1,13 +1,13 @@
 import { EventSubWsListener } from "@twurple/eventsub-ws";
 import ManageableClass from "./ManageableClass";
-import SocketClient from "./SocketClient";
+import SocketServer from "./SocketServer";
 import TwitchClient from "./TwitchClient";
 
 export default class TwitchEventListener implements ManageableClass {
   private eventSub!: EventSubWsListener;
 
   constructor(
-    private readonly socketClient: SocketClient,
+    private readonly socketServer: SocketServer,
     private readonly twitchClient: TwitchClient,
   ) {}
 
@@ -24,14 +24,14 @@ export default class TwitchEventListener implements ManageableClass {
     this.eventSub.onChannelSubscription(channelId, (e) => {
       const userName = e.userDisplayName;
 
-      this.socketClient.handleFirstSubscription(userName);
+      this.socketServer.handleFirstSubscription(userName);
     });
 
     this.eventSub.onChannelSubscriptionMessage(channelId, (e) => {
       const userName = e.userDisplayName;
       const subStreakInMonths = e.streakMonths ?? 0;
 
-      this.socketClient.handleResubscription(userName, subStreakInMonths);
+      this.socketServer.handleResubscription(userName, subStreakInMonths);
     });
 
     this.eventSub.start();

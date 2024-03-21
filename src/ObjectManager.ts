@@ -2,7 +2,7 @@ import AuthManager from "./AuthManager";
 import ConfigInitializer from "./ConfigInitializer";
 import HttpServer from "./HttpServer";
 import ManageableClass from "./ManageableClass";
-import SocketClient from "./SocketClient";
+import SocketServer from "./SocketServer";
 import SongRequestManager from "./SongRequestManager";
 import TokenUtil from "./TokenUtil";
 import TwitchChat from "./TwitchChat";
@@ -37,8 +37,8 @@ export default class ObjectManager {
       new HttpServer(config.httpServerPort),
     );
     this.manageableClasses.set(
-      SocketClient.name,
-      new SocketClient(
+      SocketServer.name,
+      new SocketServer(
         (
           this.manageableClasses.get(HttpServer.name) as HttpServer
         ).getHttpServer(),
@@ -48,7 +48,7 @@ export default class ObjectManager {
       SongRequestManager.name,
       new SongRequestManager(
         this.manageableClasses.get(YoutubeClient.name) as YoutubeClient,
-        this.manageableClasses.get(SocketClient.name) as SocketClient,
+        this.manageableClasses.get(SocketServer.name) as SocketServer,
       ),
     );
     this.manageableClasses.set(
@@ -76,7 +76,7 @@ export default class ObjectManager {
     this.manageableClasses.set(
       TwitchEventListener.name,
       new TwitchEventListener(
-        this.manageableClasses.get(SocketClient.name) as SocketClient,
+        this.manageableClasses.get(SocketServer.name) as SocketServer,
         this.manageableClasses.get(TwitchClient.name) as TwitchClient,
       ),
     );
