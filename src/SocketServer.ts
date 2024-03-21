@@ -7,6 +7,10 @@ export default class SocketServer implements ManageableClass {
 
   constructor(private readonly httpServer: Server) {}
 
+  public getSocketIO(): SocketIO {
+    return this.io;
+  }
+
   async init(): Promise<void> {
     console.log("Initializing the SocketClient...");
 
