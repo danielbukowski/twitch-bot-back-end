@@ -104,7 +104,7 @@ export default class TwitchChat implements ManageableClass {
         );
 
         videoId =
-          splitVideoLink[splitVideoLink.findIndex((v) => v === "v") + 1].trim();
+          splitVideoLink[splitVideoLink.findIndex((v) => v === "v") + 1];
       } else {
         // TODO: sometimes even if a video exists it returns undefined
         videoId = await this.youtubeClient.getVideoIdByName(
