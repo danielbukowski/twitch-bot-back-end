@@ -26,13 +26,17 @@ export default class SongRequestManager implements ManageableClass {
   }
 
   public playSong(): void {
-    this.socketServer.requestToPlaySong();
+      this.socketIO.emit("song-request-message", {
+        type: "PLAY"
+      });
   }
 
   public pauseSong(): void {
-    this.socketServer.requestToPauseSong();
-  }
-
+      this.socketIO.emit("song-request-message", {
+        type: "PAUSE"
+      });
+    }
+  
   public async sendSongFromQueue(): Promise<void> {
       const song: Song | undefined = this.removeSongFromQueue();
       if(!song) return;
@@ -40,7 +44,13 @@ export default class SongRequestManager implements ManageableClass {
       const audioData: string | undefined = await this.youTubeClient.downloadYouTubeAudio(song.videoId);
       if(!audioData) return;
 
-      this.socketServer.sendSong(audioData, song.title);
+      this.socketIO.emit("song-request-message", {
+          type: "PLAY_NEXT_SONG",
+          data: {
+            title: song.title,
+            audio: audioData
+          }
+        })
   }
 
   public removeSongFromQueue(): Song | undefined {

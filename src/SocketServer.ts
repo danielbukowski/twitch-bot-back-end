@@ -35,26 +35,4 @@ export default class SocketServer implements ManageableClass {
       subStreakInMonths,
     });
   }
-  
-  public async sendSong(base64AudioData: string, songTitle: string): Promise<void> {
-    this.io.emit("song-request-message", {
-      type: "PLAY_NEXT_SONG",
-      data: {
-        title: songTitle,
-        audio: base64AudioData
-      }
-    })
-  }
-
-  public requestToPauseSong(): void {
-    this.io.emit("song-request-message", {
-      type: "PAUSE"
-    })
-  }
-
-  public requestToPlaySong(): void {
-    this.io.emit("song-request-message", {
-      type: "PLAY"
-    })
-  }
 }
