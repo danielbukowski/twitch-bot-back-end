@@ -1,3 +1,4 @@
+import { Socket } from "socket.io";
 import AuthManager from "./AuthManager";
 import ConfigInitializer from "./ConfigInitializer";
 import HttpServer from "./HttpServer";
@@ -48,7 +49,7 @@ export default class ObjectManager {
       SongRequestManager.name,
       new SongRequestManager(
         this.manageableClasses.get(YoutubeClient.name) as YoutubeClient,
-        this.manageableClasses.get(SocketServer.name) as SocketServer,
+        (this.manageableClasses.get(SocketServer.name) as SocketServer).getSocketIO()
       ),
     );
     this.manageableClasses.set(

@@ -1,5 +1,5 @@
+import { Server as SocketIO } from "socket.io";
 import ManageableClass from "./ManageableClass";
-import SocketServer from "./SocketServer";
 import YoutubeClient from "./YoutubeClient";
 
 export interface Song {
@@ -13,7 +13,7 @@ export default class SongRequestManager implements ManageableClass {
 
   constructor(
     private readonly youTubeClient: YoutubeClient,
-    private readonly socketServer: SocketServer,
+    private readonly socketIO: SocketIO,
   ) {}
 
   async init(): Promise<void> {
