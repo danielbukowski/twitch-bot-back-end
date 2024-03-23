@@ -37,6 +37,29 @@ export default class SongRequestManager implements ManageableClass {
       });
     }
   
+  public getDurationOfCurrentPlayedSong(): Promise<string> {
+      return new Promise((resolve, reject) => {
+        this.socketIO.of("/song-request").fetchSockets()
+        .then(sockets => {
+          sockets[0].timeout(1400).emit("song-request-message", {
+            type: "SONG_DURATION"
+          },
+          (e: Error, response: {
+            durationInSeconds: string
+          }) => {
+            if (!e) {
+              resolve(response.durationInSeconds);
+            } 
+            
+            // the request timed out and just return 0 for now
+            resolve("0");
+          })
+        }).catch((e) => {
+          reject(e);
+        })
+      })
+  }
+
   public async sendSongFromQueue(): Promise<void> {
       const song: Song | undefined = this.removeSongFromQueue();
       if(!song) return;
