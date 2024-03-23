@@ -26,13 +26,13 @@ export default class SongRequestManager implements ManageableClass {
   }
 
   public playSong(): void {
-      this.socketIO.emit("song-request-message", {
+      this.socketIO.of("/song-request").emit("song-request-message", {
         type: "PLAY"
       });
   }
 
   public pauseSong(): void {
-      this.socketIO.emit("song-request-message", {
+      this.socketIO.of("/song-request").emit("song-request-message", {
         type: "PAUSE"
       });
     }
@@ -44,7 +44,7 @@ export default class SongRequestManager implements ManageableClass {
       const audioData: string | undefined = await this.youTubeClient.downloadYouTubeAudio(song.videoId);
       if(!audioData) return;
 
-      this.socketIO.emit("song-request-message", {
+      this.socketIO.of("/song-request").emit("song-request-message", {
           type: "PLAY_NEXT_SONG",
           data: {
             title: song.title,
