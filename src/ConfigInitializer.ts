@@ -32,7 +32,7 @@ export default class ConfigInitializer {
     for (const key in this.config) {
       const value = this.config[key as keyof Config];
       if (!value)
-        throw Error(
+        throw new Error(
           `The ${key as keyof Config} enviroment variable is not set :C`,
         );
     }

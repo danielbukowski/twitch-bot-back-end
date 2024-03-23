@@ -28,7 +28,7 @@ export default class TwitchClient implements ManageableClass {
       });
     } catch (e: unknown) {
       throw new Error(
-        "Could not get a username from the chatbot's access token :/",
+        "Could not get a username from the chatbot access token :/",
       );
     }
   }
