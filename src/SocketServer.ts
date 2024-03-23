@@ -3,9 +3,11 @@ import ManageableClass from "./ManageableClass";
 import { Server } from "node:http";
 
 export default class SocketServer implements ManageableClass {
-  private io!: SocketIO;
+  private io: SocketIO;
 
-  constructor(private readonly httpServer: Server) {}
+  constructor(private readonly httpServer: Server) {
+    this.io = new SocketIO(this.httpServer);
+  }
 
   public getSocketIO(): SocketIO {
     return this.io;
@@ -13,8 +15,6 @@ export default class SocketServer implements ManageableClass {
 
   async init(): Promise<void> {
     console.log("Initializing the SocketClient...");
-
-    this.io = new SocketIO(this.httpServer);
 
     this.io.on("connection", (socket) => {
       console.log(
