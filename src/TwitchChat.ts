@@ -69,7 +69,7 @@ export default class TwitchChat implements ManageableClass {
             this.chatClient.say(channel, `Hello @${user}`);
             break;
           case `${this.COMMAND_PREFIX}sr`:
-            this.handleSrCommand(channel, commandParameters);
+            this.handleSrCommand(channel, user, commandParameters);
             break;
           case `${this.COMMAND_PREFIX}srpause`:
             this.songRequestManager.pauseSong();
@@ -86,6 +86,7 @@ export default class TwitchChat implements ManageableClass {
 
   private async handleSrCommand(
     channel: string,
+    user: string,
     commandParameters: string[],
   ): Promise<void> {
     const songRequestParameters: string = commandParameters.join(" ");
@@ -137,6 +138,7 @@ export default class TwitchChat implements ManageableClass {
         videoId: videoId,
         title: songDetails.snippet.title,
         durationInSeconds: videoDurationInSeconds,
+        addedBy: user
       });
 
 

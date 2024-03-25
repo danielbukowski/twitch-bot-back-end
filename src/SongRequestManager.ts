@@ -6,6 +6,7 @@ export interface Song {
   videoId: string;
   title: string;
   durationInSeconds: number;
+  addedBy: string;
 }
 
 export default class SongRequestManager implements ManageableClass {
