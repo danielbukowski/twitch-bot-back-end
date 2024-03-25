@@ -37,8 +37,8 @@ export default class SongRequestManager implements ManageableClass {
     console.log("Initialized the SongRequestClient!");
   }
 
-  public addSongToQueue(song: Song): void {
-    this.songQueue.push(song);
+  public addSongToQueue(song: Song): number {
+    return this.songQueue.push(song);
   }
 
   public playSong(): void {
