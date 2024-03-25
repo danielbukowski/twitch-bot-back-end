@@ -141,23 +141,13 @@ export default class TwitchChat implements ManageableClass {
         addedBy: user
       });
 
-
-      // TODO: improve and make it more readable, add also hours
-      const songMinutes: number = Math.trunc(queueMetadata.duration / 60);
-      const songSeconds: number = queueMetadata.duration % 60;
+      const songsDurationInSeconds: number = await this.songRequestManager.getDurationOfSongs();
 
       this.chatClient.say(
         channel,
-        `I have successfully added your song '${songDetails.snippet.title}' to the queue at #${queueMetadata.length} position!
-         (playing in ~ ${
-           songMinutes === 0
-             ? ""
-             : songMinutes > 1
-               ? `${songMinutes} minutes and`
-               : `${songMinutes} minute and`
-         } 
-         ${songSeconds} seconds)`,
+        this.getMessageDetailsOfSuccessfullyAddedSong(songsDurationInSeconds, positionInQueue, songDetails.snippet.title)
       );
+
     } catch (e: unknown) {
       if (e instanceof SongRequestError) {
         this.chatClient.say(channel, e.message);
@@ -165,5 +155,47 @@ export default class TwitchChat implements ManageableClass {
         this.chatClient.say(channel, "Something is wrong with your song :|");
       }
     }
+  }
+
+  private getMessageDetailsOfSuccessfullyAddedSong(queueDuration: number, queuePosition: number, songTitle: string) {
+    const hours = Math.floor(queueDuration / 3600);
+    if(hours >= 1) {
+      queueDuration %= 3600;
+    }
+
+    const minutes = Math.floor(queueDuration / 60);
+    if(minutes >= 1) {
+      queueDuration %= 60;
+    }
+
+    const seconds = queueDuration;
+
+    let timeString: string[] = [];
+
+    if(hours > 0) {
+      if(hours === 1) {
+        timeString.push("1 hour");
+      } else {
+        timeString.push(`${hours} hours`);
+      }
+    }
+    
+    if(minutes > 0) {
+      if(minutes === 1) {
+        timeString.push("1 minute");
+      } else {
+        timeString.push(`${minutes} minutes`)
+      }
+    }
+
+    if(seconds > 0) {
+      if(seconds === 1) {
+        timeString.push("1 second")
+      } else {
+        timeString.push(`${seconds} seconds`)
+      }
+    }
+
+    return `${songTitle}' to the queue at #${queuePosition} position! (playing in ~ ${timeString.join(" and ")})`;
   }
 }
