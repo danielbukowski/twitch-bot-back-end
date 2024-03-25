@@ -69,6 +69,16 @@ export default class SongRequestManager implements ManageableClass {
     }
   }
 
+  public async getDurationOfSongs(): Promise<number> {
+    let queueDurationInSeconds: number = this.songQueue
+    .map(s => s.durationInSeconds)
+    .reduce((acc, s) => acc + s, 0);
+
+    queueDurationInSeconds += (await this.getDurationOfCurrentPlayingSong());
+
+    return queueDurationInSeconds;
+  }
+
   public async sendSongFromQueue(): Promise<void> {
       const song: Song | undefined = this.removeSongFromQueue();
       if(!song) return;
