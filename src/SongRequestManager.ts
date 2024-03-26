@@ -53,6 +53,12 @@ export default class SongRequestManager implements ManageableClass {
       });
     }
   
+  public skipSong(): void {
+    this.socketIO.of("/song-request").emit("song-request-message", {
+      type: "SKIP_SONG"
+    });
+  }
+  
   private async getDurationOfCurrentPlayingSong(): Promise<number> {
     try {
       const sockets = await this.socketIO.of("/song-request").fetchSockets();
