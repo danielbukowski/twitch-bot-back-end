@@ -199,6 +199,6 @@ export default class TwitchChat implements ManageableClass {
       }
     }
 
-    return `${songTitle}' to the queue at #${queuePosition} position! (playing in ~ ${timeString.join(" and ")})`;
+    return `'${songTitle}' added to the queue at #${queuePosition} position! (playing in ~ ${timeString.join(" and ")})`;
   }
 }
