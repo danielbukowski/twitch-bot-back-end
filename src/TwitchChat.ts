@@ -161,6 +161,10 @@ export default class TwitchChat implements ManageableClass {
   }
 
   private getMessageDetailsOfSuccessfullyAddedSong(queueDuration: number, queuePosition: number, songTitle: string) {
+    if(queueDuration === 0) {
+      return `'${songTitle}' added to the queue at #${queuePosition} position! (playing in ~ now)`;
+    }
+
     const hours = Math.floor(queueDuration / 3600);
     if(hours >= 1) {
       queueDuration %= 3600;
