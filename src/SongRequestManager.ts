@@ -58,6 +58,10 @@ export default class SongRequestManager implements ManageableClass {
       type: "SKIP_SONG"
     });
   }
+
+  public getFirstNSongsFromQueue(n: number): Song[] {
+    return this.songQueue.slice(0, n);
+  }
   
   private async getDurationOfCurrentPlayingSong(): Promise<number> {
     try {
