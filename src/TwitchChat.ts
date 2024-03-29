@@ -4,7 +4,7 @@ import ManageableClass from "./ManageableClass";
 import YoutubeClient from "./YoutubeClient";
 import { VideoDetail } from "./YoutubeClient";
 import { Duration } from "luxon";
-import SongRequestManager from "./SongRequestManager";
+import SongRequestManager, { Song } from "./SongRequestManager";
 import SongRequestError from "./SongRequestError";
 import TwitchClient from "./TwitchClient";
 
@@ -76,6 +76,24 @@ export default class TwitchChat implements ManageableClass {
             break;
           case `${this.COMMAND_PREFIX}srpause`:
             this.songRequestManager.pauseSong();
+            break;
+          case `${this.COMMAND_PREFIX}srq`:
+            const first3SongsInQueue: Song[] = this.songRequestManager.getFirstNSongsFromQueue(3);
+
+            if(!first3SongsInQueue.length) {
+              this.chatClient.say(channel, "No songs have been found in the queue :(")
+              break;
+            }
+
+            let response: string = `Current ${first3SongsInQueue.length === 1 ? 'song' : 'songs'} in the queue: `;
+
+            for (let index = 0; index < first3SongsInQueue.length; index++) {
+              let song = first3SongsInQueue[index];
+              response += `#${index + 1} '${song.title}' https://www.youtube.com/watch?v=${song.videoId} added by @${song.addedBy}, `;
+            }
+            response = response.slice(0, -2);
+
+            this.chatClient.say(channel, response);
             break;
           case `${this.COMMAND_PREFIX}srplay`:
             this.songRequestManager.playSong();
