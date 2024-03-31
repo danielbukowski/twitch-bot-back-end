@@ -59,6 +59,13 @@ export default class SongRequestManager implements ManageableClass {
     });
   }
 
+  public changeSongVolume(volumeValue: string): void {
+    this.socketIO.of("/song-request").emit("song-request-message", {
+      type: "CHANGE_VOLUME",
+      volumeValue
+    })
+  }
+
   public getFirstNSongsFromQueue(n: number): Song[] {
     return this.songQueue.slice(0, n);
   }
