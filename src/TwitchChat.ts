@@ -78,8 +78,8 @@ export default class TwitchChat implements ManageableClass {
             this.songRequestManager.pauseSong();
             break;
           case `${this.COMMAND_PREFIX}srvolume`:
-            const volumeValue = commandParameters[1];
-            const regexToVolume: RegExp = /^[+-]?\d{1,2}$/;
+            const volumeValue: string = commandParameters[0];
+            const regExpToVolume: RegExp = /^[+-]?\d{1,2}$/;
 
             if(!volumeValue.match(regexToVolume)) break;
 
