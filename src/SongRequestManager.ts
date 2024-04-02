@@ -59,11 +59,17 @@ export default class SongRequestManager implements ManageableClass {
     });
   }
 
-  public changeSongVolume(volumeValue: string): void {
-    this.socketIO.of("/song-request").emit("song-request-message", {
-      type: "CHANGE_VOLUME",
-      volumeValue
-    })
+  public async changeSongVolume(volumeValue: string): Promise<number | undefined> {
+    try {
+      const response = await this.socketIO.of("/song-request").timeout(1400).emitWithAck("song-request-message", {
+        type: "CHANGE_VOLUME",
+        volumeValue
+      });
+      
+      return response[0].newVolume;
+    } catch (e: unknown) {
+      return undefined;
+    }
   }
 
   public getFirstNSongsFromQueue(n: number): Song[] {

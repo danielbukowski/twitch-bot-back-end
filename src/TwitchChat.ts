@@ -83,7 +83,11 @@ export default class TwitchChat implements ManageableClass {
 
             if(!volumeValue || !volumeValue.match(regExpToVolume)) break;
 
-            this.songRequestManager.changeSongVolume(volumeValue);
+            const newVolume: number | undefined = await this.songRequestManager.changeSongVolume(volumeValue);
+            
+            if(newVolume == undefined) break;
+
+            this.chatClient.say(channel, `The volume has been set to ${(newVolume * 100)}%`);
             break;
           case `${this.COMMAND_PREFIX}srq`:
             const first3SongsInQueue: Song[] = this.songRequestManager.getFirstNSongsFromQueue(3);
