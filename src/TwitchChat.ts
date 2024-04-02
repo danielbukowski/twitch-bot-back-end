@@ -203,32 +203,32 @@ export default class TwitchChat implements ManageableClass {
 
     const seconds = queueDuration;
 
-    let timeString: string[] = [];
+    let times: string[] = [];
 
     if(hours > 0) {
       if(hours === 1) {
-        timeString.push("1 hour");
+        times.push("1 hour");
       } else {
-        timeString.push(`${hours} hours`);
+        times.push(`${hours} hours`);
       }
     }
     
     if(minutes > 0) {
       if(minutes === 1) {
-        timeString.push("1 minute");
+        times.push("1 minute");
       } else {
-        timeString.push(`${minutes} minutes`)
+        times.push(`${minutes} minutes`)
       }
     }
 
     if(seconds > 0) {
       if(seconds === 1) {
-        timeString.push("1 second")
+        times.push("1 second")
       } else {
-        timeString.push(`${seconds} seconds`)
+        times.push(`${seconds} seconds`)
       }
     }
 
-    return `'${songTitle}' added to the queue at #${queuePosition} position! (playing in ~ ${timeString.join(" and ")})`;
+    return `'${songTitle}' added to the queue at #${queuePosition} position! (playing in ~ ${times.join(" and ")})`;
   }
 }
