@@ -81,7 +81,7 @@ export default class TwitchChat implements ManageableClass {
             const volumeValue: string = commandParameters[0];
             const regExpToVolume: RegExp = /^[+-]?\d{1,2}$/;
 
-            if(!volumeValue.match(regexToVolume)) break;
+            if(!volumeValue || !volumeValue.match(regExpToVolume)) break;
 
             this.songRequestManager.changeSongVolume(volumeValue);
             break;
