@@ -79,7 +79,7 @@ export default class TwitchChat implements ManageableClass {
             break;
           case `${this.COMMAND_PREFIX}srvolume`:
             const volumeValue: string = commandParameters[0];
-            const regExpToVolume: RegExp = /^[+-]?\d{1,2}$/;
+            const regExpToVolume: RegExp = /^[+-]?(\d{1,2}|100)$/;
 
             if(!volumeValue || !volumeValue.match(regExpToVolume)) break;
 
