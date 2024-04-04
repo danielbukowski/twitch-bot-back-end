@@ -88,7 +88,7 @@ export default class ObjectManager {
     );
   }
 
-  public async initManageableClasses() {
+  public async initializeClasses() {
     try {
       for (const manageableClass of this.manageableClasses.values()) {
         await manageableClass.init();
