@@ -1,5 +1,5 @@
 import axios from "axios";
-import ManageableClass from "./ManageableClass";
+import { ManageableClass } from "./ObjectManager";
 import ytdl from "ytdl-core";
 
 export interface VideoDetail {

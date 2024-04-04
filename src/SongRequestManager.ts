@@ -1,5 +1,5 @@
 import { Server as SocketIO } from "socket.io";
-import ManageableClass from "./ManageableClass";
+import { ManageableClass } from "./ObjectManager";
 import YoutubeClient from "./YoutubeClient";
 
 export interface Song {

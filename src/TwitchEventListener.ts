@@ -1,5 +1,5 @@
 import { EventSubWsListener } from "@twurple/eventsub-ws";
-import ManageableClass from "./ManageableClass";
+import { ManageableClass } from "./ObjectManager";
 import SocketServer from "./SocketServer";
 import TwitchClient from "./TwitchClient";
 

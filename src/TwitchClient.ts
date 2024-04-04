@@ -1,5 +1,5 @@
 import { ApiClient } from "@twurple/api";
-import ManageableClass from "./ManageableClass";
+import { ManageableClass } from "./ObjectManager";
 import { RefreshingAuthProvider } from "@twurple/auth";
 import { TokenIntent } from "./TokenUtil";
 

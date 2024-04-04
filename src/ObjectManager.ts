@@ -2,7 +2,6 @@ import { Socket } from "socket.io";
 import AuthManager from "./AuthManager";
 import ConfigInitializer from "./ConfigInitializer";
 import HttpServer from "./HttpServer";
-import ManageableClass from "./ManageableClass";
 import SocketServer from "./SocketServer";
 import SongRequestManager from "./SongRequestManager";
 import TokenUtil from "./TokenUtil";
@@ -10,6 +9,10 @@ import TwitchChat from "./TwitchChat";
 import TwitchClient from "./TwitchClient";
 import TwitchEventListener from "./TwitchEventListener";
 import YoutubeClient from "./YoutubeClient";
+
+abstract class ManageableClass {
+  abstract init(): Promise<void>;
+}
 
 export default class ObjectManager {
   private manageableClasses: Map<string, ManageableClass> = new Map();

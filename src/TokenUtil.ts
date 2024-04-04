@@ -1,5 +1,5 @@
 import { AccessToken } from "@twurple/auth";
-import ManageableClass from "./ManageableClass";
+import { ManageableClass } from "./ObjectManager";
 import { readFile, readdir } from "fs/promises";
 import { createCipheriv, pbkdf2Sync, randomBytes, CipherGCM, CipherGCMTypes } from "crypto";
 

@@ -1,5 +1,5 @@
 import { Server as SocketIO } from "socket.io";
-import ManageableClass from "./ManageableClass";
+import { ManageableClass } from "./ObjectManager";
 import { Server } from "node:http";
 
 export default class SocketServer implements ManageableClass {

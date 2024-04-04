@@ -1,5 +1,5 @@
 import express from "express";
-import ManageableClass from "./ManageableClass";
+import { ManageableClass } from "./ObjectManager";
 import { createServer, Server } from "node:http";
 import cors from "cors";
 

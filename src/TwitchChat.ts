@@ -1,6 +1,6 @@
 import { RefreshingAuthProvider } from "@twurple/auth";
 import { ChatClient, ChatMessage } from "@twurple/chat";
-import ManageableClass from "./ManageableClass";
+import { ManageableClass } from "./ObjectManager";
 import YoutubeClient from "./YoutubeClient";
 import { VideoDetail } from "./YoutubeClient";
 import { Duration } from "luxon";
