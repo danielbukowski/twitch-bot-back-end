@@ -1,9 +1,9 @@
 import express from "express";
-import { ManageableClass } from "./ObjectManager";
+import { Initializable } from "./ObjectManager";
 import { createServer, Server } from "node:http";
 import cors from "cors";
 
-export default class HttpServer implements ManageableClass {
+export default class HttpServer implements Initializable {
   private app = express();
   private httpServer = createServer(this.app);
 

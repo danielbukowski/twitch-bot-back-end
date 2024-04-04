@@ -1,11 +1,11 @@
 import { AccessToken } from "@twurple/auth";
-import { ManageableClass } from "./ObjectManager";
+import { Initializable } from "./ObjectManager";
 import { readFile, readdir } from "fs/promises";
 import { createCipheriv, pbkdf2Sync, randomBytes, CipherGCM, CipherGCMTypes } from "crypto";
 
 export type TokenIntent = "events" | "chat";
 
-export default class TokenUtil implements ManageableClass {
+export default class TokenUtil implements Initializable {
   private readonly regExpToGetIdFromToken: RegExp = /[-\\.]/;
   private readonly ALGORITHM_NAME: CipherGCMTypes = "aes-128-gcm";
   private readonly ALGORITHM_NONCE_SIZE: number = 12;

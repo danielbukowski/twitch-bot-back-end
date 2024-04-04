@@ -1,8 +1,8 @@
 import { Server as SocketIO } from "socket.io";
-import { ManageableClass } from "./ObjectManager";
+import { Initializable } from "./ObjectManager";
 import { Server } from "node:http";
 
-export default class SocketServer implements ManageableClass {
+export default class SocketServer implements Initializable {
   private io: SocketIO;
 
   constructor(private readonly httpServer: Server) {

@@ -1,9 +1,9 @@
 import { EventSubWsListener } from "@twurple/eventsub-ws";
-import { ManageableClass } from "./ObjectManager";
+import { Initializable } from "./ObjectManager";
 import SocketServer from "./SocketServer";
 import TwitchClient from "./TwitchClient";
 
-export default class TwitchEventListener implements ManageableClass {
+export default class TwitchEventListener implements Initializable {
   private eventSub!: EventSubWsListener;
 
   constructor(

@@ -1,6 +1,6 @@
 import { RefreshingAuthProvider } from "@twurple/auth";
 import { ChatClient, ChatMessage } from "@twurple/chat";
-import { ManageableClass } from "./ObjectManager";
+import { Initializable } from "./ObjectManager";
 import YoutubeClient from "./YoutubeClient";
 import { VideoDetail } from "./YoutubeClient";
 import { Duration } from "luxon";
@@ -8,7 +8,7 @@ import SongRequestManager, { Song } from "./SongRequestManager";
 import SongRequestError from "./SongRequestError";
 import TwitchClient from "./TwitchClient";
 
-export default class TwitchChat implements ManageableClass {
+export default class TwitchChat implements Initializable {
   private readonly COMMAND_PREFIX: string = "!";
   private readonly MIN_VIDEO_VIEWS: number = 18_000;
   private readonly MAX_VIDEO_DURATION_IN_SECONDS: number = 360;

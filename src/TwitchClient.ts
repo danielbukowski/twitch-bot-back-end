@@ -1,9 +1,9 @@
 import { ApiClient } from "@twurple/api";
-import { ManageableClass } from "./ObjectManager";
+import { Initializable } from "./ObjectManager";
 import { RefreshingAuthProvider } from "@twurple/auth";
 import { TokenIntent } from "./TokenUtil";
 
-export default class TwitchClient implements ManageableClass {
+export default class TwitchClient implements Initializable {
   private apiClient: ApiClient;
 
   constructor(private readonly authProvider: RefreshingAuthProvider) {

@@ -1,5 +1,5 @@
 import { Server as SocketIO } from "socket.io";
-import { ManageableClass } from "./ObjectManager";
+import { Initializable } from "./ObjectManager";
 import YoutubeClient from "./YoutubeClient";
 
 export interface Song {
@@ -9,7 +9,7 @@ export interface Song {
   addedBy: string;
 }
 
-export default class SongRequestManager implements ManageableClass {
+export default class SongRequestManager implements Initializable {
   private songQueue: Song[] = [];
 
   constructor(

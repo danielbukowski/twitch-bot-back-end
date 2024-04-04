@@ -10,12 +10,12 @@ import TwitchClient from "./TwitchClient";
 import TwitchEventListener from "./TwitchEventListener";
 import YoutubeClient from "./YoutubeClient";
 
-abstract class ManageableClass {
+export abstract class Initializable {
   abstract init(): Promise<void>;
 }
 
 export default class ObjectManager {
-  private manageableClasses: Map<string, ManageableClass> = new Map();
+  private manageableClasses: Map<string, Initializable> = new Map();
 
   public constructor(private readonly configInitializer: ConfigInitializer) {
     const config = configInitializer.getConfig();

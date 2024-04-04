@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ManageableClass } from "./ObjectManager";
+import { Initializable } from "./ObjectManager";
 import ytdl from "ytdl-core";
 
 export interface VideoDetail {
@@ -14,7 +14,7 @@ export interface VideoDetail {
   };
 }
 
-export default class YoutubeClient implements ManageableClass {
+export default class YoutubeClient implements Initializable {
   constructor(private readonly youtubeApiKey: string) {}
 
   public async init(): Promise<void> {
