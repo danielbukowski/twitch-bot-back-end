@@ -15,7 +15,7 @@ export default class TokenUtil implements ManageableClass {
   private readonly PBKDF2_SALT_SIZE: number = 18;
   private readonly PBKDF2_ITERATIONS: number = 33217;
 
-  public constructor(private readonly clientId: string) {}
+  public constructor(private readonly clientId: string, private readonly encryptionKey: string) {}
 
   public async init(): Promise<void> {
     console.log("Initializing the TokenUtil...");
