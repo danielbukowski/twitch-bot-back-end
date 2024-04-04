@@ -6,7 +6,7 @@ import { createCipheriv, pbkdf2Sync, randomBytes, CipherGCM, CipherGCMTypes } fr
 export type TokenIntent = "events" | "chat";
 
 export default class TokenUtil implements ManageableClass {
-  private readonly regexToGetIdFromToken: RegExp = /[-\\.]/;
+  private readonly regExpToGetIdFromToken: RegExp = /[-\\.]/;
   private readonly ALGORITHM_NAME: CipherGCMTypes = "aes-128-gcm";
   private readonly ALGORITHM_NONCE_SIZE: number = 12;
   private readonly ALGORITHM_TAG_SIZE: number = 16;
@@ -27,7 +27,7 @@ export default class TokenUtil implements ManageableClass {
   ): Promise<string> {
     try {
       const accessToken = (await readdir(`./access-tokens/${tokenIntent}/`))[0];
-      const idFromToken = accessToken.split(this.regexToGetIdFromToken)[1];
+      const idFromToken = accessToken.split(this.regExpToGetIdFromToken)[1];
 
       return idFromToken;
     } catch (e: unknown) {
