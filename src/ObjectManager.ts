@@ -1,4 +1,3 @@
-import { Socket } from "socket.io";
 import AuthManager from "./AuthManager";
 import ConfigInitializer from "./ConfigInitializer";
 import HttpServer from "./HttpServer";
