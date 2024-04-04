@@ -13,7 +13,7 @@ export default class SocketServer implements ManageableClass {
     return this.io;
   }
 
-  async init(): Promise<void> {
+  public async init(): Promise<void> {
     console.log("Initializing the SocketClient...");
 
     this.io.on("connection", (socket) => {

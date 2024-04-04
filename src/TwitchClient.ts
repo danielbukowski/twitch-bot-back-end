@@ -16,7 +16,7 @@ export default class TwitchClient implements ManageableClass {
     return this.apiClient;
   }
 
-  async init(): Promise<void> {
+  public async init(): Promise<void> {
     console.log("Initializing the TwitchClient...");
     console.log("Initialized the TwitchClient!");
   }

@@ -15,7 +15,7 @@ export default class HttpServer implements ManageableClass {
     return this.httpServer;
   }
 
-  async init(): Promise<void> {
+  public async init(): Promise<void> {
     console.log("Initializing the HttpServer...");
 
     this.app.use(

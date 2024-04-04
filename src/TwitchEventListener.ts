@@ -11,7 +11,7 @@ export default class TwitchEventListener implements ManageableClass {
     private readonly twitchClient: TwitchClient,
   ) {}
 
-  async init(): Promise<void> {
+  public async init(): Promise<void> {
     console.log("Initializing the TwitchEventListener...");
 
     this.eventSub = new EventSubWsListener({

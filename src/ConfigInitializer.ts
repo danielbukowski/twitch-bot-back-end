@@ -24,11 +24,11 @@ export default class ConfigInitializer {
     };
   }
 
-  getConfig(): Config {
+  public getConfig(): Config {
     return this.config;
   }
 
-  checkConfigurationVariables(): void {
+  public checkConfigurationVariables(): void {
     console.log("Checking configuration variables...");
 
     for (const key in this.config) {

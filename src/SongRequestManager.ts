@@ -17,7 +17,7 @@ export default class SongRequestManager implements ManageableClass {
     private readonly socketIO: SocketIO,
   ) {}
 
-  async init(): Promise<void> {
+  public async init(): Promise<void> {
     console.log("Initializing the SongRequestClient...");
 
     this.socketIO.of("/song-request").on("connection", (socket) => {
