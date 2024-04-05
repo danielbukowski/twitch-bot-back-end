@@ -78,16 +78,7 @@ export default class TwitchChat implements Initializable {
             this.songRequestManager.pauseSong();
             break;
           case `${this.COMMAND_PREFIX}srvolume`:
-            const volumeValue: string = commandParameters[0];
-            const regExpToVolume: RegExp = /^[+-]?(\d{1,2}|100)$/;
-
-            if(!volumeValue || !volumeValue.match(regExpToVolume)) break;
-
-            const newVolume: number | undefined = await this.songRequestManager.changeSongVolume(volumeValue);
-            
-            if(newVolume == undefined) break;
-
-            this.chatClient.say(channel, `The volume has been set to ${(newVolume * 100)}%`);
+            await this.handleSrVolumeCommand(commandParameters, channel);
             break;
           case `${this.COMMAND_PREFIX}srq`:
             const first3SongsInQueue: Song[] = this.songRequestManager.getFirstNSongsFromQueue(3);
@@ -234,5 +225,18 @@ export default class TwitchChat implements Initializable {
     }
 
     return `'${songTitle}' added to the queue at #${queuePosition} position! (playing in ~ ${times.join(" and ")})`;
+  }
+
+  private async handleSrVolumeCommand(commandParameters: string[], channel: string): Promise<void> {
+    const volumeValue: string = commandParameters[0];
+    const regExpToVolume: RegExp = /^[+-]?(\d{1,2}|100)$/;
+  
+    if(!volumeValue || !volumeValue.match(regExpToVolume)) return;
+  
+    const newVolume: number | undefined = await this.songRequestManager.changeSongVolume(volumeValue);
+    
+    if(newVolume == undefined) return;
+  
+    this.chatClient.say(channel, `The volume has been set to ${(newVolume * 100)}%`);
   }
 }
