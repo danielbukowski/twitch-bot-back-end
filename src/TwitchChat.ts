@@ -81,22 +81,7 @@ export default class TwitchChat implements Initializable {
             await this.handleSrVolumeCommand(commandParameters, channel);
             break;
           case `${this.COMMAND_PREFIX}srq`:
-            const first3SongsInQueue: Song[] = this.songRequestManager.getFirstNSongsFromQueue(3);
-
-            if(!first3SongsInQueue.length) {
-              this.chatClient.say(channel, "No songs have been found in the queue :(")
-              break;
-            }
-
-            let response: string = `Current ${first3SongsInQueue.length === 1 ? 'song' : 'songs'} in the queue: `;
-
-            for (let index = 0; index < first3SongsInQueue.length; index++) {
-              let song = first3SongsInQueue[index];
-              response += `#${index + 1} '${song.title}' https://www.youtube.com/watch?v=${song.videoId} added by @${song.addedBy}, `;
-            }
-            response = response.slice(0, -2);
-
-            this.chatClient.say(channel, response);
+            this.handleSrQCommand(channel);
             break;
           case `${this.COMMAND_PREFIX}srplay`:
             this.songRequestManager.playSong();
@@ -238,5 +223,24 @@ export default class TwitchChat implements Initializable {
     if(newVolume == undefined) return;
   
     this.chatClient.say(channel, `The volume has been set to ${(newVolume * 100)}%`);
+  }
+
+  private handleSrQCommand(channel: string): void {
+    const first3SongsInQueue: Song[] = this.songRequestManager.getFirstNSongsFromQueue(3);
+
+    if(!first3SongsInQueue.length) {
+      this.chatClient.say(channel, "No songs have been found in the queue :(")
+      return;
+    }
+
+    let response: string = `Current ${first3SongsInQueue.length === 1 ? 'song' : 'songs'} in the queue: `;
+
+    for (let index = 0; index < first3SongsInQueue.length; index++) {
+      let song = first3SongsInQueue[index];
+      response += `#${index + 1} '${song.title}' https://www.youtube.com/watch?v=${song.videoId} added by @${song.addedBy}, `;
+    }
+    response = response.slice(0, -2);
+
+    this.chatClient.say(channel, response);
   }
 }
