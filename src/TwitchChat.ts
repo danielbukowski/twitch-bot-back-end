@@ -142,9 +142,9 @@ export default class TwitchChat implements Initializable {
       let videoId: string | undefined;
 
       if (songRequestParameters.startsWith("https://www.youtube.com/watch")) {
-        const regexpToSplitUrlParameters: RegExp = /[?=&]/;
+        const regExpToSplitUrlParameters: RegExp = /[?=&]/;
         const splitVideoLink: string[] = songRequestParameters.split(
-          regexpToSplitUrlParameters,
+          regExpToSplitUrlParameters,
         );
 
         videoId =
