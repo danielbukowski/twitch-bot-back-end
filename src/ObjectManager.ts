@@ -9,8 +9,8 @@ import TwitchClient from "./TwitchClient";
 import TwitchEventListener from "./TwitchEventListener";
 import YoutubeClient from "./YoutubeClient";
 
-export abstract class Initializable {
-  abstract init(): Promise<void>;
+export interface Initializable {
+  init(): Promise<void>;
 }
 
 export default class ObjectManager {
