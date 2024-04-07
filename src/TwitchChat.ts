@@ -1,5 +1,5 @@
 import { RefreshingAuthProvider } from "@twurple/auth";
-import { ChatClient, ChatMessage } from "@twurple/chat";
+import { ChatClient, ChatMessage, ChatUser } from "@twurple/chat";
 import { Initializable } from "./ObjectManager";
 import YoutubeClient from "./YoutubeClient";
 import { VideoDetail } from "./YoutubeClient";
@@ -7,6 +7,29 @@ import { Duration } from "luxon";
 import SongRequestManager, { Song } from "./SongRequestManager";
 import SongRequestError from "./SongRequestError";
 import TwitchClient from "./TwitchClient";
+import { UserRole } from "./ConfigInitializer";
+
+function HasRole(roles: UserRole[]) {
+  return function actualDecorator(decoratedMethod: any, context: ClassMethodDecoratorContext) {
+      return function (this: any, ...args: any[]) {
+          const userInfo: ChatUser = args[args.length - 1];
+
+          if(!(userInfo instanceof ChatUser)) {
+            throw new Error(`The method '${context.name as string}' with hasRole decorator does not have ChatUser parameter as the last method parameter!`);
+          }
+          
+          if(!roles.length) {
+            return decoratedMethod.call(this, ...args);
+          }
+          
+          for(const role of roles) {
+            if(userInfo[`is${role}`]) {
+              return decoratedMethod.call(this, ...args);
+            }
+          }
+      }
+  }
+}
 
 export default class TwitchChat implements Initializable {
   private readonly COMMAND_PREFIX: string = "!";
