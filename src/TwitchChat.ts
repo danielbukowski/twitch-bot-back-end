@@ -231,7 +231,7 @@ export default class TwitchChat implements Initializable {
     this.chatClient.say(channel, response);
   }
 
-  private getMessageDetailsOfSuccessfullyAddedSong(queueDuration: number, queuePosition: number, songTitle: string) {
+  private getMessageDetailsOfSuccessfullyAddedSong(queueDuration: number, queuePosition: number, songTitle: string): string {
     if(queueDuration === 0) {
       return `'${songTitle}' added to the queue at #${queuePosition} position! (playing in ~ now)`;
     }
