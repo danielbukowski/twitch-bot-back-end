@@ -87,27 +87,29 @@ export default class TwitchChat implements Initializable {
 
         const [commandName, ...commandParameters] = text.split(" ");
 
+        const userInfo: ChatUser = msg.userInfo;
+
         switch (commandName.toLowerCase()) {
           case `${this.COMMAND_PREFIX}hello`:
             this.chatClient.say(channel, `Hello @${user}`);
             break;
           case `${this.COMMAND_PREFIX}sr`:
-            this.handleSrCommand(channel, user, commandParameters);
+            this.handleSrCommand(channel, user, commandParameters, userInfo);
             break;
           case `${this.COMMAND_PREFIX}srskipsong`:
-            this.songRequestManager.skipSong();
+            this.handleSrSkipSongCommand(userInfo);
             break;
           case `${this.COMMAND_PREFIX}srpause`:
-            this.songRequestManager.pauseSong();
+            this.handleSrPauseCommand(userInfo);
             break;
           case `${this.COMMAND_PREFIX}srvolume`:
-            await this.handleSrVolumeCommand(commandParameters, channel);
+            await this.handleSrVolumeCommand(commandParameters, channel, userInfo);
             break;
           case `${this.COMMAND_PREFIX}srq`:
-            this.handleSrQCommand(channel);
+            this.handleSrQueueCommand(channel, userInfo);
             break;
           case `${this.COMMAND_PREFIX}srplay`:
-            this.songRequestManager.playSong();
+            this.handleSrPlay(userInfo);
             break;
           default:
             break;
@@ -115,11 +117,20 @@ export default class TwitchChat implements Initializable {
       },
     );
   }
+  private handleSrPlay(userInfo: ChatUser): void {
+    this.songRequestManager.playSong();
+  }
+
+  private handleSrSkipSongCommand(userInfo: ChatUser): void {
+    this.songRequestManager.skipSong();
+  }
+
+  private handleSrPauseCommand(userInfo: ChatUser): void {
+    this.songRequestManager.pauseSong();
+  }
 
   private async handleSrCommand(
-    channel: string,
-    user: string,
-    commandParameters: string[],
+  channel: string, user: string, commandParameters: string[], userInfo: ChatUser,
   ): Promise<void> {
     const songRequestParameters: string = commandParameters.join(" ");
 
@@ -139,7 +150,6 @@ export default class TwitchChat implements Initializable {
         videoId =
           splitVideoLink[splitVideoLink.findIndex((v) => v === "v") + 1];
       } else {
-        // TODO: sometimes even if a video exists it returns undefined
         videoId = await this.youtubeClient.getVideoIdByName(
           songRequestParameters,
         );
@@ -235,7 +245,7 @@ export default class TwitchChat implements Initializable {
     return `'${songTitle}' added to the queue at #${queuePosition} position! (playing in ~ ${times.join(" and ")})`;
   }
 
-  private async handleSrVolumeCommand(commandParameters: string[], channel: string): Promise<void> {
+  private async handleSrVolumeCommand(commandParameters: string[], channel: string, userInfo: ChatUser): Promise<void> {
     const volumeValue: string = commandParameters[0];
     const regExpToVolume: RegExp = /^[+-]?(\d{1,2}|100)$/;
   
@@ -248,7 +258,7 @@ export default class TwitchChat implements Initializable {
     this.chatClient.say(channel, `The volume has been set to ${(newVolume * 100)}%`);
   }
 
-  private handleSrQCommand(channel: string): void {
+  private handleSrQueueCommand(channel: string, userInfo: ChatUser): void {
     const first3SongsInQueue: Song[] = this.songRequestManager.getFirstNSongsFromQueue(3);
 
     if(!first3SongsInQueue.length) {
