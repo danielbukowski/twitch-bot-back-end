@@ -60,7 +60,7 @@ export default class TwitchChat implements Initializable {
       authIntents: ["chat"],
     });
 
-    this.botName = await this.twitchClient.getChatbotUsername();
+    this.botName = await this.twitchClient.getChatbotName();
 
     this.setChatClientListeners();
     this.chatClient.connect();

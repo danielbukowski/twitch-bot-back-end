@@ -21,7 +21,7 @@ export default class TwitchClient implements Initializable {
     console.log("Initialized the TwitchClient!");
   }
 
-  public async getChatbotUsername(): Promise<string> {
+  public async getChatbotName(): Promise<string> {
     try {
       return this.apiClient.asIntent(["chat"], async (ctx) => {
         return (await ctx.getTokenInfo()).userName as string;
