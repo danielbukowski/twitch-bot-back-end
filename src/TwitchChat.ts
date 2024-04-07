@@ -199,6 +199,38 @@ export default class TwitchChat implements Initializable {
     }
   }
 
+  private async handleSrVolumeCommand(commandParameters: string[], channel: string, userInfo: ChatUser): Promise<void> {
+    const volumeValue: string = commandParameters[0];
+    const regExpToVolume: RegExp = /^[+-]?(\d{1,2}|100)$/;
+  
+    if(!volumeValue || !volumeValue.match(regExpToVolume)) return;
+  
+    const newVolume: number | undefined = await this.songRequestManager.changeSongVolume(volumeValue);
+    
+    if(newVolume == undefined) return;
+  
+    this.chatClient.say(channel, `The volume has been set to ${(newVolume * 100)}%`);
+  }
+
+  private handleSrQueueCommand(channel: string, userInfo: ChatUser): void {
+    const first3SongsInQueue: Song[] = this.songRequestManager.getFirstNSongsFromQueue(3);
+
+    if(!first3SongsInQueue.length) {
+      this.chatClient.say(channel, "No songs have been found in the queue :(")
+      return;
+    }
+
+    let response: string = `Current ${first3SongsInQueue.length === 1 ? 'song' : 'songs'} in the queue: `;
+
+    for (let index = 0; index < first3SongsInQueue.length; index++) {
+      let song = first3SongsInQueue[index];
+      response += `#${index + 1} '${song.title}' https://www.youtube.com/watch?v=${song.videoId} added by @${song.addedBy}, `;
+    }
+    response = response.slice(0, -2);
+
+    this.chatClient.say(channel, response);
+  }
+
   private getMessageDetailsOfSuccessfullyAddedSong(queueDuration: number, queuePosition: number, songTitle: string) {
     if(queueDuration === 0) {
       return `'${songTitle}' added to the queue at #${queuePosition} position! (playing in ~ now)`;
@@ -243,37 +275,5 @@ export default class TwitchChat implements Initializable {
     }
 
     return `'${songTitle}' added to the queue at #${queuePosition} position! (playing in ~ ${times.join(" and ")})`;
-  }
-
-  private async handleSrVolumeCommand(commandParameters: string[], channel: string, userInfo: ChatUser): Promise<void> {
-    const volumeValue: string = commandParameters[0];
-    const regExpToVolume: RegExp = /^[+-]?(\d{1,2}|100)$/;
-  
-    if(!volumeValue || !volumeValue.match(regExpToVolume)) return;
-  
-    const newVolume: number | undefined = await this.songRequestManager.changeSongVolume(volumeValue);
-    
-    if(newVolume == undefined) return;
-  
-    this.chatClient.say(channel, `The volume has been set to ${(newVolume * 100)}%`);
-  }
-
-  private handleSrQueueCommand(channel: string, userInfo: ChatUser): void {
-    const first3SongsInQueue: Song[] = this.songRequestManager.getFirstNSongsFromQueue(3);
-
-    if(!first3SongsInQueue.length) {
-      this.chatClient.say(channel, "No songs have been found in the queue :(")
-      return;
-    }
-
-    let response: string = `Current ${first3SongsInQueue.length === 1 ? 'song' : 'songs'} in the queue: `;
-
-    for (let index = 0; index < first3SongsInQueue.length; index++) {
-      let song = first3SongsInQueue[index];
-      response += `#${index + 1} '${song.title}' https://www.youtube.com/watch?v=${song.videoId} added by @${song.addedBy}, `;
-    }
-    response = response.slice(0, -2);
-
-    this.chatClient.say(channel, response);
   }
 }
