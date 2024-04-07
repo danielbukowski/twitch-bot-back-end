@@ -10,6 +10,8 @@ interface Config {
   readonly encryptionKey: string;
 }
 
+export type UserRole = "Mod" | "Subscriber" | "Vip" | "Broadcaster" | "Artist" | "Founder";
+
 export default class ConfigInitializer {
   private config: Config;
 
