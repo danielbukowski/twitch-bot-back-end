@@ -117,18 +117,23 @@ export default class TwitchChat implements Initializable {
       },
     );
   }
+
+  @HasRole(["Broadcaster"])
   private handleSrPlay(userInfo: ChatUser): void {
     this.songRequestManager.playSong();
   }
 
+  @HasRole(["Broadcaster", "Mod"])
   private handleSrSkipSongCommand(userInfo: ChatUser): void {
     this.songRequestManager.skipSong();
   }
 
+  @HasRole(["Broadcaster"])
   private handleSrPauseCommand(userInfo: ChatUser): void {
     this.songRequestManager.pauseSong();
   }
 
+  @HasRole([])
   private async handleSrCommand(
   channel: string, user: string, commandParameters: string[], userInfo: ChatUser,
   ): Promise<void> {
@@ -199,6 +204,7 @@ export default class TwitchChat implements Initializable {
     }
   }
 
+  @HasRole(["Broadcaster", "Mod"])
   private async handleSrVolumeCommand(commandParameters: string[], channel: string, userInfo: ChatUser): Promise<void> {
     const volumeValue: string = commandParameters[0];
     const regExpToVolume: RegExp = /^[+-]?(\d{1,2}|100)$/;
@@ -212,6 +218,7 @@ export default class TwitchChat implements Initializable {
     this.chatClient.say(channel, `The volume has been set to ${(newVolume * 100)}%`);
   }
 
+  @HasRole([])
   private handleSrQueueCommand(channel: string, userInfo: ChatUser): void {
     const first3SongsInQueue: Song[] = this.songRequestManager.getFirstNSongsFromQueue(3);
 
