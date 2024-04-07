@@ -7,7 +7,7 @@ interface Config {
   readonly httpServerPort: string;
   readonly youtubeApiKey: string;
   readonly twitchChannel: string;
-  readonly encryptionKey: string;
+  readonly encryptionPassphrase: string;
 }
 
 export type UserRole = "Mod" | "Subscriber" | "Vip" | "Broadcaster" | "Artist" | "Founder";
@@ -22,7 +22,7 @@ export default class ConfigInitializer {
       httpServerPort: process.env.HTTP_SERVER_PORT || "",
       youtubeApiKey: process.env.YOUTUBE_API_KEY || "",
       twitchChannel: process.env.TWITCH_CHANNEL || "",
-      encryptionKey: process.env.ENCRYPTION_KEY || "",
+      encryptionPassphrase: process.env.ENCRYPTION_PASSPHRASE || "",
     };
   }
 

@@ -15,7 +15,7 @@ export default class TokenUtil implements Initializable {
   private readonly PBKDF2_SALT_SIZE: number = 18;
   private readonly PBKDF2_ITERATIONS: number = 33217;
 
-  public constructor(private readonly clientId: string, private readonly encryptionKey: string) {}
+  public constructor(private readonly clientId: string, private readonly encryptionPassphrase: string) {}
 
   public async init(): Promise<void> {
     console.log("Initializing the TokenUtil...");
@@ -51,7 +51,7 @@ export default class TokenUtil implements Initializable {
 
   private encryptPlainToken(plainToken: string): String {
     const salt = randomBytes(this.PBKDF2_SALT_SIZE);
-    const key: Buffer = pbkdf2Sync(Buffer.from(this.encryptionKey, "utf8"), salt, this.PBKDF2_ITERATIONS, this.ALGORITHM_KEY_SIZE, this.PBKDF2_NAME);
+    const key: Buffer = pbkdf2Sync(Buffer.from(this.encryptionPassphrase, "utf8"), salt, this.PBKDF2_ITERATIONS, this.ALGORITHM_KEY_SIZE, this.PBKDF2_NAME);
     const iv: Buffer = randomBytes(this.ALGORITHM_NONCE_SIZE);
 
     const cipher: CipherGCM = createCipheriv(this.ALGORITHM_NAME, key, iv);

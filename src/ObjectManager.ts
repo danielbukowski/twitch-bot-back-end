@@ -23,7 +23,7 @@ export default class ObjectManager {
       TokenUtil.name,
       new TokenUtil(
         config.twitchAppClientId,
-        config.encryptionKey
+        config.encryptionPassphrase
       ),
     );
     this.manageableClasses.set(
