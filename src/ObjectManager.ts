@@ -42,7 +42,10 @@ export default class ObjectManager {
     );
     this.manageableClasses.set(
       HttpServer.name,
-      new HttpServer(config.httpServerPort),
+      new HttpServer(
+        config.httpServerPort,
+        this.manageableClasses.get(TokenUtil.name) as TokenUtil
+      ),
     );
     this.manageableClasses.set(
       SocketServer.name,

@@ -2,12 +2,16 @@ import express from "express";
 import { Initializable } from "./ObjectManager";
 import { createServer, Server } from "node:http";
 import cors from "cors";
+import TokenUtil from "./TokenUtil";
 
 export default class HttpServer implements Initializable {
   private app = express();
   private httpServer = createServer(this.app);
 
-  constructor(private readonly port: string) {
+  constructor(
+    private readonly port: string,
+    private readonly tokenUtil: TokenUtil
+  ) {
     this.port = port;
   }
 
