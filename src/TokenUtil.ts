@@ -15,7 +15,12 @@ export default class TokenUtil implements Initializable {
   private readonly PBKDF2_SALT_SIZE: number = 18;
   private readonly PBKDF2_ITERATIONS: number = 33217;
 
-  public constructor(private readonly clientId: string, private readonly encryptionPassphrase: string) {}
+  public constructor(
+    private readonly clientId: string, 
+    private readonly clientSecret: string,
+    private readonly oauthRedirectUri: string,
+    private readonly encryptionPassphrase: string
+  ) {}
 
   public async init(): Promise<void> {
     console.log("Initializing the TokenUtil...");
