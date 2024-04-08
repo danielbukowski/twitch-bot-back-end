@@ -8,6 +8,7 @@ interface Config {
   readonly youtubeApiKey: string;
   readonly twitchChannel: string;
   readonly encryptionPassphrase: string;
+  readonly oauthRedirectUri: string;
 }
 
 export type UserRole = "Mod" | "Subscriber" | "Vip" | "Broadcaster" | "Artist" | "Founder";
@@ -23,6 +24,7 @@ export default class ConfigInitializer {
       youtubeApiKey: process.env.YOUTUBE_API_KEY || "",
       twitchChannel: process.env.TWITCH_CHANNEL || "",
       encryptionPassphrase: process.env.ENCRYPTION_PASSPHRASE || "",
+      oauthRedirectUri: process.env.OAUTH_REDIRECT_URI || ""
     };
   }
 
