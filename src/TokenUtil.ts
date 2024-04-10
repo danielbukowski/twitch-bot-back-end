@@ -6,7 +6,6 @@ import { createCipheriv, pbkdf2Sync, randomBytes, CipherGCM, CipherGCMTypes, cre
 export type TokenIntent = "events" | "chat";
 
 export default class TokenUtil implements Initializable {
-  private readonly regExpToGetIdFromToken: RegExp = /[-\\.]/;
   private readonly ALGORITHM_NAME: CipherGCMTypes = "aes-128-gcm";
   private readonly ALGORITHM_NONCE_SIZE: number = 12;
   private readonly ALGORITHM_TAG_SIZE: number = 16;
