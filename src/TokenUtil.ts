@@ -43,6 +43,11 @@ export default class TokenUtil implements Initializable {
     }
   }
 
+  private areArrayEqual(array1: ReadonlyArray<string>, array2: ReadonlyArray<string>): boolean {
+    return array1.length === array2.length &&
+           array1.every(elem => array2.includes(elem));
+  }
+
   public checkUseOfScope(scopes: string[]): TokenIntent | undefined {
     if(this.areArrayEqual(scopes, this.scopeForChat)) {
       return "chat";
