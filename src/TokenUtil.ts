@@ -1,6 +1,7 @@
 import { AccessToken, exchangeCode } from "@twurple/auth";
 import { Initializable } from "./ObjectManager";
 import { readFile, readdir, writeFile } from "fs/promises";
+import { createCipheriv, pbkdf2Sync, randomBytes, CipherGCM, CipherGCMTypes, createDecipheriv, DecipherGCM } from "crypto";
 
 export type TokenIntent = "events" | "chat";
 
@@ -80,4 +81,24 @@ export default class TokenUtil implements Initializable {
 
     return saltNonceCipertextAndTag.toString("base64");
   }
+
+  private decryptToken(encryptedToken: string): AccessToken {
+    let saltNonceCipertextAndTag: Uint8Array = Buffer.from(encryptedToken, "base64");
+
+    let salt: Uint8Array = saltNonceCipertextAndTag.slice(0, this.PBKDF2_SALT_SIZE);
+    let ciphertextAndNonce: Uint8Array = saltNonceCipertextAndTag.slice(this.PBKDF2_SALT_SIZE);
+
+    let key: Uint8Array = pbkdf2Sync(Buffer.from(this.encryptionPassphrase, "utf8"), salt, this.PBKDF2_ITERATIONS, this.ALGORITHM_KEY_SIZE, this.PBKDF2_NAME);
+
+
+    let iv: Uint8Array = ciphertextAndNonce.slice(0, this.ALGORITHM_NONCE_SIZE);
+    let ciphertext: Uint8Array = ciphertextAndNonce.slice(this.ALGORITHM_NONCE_SIZE, ciphertextAndNonce.length - this.ALGORITHM_TAG_SIZE);
+    let tag: Uint8Array = ciphertextAndNonce.slice(ciphertext.length + this.ALGORITHM_NONCE_SIZE);
+
+    let cipher: DecipherGCM = createDecipheriv(this.ALGORITHM_NAME, key, iv);
+
+    cipher.setAuthTag(tag);
+    return JSON.parse(Buffer.concat([ cipher.update(ciphertext), cipher.final() ]).toString("utf-8"));
+  }
+
 }
