@@ -1,4 +1,4 @@
-import { AccessToken, exchangeCode } from "@twurple/auth";
+import { AccessToken } from "@twurple/auth";
 import { Initializable } from "./ObjectManager";
 import { readFile, readdir, writeFile } from "fs/promises";
 import { createCipheriv, pbkdf2Sync, randomBytes, CipherGCM, CipherGCMTypes, createDecipheriv, DecipherGCM } from "crypto";
@@ -27,9 +27,6 @@ export default class TokenUtil implements Initializable {
     console.log("Initialized the TokenUtil!");
   }
 
-  public async exchangeCodeToAccessToken(code: string): Promise<AccessToken> {
-    return await exchangeCode(this.clientId, this.clientSecret, code, this.oauthRedirectUri);
-  }
 
   public async findIdOfAccessTokenInDirectory(
     tokenIntent: TokenIntent,
