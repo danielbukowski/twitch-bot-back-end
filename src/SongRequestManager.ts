@@ -10,6 +10,7 @@ export interface Song {
 }
 
 export default class SongRequestManager implements Initializable {
+  private readonly REQUEST_TIMEOUT = 1_400;
   private songQueue: Song[] = [];
 
   constructor(
@@ -61,7 +62,7 @@ export default class SongRequestManager implements Initializable {
 
   public async changeSongVolume(volumeValue: string): Promise<number | undefined> {
     try {
-      const response = await this.socketIO.of("/song-request").timeout(1400).emitWithAck("song-request-message", {
+      const response = await this.socketIO.of("/song-request").timeout(this.REQUEST_TIMEOUT).emitWithAck("song-request-message", {
         type: "CHANGE_VOLUME",
         volumeValue
       });
@@ -82,7 +83,7 @@ export default class SongRequestManager implements Initializable {
 
       const response: {
         durationInSeconds: number
-      } = await sockets[0].timeout(1400).emitWithAck("song-request-message", {
+      } = await sockets[0].timeout(this.REQUEST_TIMEOUT).emitWithAck("song-request-message", {
         type: "SONG_DURATION"
       });
 
