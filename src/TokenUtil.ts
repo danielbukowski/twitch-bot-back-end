@@ -43,11 +43,11 @@ export default class TokenUtil implements Initializable {
     }
   }
 
-  public async writeAccessTokenToDirectory(plainToken: AccessToken, userId: string, tokenIntent: TokenIntent): Promise<void> {
+  public async writeAccessTokenToDirectory(plainToken: AccessToken, tokenIntent: TokenIntent): Promise<void> {
     const encryptedToken: string = this.encryptPlainToken(plainToken);
     
     await writeFile(
-      `./access-tokens/${tokenIntent}/accessToken-${userId}.txt`,
+      `./access-tokens/${tokenIntent}.txt`,
       encryptedToken,
       { encoding: "base64" }
     );
