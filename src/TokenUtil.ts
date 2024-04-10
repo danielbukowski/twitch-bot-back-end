@@ -53,15 +53,15 @@ export default class TokenUtil implements Initializable {
   } 
 
   public async readAccessTokenFromDirectory(
-    userId: string,
     tokenIntent: TokenIntent,
   ): Promise<AccessToken> {
-    return JSON.parse(
-      await readFile(
-        `./access-tokens/${tokenIntent}/accessToken-${userId}.json`,
-        { encoding: "utf-8" },
-      ),
-    ) as AccessToken;
+    const encryptedToken: string = await readFile(
+        `./access-tokens/${tokenIntent}.txt`,
+        { encoding: "base64" }
+    );
+
+    const decryptedToken: AccessToken = this.decryptToken(encryptedToken);
+    return decryptedToken;
   }
 
   private encryptPlainToken(plainToken: string): String {
