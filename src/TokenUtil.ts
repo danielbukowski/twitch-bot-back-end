@@ -43,6 +43,17 @@ export default class TokenUtil implements Initializable {
     }
   }
 
+  public checkUseOfScope(scopes: string[]): TokenIntent | undefined {
+    if(this.areArrayEqual(scopes, this.scopeForChat)) {
+      return "chat";
+    } else if(this.areArrayEqual(scopes, this.scopeForEvents)) {
+      return "events";
+    } else {
+      return undefined;
+    }
+  }
+
+
   public async writeAccessTokenToDirectory(plainToken: AccessToken, tokenIntent: TokenIntent): Promise<void> {
     const encryptedToken: string = this.encryptPlainToken(plainToken);
     
