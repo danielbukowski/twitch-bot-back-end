@@ -15,6 +15,9 @@ export default class TokenUtil implements Initializable {
   private readonly PBKDF2_SALT_SIZE: number = 18;
   private readonly PBKDF2_ITERATIONS: number = 33217;
 
+  private readonly scopeForChat: ReadonlyArray<string> =  ["chat:edit","chat:read"];
+  private readonly scopeForEvents: ReadonlyArray<string> = ["moderator:read:follows"];
+
   public constructor(
     private readonly encryptionPassphrase: string
   ) {}
