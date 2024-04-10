@@ -27,22 +27,6 @@ export default class TokenUtil implements Initializable {
     console.log("Initialized the TokenUtil!");
   }
 
-
-  public async findIdOfAccessTokenInDirectory(
-    tokenIntent: TokenIntent,
-  ): Promise<string> {
-    try {
-      const accessToken = (await readdir(`./access-tokens/${tokenIntent}/`))[0];
-      const idFromToken = accessToken.split(this.regExpToGetIdFromToken)[1];
-
-      return idFromToken;
-    } catch (e: unknown) {
-      throw new Error(
-        `Could not find an access token in the directory with intent \"${tokenIntent}\" :(`,
-      );
-    }
-  }
-
   private areArrayEqual(array1: ReadonlyArray<string>, array2: ReadonlyArray<string>): boolean {
     return array1.length === array2.length &&
            array1.every(elem => array2.includes(elem));
