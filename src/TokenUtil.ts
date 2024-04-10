@@ -64,16 +64,16 @@ export default class TokenUtil implements Initializable {
     return decryptedToken;
   }
 
-  private encryptPlainToken(plainToken: string): String {
-    const salt = randomBytes(this.PBKDF2_SALT_SIZE);
-    const key: Buffer = pbkdf2Sync(Buffer.from(this.encryptionPassphrase, "utf8"), salt, this.PBKDF2_ITERATIONS, this.ALGORITHM_KEY_SIZE, this.PBKDF2_NAME);
-    const iv: Buffer = randomBytes(this.ALGORITHM_NONCE_SIZE);
+  private encryptPlainToken(plainToken: AccessToken): string {
+    const salt: Uint8Array = randomBytes(this.PBKDF2_SALT_SIZE);
+    const key: Uint8Array = pbkdf2Sync(Buffer.from(this.encryptionPassphrase, "utf-8"), salt, this.PBKDF2_ITERATIONS, this.ALGORITHM_KEY_SIZE, this.PBKDF2_NAME);
+    const iv: Uint8Array = randomBytes(this.ALGORITHM_NONCE_SIZE);
 
     const cipher: CipherGCM = createCipheriv(this.ALGORITHM_NAME, key, iv);
 
-    const ciphertext = Buffer.concat([ cipher.update(Buffer.from(plainToken, "utf-8")), cipher.final() ]);
+    const ciphertext: Uint8Array = Buffer.concat([ cipher.update(Buffer.from(JSON.stringify(plainToken), "utf-8")), cipher.final() ]);
 
-    const saltNonceCipertextAndTag = Buffer.concat([ salt, iv, ciphertext, cipher.getAuthTag()]);
+    const saltNonceCipertextAndTag: Buffer = Buffer.concat([ salt, iv, ciphertext, cipher.getAuthTag()]);
 
     return saltNonceCipertextAndTag.toString("base64");
   }
