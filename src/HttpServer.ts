@@ -2,7 +2,7 @@ import express from "express";
 import { Initializable } from "./ObjectManager";
 import { createServer, Server } from "node:http";
 import cors from "cors";
-import TokenUtil from "./TokenUtil";
+import TwitchClient from "./TwitchClient";
 
 export default class HttpServer implements Initializable {
   private app = express();
@@ -10,7 +10,8 @@ export default class HttpServer implements Initializable {
 
   constructor(
     private readonly port: string,
-    private readonly tokenUtil: TokenUtil
+    private readonly tokenUtil: TokenUtil,
+    private readonly twitchClient: TwitchClient
   ) {
     this.port = port;
   }
