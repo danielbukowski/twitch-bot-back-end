@@ -16,9 +16,6 @@ export default class TokenUtil implements Initializable {
   private readonly PBKDF2_ITERATIONS: number = 33217;
 
   public constructor(
-    private readonly clientId: string, 
-    private readonly clientSecret: string,
-    private readonly oauthRedirectUri: string,
     private readonly encryptionPassphrase: string
   ) {}
 

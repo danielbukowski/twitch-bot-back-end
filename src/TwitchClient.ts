@@ -6,7 +6,11 @@ import { TokenIntent } from "./TokenUtil";
 export default class TwitchClient implements Initializable {
   private apiClient: ApiClient;
 
-  constructor(private readonly authProvider: RefreshingAuthProvider) {
+  constructor(
+    private readonly authProvider: RefreshingAuthProvider,
+    private readonly clientId: string, 
+    private readonly clientSecret: string,
+    private readonly oauthRedirectUri: string,) {
     this.apiClient = new ApiClient({
       authProvider: this.authProvider,
     });
