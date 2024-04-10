@@ -38,16 +38,4 @@ export default class TwitchClient implements Initializable {
       return undefined;
     }
   }
-
-  public async getIdFromAccessTokenForIntent(
-    tokenIntent: TokenIntent,
-  ): Promise<string> {
-    try {
-      return this.apiClient.asIntent([tokenIntent], async (ctx) => {
-        return (await ctx.getTokenInfo()).userId as string;
-      });
-    } catch (e: unknown) {
-      throw new Error(`Could not get id for intent \'${tokenIntent}\' :/`);
-    }
-  }
 }
