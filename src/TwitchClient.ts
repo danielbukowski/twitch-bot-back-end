@@ -21,15 +21,13 @@ export default class TwitchClient implements Initializable {
     console.log("Initialized the TwitchClient!");
   }
 
-  public async getChatbotName(): Promise<string> {
+  public async getChatbotName(): Promise<string | undefined> {
     try {
       return this.apiClient.asIntent(["chat"], async (ctx) => {
         return (await ctx.getTokenInfo()).userName as string;
       });
     } catch (e: unknown) {
-      throw new Error(
-        "Could not get a username from the chatbot access token :/",
-      );
+      return undefined;
     }
   }
 
