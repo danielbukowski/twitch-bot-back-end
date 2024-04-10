@@ -24,14 +24,22 @@ export default class TwitchEventListener implements Initializable {
     this.eventSub.onChannelSubscription(channelId, (e) => {
       const userName = e.userDisplayName;
 
-      this.socketServer.handleFirstSubscription(userName);
+      this.socketServer.getSocketIO().emit("twitch-alert-message", {
+        type: "FIRST_SUB",
+        username,
+      });
+
     });
 
     this.eventSub.onChannelSubscriptionMessage(channelId, (e) => {
       const userName = e.userDisplayName;
       const subStreakInMonths = e.streakMonths ?? 0;
 
-      this.socketServer.handleResubscription(userName, subStreakInMonths);
+      this.socketServer.getSocketIO().emit("twitch-alert-message", {
+        type: "RE_SUB",
+        username,
+        subStreakInMonths,
+      });
     });
 
     this.eventSub.start();

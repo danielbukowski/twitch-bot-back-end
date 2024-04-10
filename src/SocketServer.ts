@@ -24,19 +24,4 @@ export default class SocketServer implements Initializable {
 
     console.log("Initialized the SocketClient!");
   }
-
-  public handleFirstSubscription(username: string): void {
-    this.io.emit("twitch-alert-message", {
-      type: "FIRST_SUB",
-      username,
-    });
-  }
-
-  public handleResubscription(username: string, subStreakInMonths: number): void {
-    this.io.emit("twitch-alert-message", {
-      type: "RE_SUB",
-      username,
-      subStreakInMonths,
-    });
-  }
 }
