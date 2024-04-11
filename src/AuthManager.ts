@@ -27,7 +27,7 @@ export default class AuthManager implements Initializable {
       async (userId: string, newToken: AccessToken) => {
         const scopesOfNewToken = newToken.scope;
 
-        const tokenIntent: TokenIntent | undefined = this.tokenUtil.checkUseOfScope(scopesOfNewToken);
+        const tokenIntent: TokenIntent | undefined = this.tokenUtil.checkUseOfScopes(scopesOfNewToken);
 
         if(!tokenIntent) {
           throw new Error("An error occured when refreshing an access token");

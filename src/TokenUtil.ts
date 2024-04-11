@@ -14,8 +14,8 @@ export default class TokenUtil implements Initializable {
   private readonly PBKDF2_SALT_SIZE: number = 18;
   private readonly PBKDF2_ITERATIONS: number = 33217;
 
-  private readonly scopeForChat: ReadonlyArray<string> =  ["chat:edit","chat:read"];
-  private readonly scopeForEvents: ReadonlyArray<string> = ["moderator:read:follows"];
+  private readonly scopesForChat: ReadonlyArray<string> =  ["chat:edit","chat:read"];
+  private readonly scopesForEvents: ReadonlyArray<string> = ["moderator:read:follows"];
 
   public constructor(
     private readonly encryptionPassphrase: string
@@ -31,10 +31,10 @@ export default class TokenUtil implements Initializable {
            array1.every(elem => array2.includes(elem));
   }
 
-  public checkUseOfScope(scopes: string[]): TokenIntent | undefined {
-    if(this.areArrayEqual(scopes, this.scopeForChat)) {
+  public checkUseOfScopes(scopes: string[]): TokenIntent | undefined {
+    if(this.areArrayEqual(scopes, this.scopesForChat)) {
       return "chat";
-    } else if(this.areArrayEqual(scopes, this.scopeForEvents)) {
+    } else if(this.areArrayEqual(scopes, this.scopesForEvents)) {
       return "events";
     } else {
       return undefined;

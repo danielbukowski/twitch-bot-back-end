@@ -45,7 +45,7 @@ export default class ObjectManager {
         ).getAuthProvider(),
         config.twitchAppClientId,
         config.twitchAppClientSecret,
-        config.oauthRedirectUri
+        config.oauth2RedirectUri
       ),
     );
     this.manageableClasses.set(

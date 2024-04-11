@@ -10,7 +10,7 @@ export default class TwitchClient implements Initializable {
     private readonly authProvider: RefreshingAuthProvider,
     private readonly clientId: string, 
     private readonly clientSecret: string,
-    private readonly oauthRedirectUri: string,) {
+    private readonly oauth2RedirectUri: string,) {
     this.apiClient = new ApiClient({
       authProvider: this.authProvider,
     });
@@ -26,7 +26,7 @@ export default class TwitchClient implements Initializable {
   }
 
   public async exchangeCodeToAccessToken(code: string): Promise<AccessToken> {
-    return await exchangeCode(this.clientId, this.clientSecret, code, this.oauthRedirectUri);
+    return await exchangeCode(this.clientId, this.clientSecret, code, this.oauth2RedirectUri);
   }
 
   public async getChatbotName(): Promise<string | undefined> {
