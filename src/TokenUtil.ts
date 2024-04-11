@@ -15,7 +15,7 @@ export default class TokenUtil implements Initializable {
   private readonly PBKDF2_ITERATIONS: number = 33217;
 
   private readonly scopesForChat: ReadonlyArray<string> =  ["chat:edit","chat:read"];
-  private readonly scopesForEvents: ReadonlyArray<string> = ["moderator:read:follows"];
+  private readonly scopesForEvents: ReadonlyArray<string> = ["moderator:read:followers"];
 
   public constructor(
     private readonly encryptionPassphrase: string
