@@ -11,7 +11,8 @@ export default class HttpServer implements Initializable {
   constructor(
     private readonly port: string,
     private readonly tokenUtil: TokenUtil,
-    private readonly twitchClient: TwitchClient
+    private readonly twitchClient: TwitchClient,
+    private readonly frontendOrigin: string,
   ) {
     this.port = port;
   }
@@ -25,8 +26,7 @@ export default class HttpServer implements Initializable {
 
     this.app.use(
       cors({
-        //origin to dev Vue.js
-        origin: "http://localhost:5173",
+        origin: this.frontendOrigin,
         methods: ["GET", "POST"],
         credentials: true,
       }),
