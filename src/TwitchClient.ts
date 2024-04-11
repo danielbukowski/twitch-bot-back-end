@@ -1,7 +1,6 @@
 import { ApiClient } from "@twurple/api";
 import { Initializable } from "./ObjectManager";
-import { RefreshingAuthProvider } from "@twurple/auth";
-import { TokenIntent } from "./TokenUtil";
+import { AccessToken, RefreshingAuthProvider, exchangeCode } from "@twurple/auth";
 
 export default class TwitchClient implements Initializable {
   private apiClient: ApiClient;
