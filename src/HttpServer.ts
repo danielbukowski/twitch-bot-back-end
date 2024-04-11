@@ -65,11 +65,19 @@ export default class HttpServer implements Initializable {
     }
   });
   
+    this.app.use(this.errorHandler);
 
     this.httpServer.listen(this.port, () => {
       console.log(`Server is running at http://localhost:${this.port}`);
     });
 
     console.log("Initialized the HttpServer!");
+  }
+
+  private errorHandler(err: unknown, req: Request, res: Response, next: NextFunction): void {
+      res.status(500).json({
+        status: 500,
+        message: "Internal Server Error"
+      });
   }
 }
