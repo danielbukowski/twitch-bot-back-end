@@ -48,7 +48,7 @@ export default class TokenUtil implements Initializable {
     await writeFile(
       `./access-tokens/${tokenIntent}.txt`,
       encryptedToken,
-      { encoding: "base64" }
+      { encoding: "utf-8" }
     );
   } 
 
@@ -57,7 +57,7 @@ export default class TokenUtil implements Initializable {
   ): Promise<AccessToken> {
     const encryptedToken: string = await readFile(
         `./access-tokens/${tokenIntent}.txt`,
-        { encoding: "base64" }
+        { encoding: "utf-8" }
     );
 
     const decryptedToken: AccessToken = this.decryptToken(encryptedToken);
