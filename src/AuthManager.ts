@@ -2,6 +2,11 @@ import { AccessToken, RefreshingAuthProvider } from "@twurple/auth";
 import { Initializable } from "./ObjectManager";
 import TokenUtil, { TokenIntent } from "./TokenUtil";
 
+export interface TokenStorage {
+  getAllAccessTokens(): Promise<Array<{tokenIntent: TokenIntent, accessToken: AccessToken}>>;
+  saveAccessToken(tokenIntent: TokenIntent, accessToken: AccessToken): Promise<void>;
+}
+
 export default class AuthManager implements Initializable {
   private authProvider: RefreshingAuthProvider;
 
