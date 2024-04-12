@@ -22,8 +22,8 @@ function HasRole(roles: UserRole[]) {
             return decoratedMethod.call(this, ...args);
           }
           
-          for(const role of roles) {
-            if(userInfo[`is${role}`]) {
+          for(const roleName of roles) {
+            if(userInfo[`is${roleName}`]) {
               return decoratedMethod.call(this, ...args);
             }
           }
