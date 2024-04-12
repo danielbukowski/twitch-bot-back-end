@@ -27,14 +27,4 @@ export default class TwitchClient implements Initializable {
   public async exchangeCodeToAccessToken(code: string): Promise<AccessToken> {
     return await exchangeCode(this.clientId, this.clientSecret, code, this.oauth2RedirectUri);
   }
-
-  public async getChatbotName(): Promise<string | undefined> {
-    try {
-      return this.apiClient.asIntent(["chat"], async (ctx) => {
-        return (await ctx.getTokenInfo()).userName as string;
-      });
-    } catch (e: unknown) {
-      return undefined;
-    }
-  }
 }
