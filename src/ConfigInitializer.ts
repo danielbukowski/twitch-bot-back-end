@@ -2,20 +2,20 @@ import dotenv from "dotenv";
 dotenv.config();
 
 interface Config {
-  readonly twitchAppClientId: string;
-  readonly twitchAppClientSecret: string;
-  readonly httpServerPort: string;
-  readonly youtubeApiKey: string;
-  readonly twitchChannel: string;
-  readonly encryptionPassphrase: string;
-  readonly oauth2RedirectUri: string;
-  readonly frontendOrigin: string;
+  twitchAppClientId: string;
+  twitchAppClientSecret: string;
+  httpServerPort: string;
+  youtubeApiKey: string;
+  twitchChannel: string;
+  encryptionPassphrase: string;
+  oauth2RedirectUri: string;
+  frontendOrigin: string;
 }
 
 export type UserRole = "Mod" | "Subscriber" | "Vip" | "Broadcaster" | "Artist" | "Founder";
 
 export default class ConfigInitializer {
-  private config: Config;
+  private config: Readonly<Config>;
 
   constructor() {
     this.config = {
