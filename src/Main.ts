@@ -11,7 +11,7 @@ const objectManager = new ObjectManager(configInitializer);
   } catch (e: unknown) {
     if (e instanceof Error) {
       console.log(
-        `An error occurred when running the application, reason: ${e.message}`,
+        `\x1b[31mAn error occurred when running the application, reason: ${e.message}\x1b[0m`,
       );
       console.log(e.stack);
     }
