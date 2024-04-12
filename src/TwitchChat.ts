@@ -39,7 +39,6 @@ export default class TwitchChat implements Initializable {
   private chatbotName!: string;
 
   public constructor(
-    private readonly twitchChannel: string,
     private readonly authProvider: RefreshingAuthProvider,
     private readonly youtubeClient: YoutubeClient,
     private readonly songRequestManager: SongRequestManager,

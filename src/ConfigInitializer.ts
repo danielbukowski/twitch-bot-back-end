@@ -6,7 +6,6 @@ interface Config {
   twitchAppClientSecret: string;
   httpServerPort: string;
   youtubeApiKey: string;
-  twitchChannel: string;
   encryptionPassphrase: string;
   oauth2RedirectUri: string;
   frontendOrigin: string;
@@ -23,7 +22,6 @@ export default class ConfigInitializer {
       twitchAppClientSecret: process.env.TWITCH_CLIENT_SECRET || "",
       httpServerPort: process.env.HTTP_SERVER_PORT || "",
       youtubeApiKey: process.env.YOUTUBE_API_KEY || "",
-      twitchChannel: process.env.TWITCH_CHANNEL || "",
       encryptionPassphrase: process.env.ENCRYPTION_PASSPHRASE || "",
       oauth2RedirectUri: process.env.OAUTH2_REDIRECT_URI || "",
       frontendOrigin: process.env.FRONTEND_ORIGIN || ""

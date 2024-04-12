@@ -51,7 +51,6 @@ export default class ObjectManager {
     this.manageableClasses.set(
       TwitchChat.name,
       new TwitchChat(
-        config.twitchChannel,
         (
           this.manageableClasses.get(AuthManager.name) as AuthManager
         ).getAuthProvider(),
