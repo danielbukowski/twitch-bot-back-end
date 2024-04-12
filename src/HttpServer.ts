@@ -31,6 +31,7 @@ export default class HttpServer implements Initializable {
         origin: this.frontendOrigin,
         methods: ["GET", "POST"],
         credentials: true,
+        maxAge: 86400
       }),
     );
 
