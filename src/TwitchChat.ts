@@ -36,7 +36,7 @@ export default class TwitchChat implements Initializable {
   private readonly MIN_VIDEO_VIEWS: number = 18_000;
   private readonly MAX_VIDEO_DURATION_IN_SECONDS: number = 360;
   private chatClient!: ChatClient;
-  private botName: string | undefined;
+  private chatbotName!: string;
 
   public constructor(
     private readonly twitchChannel: string,
@@ -53,22 +53,43 @@ export default class TwitchChat implements Initializable {
   public async init(): Promise<void> {
     console.log("Initializing the TwitchChat...");
 
-    this.chatClient = new ChatClient({
-      authProvider: this.authProvider,
-      channels: [this.twitchChannel],
-      webSocket: true,
-      authIntents: ["chat"],
-    });
+    try {
+      this.chatbotName = await this.twitchClient.getApiClient().asIntent(["chat"], async (ctx) => {
+        return (await (ctx.getTokenInfo())).userName as string
+      });
 
-    this.botName = await this.twitchClient.getChatbotName();
+      if(!this.chatbotName) {
+        throw new Error("Could not get the bot name from an access token");
+      }
+      
+      const broadcasterChannelName: string = await this.twitchClient.getApiClient().asIntent(["events"], async (ctx) => {
+        return (await ctx.getTokenInfo()).userName as string;
+      });
 
-    this.setChatClientListeners();
-    this.chatClient.connect();
+      if(!broadcasterChannelName) {
+        throw new Error("Could not get the broadcaster channel name from an access token");
+      }
 
-    console.log("Initialized the TwitchChat!");
+      this.chatClient = new ChatClient({
+        authProvider: this.authProvider,
+        channels: [broadcasterChannelName],
+        webSocket: true,
+        authIntents: ["chat"],
+      });
+  
+      this.setChatListeners();
+      this.chatClient.connect();
+  
+      console.log("Initialized the TwitchChat!");
+    }
+    catch (e: unknown) {
+      if(e instanceof Error) {
+        console.log(`\x1b[31mFailed to initialize the TwitchChat class, reason: ${e.message}\x1b[0m`);
+      }
+    }
   }
 
-  private setChatClientListeners(): void {
+  private setChatListeners(): void {
     this.chatClient.onDisconnect(() => {
       console.log("I have been disconnected from the chat :(");
     });
@@ -82,7 +103,7 @@ export default class TwitchChat implements Initializable {
       async (channel: string, user: string, text: string, msg: ChatMessage) => {
         text = text.trim();
 
-        if (!text.startsWith(this.COMMAND_PREFIX) || user === this.botName)
+        if (!text.startsWith(this.COMMAND_PREFIX) || user === this.chatbotName)
           return;
 
         const [commandName, ...commandParameters] = text.split(" ");
