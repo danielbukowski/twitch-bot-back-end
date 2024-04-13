@@ -64,7 +64,7 @@ export default class TokenUtil implements Initializable {
     return decryptedToken;
   }
 
-  private encryptPlainToken(plainToken: AccessToken): string {
+  public encryptPlainToken(plainToken: AccessToken): string {
     const salt: Uint8Array = randomBytes(this.PBKDF2_SALT_SIZE);
     const key: Uint8Array = pbkdf2Sync(Buffer.from(this.encryptionPassphrase, "utf-8"), salt, this.PBKDF2_ITERATIONS, this.ALGORITHM_KEY_SIZE, this.PBKDF2_NAME);
     const iv: Uint8Array = randomBytes(this.ALGORITHM_NONCE_SIZE);
@@ -78,7 +78,7 @@ export default class TokenUtil implements Initializable {
     return saltNonceCipertextAndTag.toString("base64");
   }
 
-  private decryptToken(encryptedToken: string): AccessToken {
+  public decryptToken(encryptedToken: string): AccessToken {
     let saltNonceCipertextAndTag: Uint8Array = Buffer.from(encryptedToken, "base64");
 
     let salt: Uint8Array = saltNonceCipertextAndTag.slice(0, this.PBKDF2_SALT_SIZE);
