@@ -37,8 +37,6 @@ export default class AuthManager implements Initializable {
         if(!tokenIntent) {
           throw new Error("An error occured when refreshing an access token");
         }
-
-        await this.tokenUtil.writeAccessTokenToDirectory(newToken, tokenIntent);
        }
      );
   

@@ -1,6 +1,5 @@
 import { AccessToken } from "@twurple/auth";
 import { Initializable } from "./ObjectManager";
-import { readFile, readdir, writeFile } from "fs/promises";
 import { createCipheriv, pbkdf2Sync, randomBytes, CipherGCM, CipherGCMTypes, createDecipheriv, DecipherGCM } from "crypto";
 
 export type TokenIntent = "events" | "chat";
@@ -39,29 +38,6 @@ export default class TokenUtil implements Initializable {
     } else {
       return undefined;
     }
-  }
-
-
-  public async writeAccessTokenToDirectory(plainToken: AccessToken, tokenIntent: TokenIntent): Promise<void> {
-    const encryptedToken: string = this.encryptPlainToken(plainToken);
-    
-    await writeFile(
-      `./access-tokens/${tokenIntent}.txt`,
-      encryptedToken,
-      { encoding: "utf-8" }
-    );
-  } 
-
-  public async readAccessTokenFromDirectory(
-    tokenIntent: TokenIntent,
-  ): Promise<AccessToken> {
-    const encryptedToken: string = await readFile(
-        `./access-tokens/${tokenIntent}.txt`,
-        { encoding: "utf-8" }
-    );
-
-    const decryptedToken: AccessToken = this.decryptToken(encryptedToken);
-    return decryptedToken;
   }
 
   public encryptPlainToken(plainToken: AccessToken): string {
