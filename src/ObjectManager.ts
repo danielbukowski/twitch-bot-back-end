@@ -3,6 +3,7 @@ import ConfigInitializer from "./ConfigInitializer";
 import HttpServer from "./HttpServer";
 import SocketServer from "./SocketServer";
 import SongRequestManager from "./SongRequestManager";
+import TokenStorageFactory from "./TokenStorageFactory";
 import TokenUtil from "./TokenUtil";
 import TwitchChat from "./TwitchChat";
 import TwitchClient from "./TwitchClient";
@@ -25,6 +26,13 @@ export default class ObjectManager {
         config.encryptionPassphrase
       ),
     );
+    this.manageableClasses.set(
+      TokenStorageFactory.name,
+      new TokenStorageFactory(
+        config.tokenStorageType,
+        this.manageableClasses.get(TokenUtil.name) as TokenUtil
+      )
+    )
     this.manageableClasses.set(
       AuthManager.name,
       new AuthManager(
