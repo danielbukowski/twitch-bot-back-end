@@ -58,19 +58,6 @@ export default class ObjectManager {
       ),
     );
     this.manageableClasses.set(
-      TwitchChat.name,
-      new TwitchChat(
-        (
-          this.manageableClasses.get(AuthManager.name) as AuthManager
-        ).getAuthProvider(),
-        this.manageableClasses.get(YoutubeClient.name) as YoutubeClient,
-        this.manageableClasses.get(
-          SongRequestManager.name,
-        ) as SongRequestManager,
-        this.manageableClasses.get(TwitchClient.name) as TwitchClient,
-      ),
-    );
-    this.manageableClasses.set(
       HttpServer.name,
       new HttpServer(
         config.httpServerPort,
@@ -89,17 +76,30 @@ export default class ObjectManager {
       ),
     );
     this.manageableClasses.set(
-      TwitchEventListener.name,
-      new TwitchEventListener(
-        (this.manageableClasses.get(SocketServer.name) as SocketServer).getSocketIO(),
-        this.manageableClasses.get(TwitchClient.name) as TwitchClient,
-      ),
-    );
-    this.manageableClasses.set(
       SongRequestManager.name,
       new SongRequestManager(
         this.manageableClasses.get(YoutubeClient.name) as YoutubeClient,
         (this.manageableClasses.get(SocketServer.name) as SocketServer).getSocketIO()
+      ),
+    );
+    this.manageableClasses.set(
+      TwitchChat.name,
+      new TwitchChat(
+        (
+          this.manageableClasses.get(AuthManager.name) as AuthManager
+        ).getAuthProvider(),
+        this.manageableClasses.get(YoutubeClient.name) as YoutubeClient,
+        this.manageableClasses.get(
+          SongRequestManager.name,
+        ) as SongRequestManager,
+        this.manageableClasses.get(TwitchClient.name) as TwitchClient,
+      ),
+    );
+    this.manageableClasses.set(
+      TwitchEventListener.name,
+      new TwitchEventListener(
+        (this.manageableClasses.get(SocketServer.name) as SocketServer).getSocketIO(),
+        this.manageableClasses.get(TwitchClient.name) as TwitchClient,
       ),
     );
   }
