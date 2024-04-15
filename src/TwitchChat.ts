@@ -5,7 +5,7 @@ import YoutubeClient from "./YoutubeClient";
 import { VideoDetail } from "./YoutubeClient";
 import { Duration } from "luxon";
 import SongRequestManager, { Song } from "./SongRequestManager";
-import SongRequestError from "./SongRequestError";
+import { SongRequestError } from "./SongRequestManager";
 import TwitchClient from "./TwitchClient";
 import { UserRole } from "./ConfigInitializer";
 

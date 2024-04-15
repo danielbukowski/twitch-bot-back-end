@@ -2,6 +2,13 @@ import { Server as SocketIO } from "socket.io";
 import { Initializable } from "./ObjectManager";
 import YoutubeClient from "./YoutubeClient";
 
+export class SongRequestError extends Error {
+  public constructor(message: string) {
+    super(message);
+    this.name = "SongRequestError";
+  }
+}
+
 export interface Song {
   videoId: string;
   title: string;
