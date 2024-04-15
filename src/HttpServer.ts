@@ -5,6 +5,8 @@ import cors from "cors";
 import TokenUtil, { TokenIntent } from "./TokenUtil";
 import { AccessToken } from "@twurple/auth";
 import TwitchClient from "./TwitchClient";
+import { TokenStorage } from "./AuthManager";
+import TokenStorageFactory from "./TokenStorageFactory";
 
 export default class HttpServer implements Initializable {
   private app = express();
@@ -15,6 +17,7 @@ export default class HttpServer implements Initializable {
     private readonly tokenUtil: TokenUtil,
     private readonly twitchClient: TwitchClient,
     private readonly frontendOrigin: string,
+    private readonly tokenStorageFactory: TokenStorageFactory
   ) {
     this.port = port;
   }
