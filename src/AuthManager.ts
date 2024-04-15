@@ -30,6 +30,18 @@ export default class AuthManager implements Initializable {
   public async init(): Promise<void> {
     console.log("Initializing the AuthManager...");
 
+    const tokenStorage = this.tokenStorageFactory.getTokenStorage();
+    
+    const tokens: {
+      tokenIntent: TokenIntent;
+      accessToken: AccessToken;
+    }[] = await tokenStorage.getAllAccessTokens();
+
+
+    for (const token of tokens) {
+      await this.authProvider.addUserForToken(token.accessToken, [token.tokenIntent]);
+    }
+
     this.authProvider.onRefresh(
       async (userId: string, newToken: AccessToken) => {
         const scopesOfNewToken = newToken.scope;
