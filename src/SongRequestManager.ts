@@ -1,4 +1,4 @@
-import { Server as SocketIO } from "socket.io";
+import { Namespace, Server as SocketIO } from "socket.io";
 import { Initializable } from "./ObjectManager";
 import YoutubeClient from "./YoutubeClient";
 
@@ -25,10 +25,14 @@ export default class SongRequestManager implements Initializable {
     private readonly socketIO: SocketIO,
   ) {}
 
+  private getSongRequestNamespace(): Namespace<any> {
+    return this.socketIO.of("/song-request");
+  }
+
   public async init(): Promise<void> {
     console.log("Initializing the SongRequestManager...");
 
-    this.socketIO.of("/song-request").on("connection", (socket) => {
+    this.getSongRequestNamespace().on("connection", (socket) => {
       socket.on("request-from-frontend", (request: {
         type: string
       }) => {
@@ -50,26 +54,26 @@ export default class SongRequestManager implements Initializable {
   }
 
   public playSong(): void {
-      this.socketIO.of("/song-request").emit("song-request-message", {
+      this.getSongRequestNamespace().emit("song-request-message", {
         type: "PLAY"
       });
   }
 
   public pauseSong(): void {
-      this.socketIO.of("/song-request").emit("song-request-message", {
+      this.getSongRequestNamespace().emit("song-request-message", {
         type: "PAUSE"
       });
     }
   
   public skipSong(): void {
-    this.socketIO.of("/song-request").emit("song-request-message", {
+    this.getSongRequestNamespace().emit("song-request-message", {
       type: "SKIP_SONG"
     });
   }
 
   public async changeSongVolume(volumeValue: string): Promise<number | undefined> {
     try {
-      const response = await this.socketIO.of("/song-request").timeout(this.REQUEST_TIMEOUT).emitWithAck("song-request-message", {
+      const response = await this.getSongRequestNamespace().timeout(this.REQUEST_TIMEOUT).emitWithAck("song-request-message", {
         type: "CHANGE_VOLUME",
         volumeValue
       });
@@ -86,7 +90,7 @@ export default class SongRequestManager implements Initializable {
   
   private async getDurationOfCurrentPlayingSong(): Promise<number> {
     try {
-      const sockets = await this.socketIO.of("/song-request").fetchSockets();
+      const sockets = await this.getSongRequestNamespace().fetchSockets();
 
       const response: {
         durationInSeconds: number
@@ -117,7 +121,7 @@ export default class SongRequestManager implements Initializable {
       const audioData: string | undefined = await this.youTubeClient.downloadYouTubeAudio(song.videoId);
       if(!audioData) return;
 
-      this.socketIO.of("/song-request").emit("song-request-message", {
+      this.getSongRequestNamespace().emit("song-request-message", {
           type: "PLAY_NEXT_SONG",
           data: {
             title: song.title,
