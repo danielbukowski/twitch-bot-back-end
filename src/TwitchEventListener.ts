@@ -1,6 +1,6 @@
 import { EventSubWsListener } from "@twurple/eventsub-ws";
 import { Initializable } from "./ObjectManager";
-import { Server as SocketIO } from "socket.io";
+import { Namespace, Server as SocketIO } from "socket.io";
 import TwitchClient from "./TwitchClient";
 import { UserIdResolvable } from "@twurple/api";
 export default class TwitchEventListener implements Initializable {
@@ -10,6 +10,10 @@ export default class TwitchEventListener implements Initializable {
     private readonly socketIO: SocketIO,
     private readonly twitchClient: TwitchClient,
   ) {}
+
+  private getTwitchEventNamespace(): Namespace<any> {
+    return this.socketIO.of("twitch-alerts");
+  }
 
   public async init(): Promise<void> {
     console.log("Initializing the TwitchEventListener...");
@@ -42,7 +46,7 @@ export default class TwitchEventListener implements Initializable {
     this.eventSub.onChannelSubscription(broadcasterId, (e) => {
       const username = e.userDisplayName;
 
-      this.socketIO.of("twitch-alerts").emit("twitch-alert-message", {
+      this.getTwitchEventNamespace().emit("twitch-alert-message", {
         type: "FIRST_SUB",
         username,
       });
@@ -53,7 +57,7 @@ export default class TwitchEventListener implements Initializable {
       const username = e.userDisplayName;
       const subStreakInMonths = e.streakMonths ?? 0;
 
-      this.socketIO.of("twitch-alerts").emit("twitch-alert-message", {
+      this.getTwitchEventNamespace().emit("twitch-alert-message", {
         type: "RE_SUB",
         username,
         subStreakInMonths,
