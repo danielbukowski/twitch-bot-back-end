@@ -14,6 +14,7 @@ export default class AuthManager implements Initializable {
     private readonly clientId: string,
     private readonly clientSecret: string,
     private readonly tokenUtil: TokenUtil,
+    private readonly tokenStorageFactory: TokenStorageFactory
   ) {
     this.authProvider = new RefreshingAuthProvider({
       clientId,

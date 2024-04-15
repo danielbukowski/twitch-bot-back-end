@@ -39,6 +39,7 @@ export default class ObjectManager {
         config.twitchAppClientId,
         config.twitchAppClientSecret,
         this.manageableClasses.get(TokenUtil.name) as TokenUtil,
+        this.manageableClasses.get(TokenStorageFactory.name) as TokenStorageFactory
       ),
     );
     this.manageableClasses.set(
