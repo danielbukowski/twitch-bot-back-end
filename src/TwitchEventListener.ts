@@ -42,7 +42,7 @@ export default class TwitchEventListener implements Initializable {
     this.eventSub.onChannelSubscription(broadcasterId, (e) => {
       const username = e.userDisplayName;
 
-      this.socketIO.emit("twitch-alert-message", {
+      this.socketIO.of("twitch-alerts").emit("twitch-alert-message", {
         type: "FIRST_SUB",
         username,
       });
@@ -53,7 +53,7 @@ export default class TwitchEventListener implements Initializable {
       const username = e.userDisplayName;
       const subStreakInMonths = e.streakMonths ?? 0;
 
-      this.socketIO.emit("twitch-alert-message", {
+      this.socketIO.of("twitch-alerts").emit("twitch-alert-message", {
         type: "RE_SUB",
         username,
         subStreakInMonths,
