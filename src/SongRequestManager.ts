@@ -19,7 +19,7 @@ export default class SongRequestManager implements Initializable {
   ) {}
 
   public async init(): Promise<void> {
-    console.log("Initializing the SongRequestClient...");
+    console.log("Initializing the SongRequestManager...");
 
     this.socketIO.of("/song-request").on("connection", (socket) => {
       socket.on("request-from-frontend", (request: {
@@ -35,7 +35,7 @@ export default class SongRequestManager implements Initializable {
       });
     });
 
-    console.log("Initialized the SongRequestClient!");
+    console.log("Initialized the SongRequestManager!");
   }
 
   public addSongToQueue(song: Song): number {
