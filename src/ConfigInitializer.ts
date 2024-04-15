@@ -9,6 +9,7 @@ interface Config {
   encryptionPassphrase: string;
   oauth2RedirectUri: string;
   frontendOrigin: string;
+  tokenStorageType: string;
 }
 
 export type UserRole = "Mod" | "Subscriber" | "Vip" | "Broadcaster" | "Artist" | "Founder";
@@ -24,7 +25,8 @@ export default class ConfigInitializer {
       youtubeApiKey: process.env.YOUTUBE_API_KEY || "",
       encryptionPassphrase: process.env.ENCRYPTION_PASSPHRASE || "",
       oauth2RedirectUri: process.env.OAUTH2_REDIRECT_URI || "",
-      frontendOrigin: process.env.FRONTEND_ORIGIN || ""
+      frontendOrigin: process.env.FRONTEND_ORIGIN || "",
+      tokenStorageType: process.env.TOKEN_STORAGE_TYPE || "IN_MEMORY"
     };
   }
 
