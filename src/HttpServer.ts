@@ -61,7 +61,7 @@ export default class HttpServer implements Initializable {
           return;
         }
       
-        this.tokenUtil.writeAccessTokenToDirectory(accessToken, tokenIntent);
+        this.tokenStorageFactory.getTokenStorage().saveAccessToken(tokenIntent, accessToken);
 
         res.sendStatus(200);
       } catch (e: unknown) {
