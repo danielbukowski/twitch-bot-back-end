@@ -1,6 +1,7 @@
 import { AccessToken, RefreshingAuthProvider } from "@twurple/auth";
 import { Initializable } from "./ObjectManager";
 import TokenUtil, { TokenIntent } from "./TokenUtil";
+import TokenStorageFactory from "./TokenStorageFactory";
 
 export interface TokenStorage {
   getAllAccessTokens(): Promise<Array<{tokenIntent: TokenIntent, accessToken: AccessToken}>>;
@@ -38,6 +39,8 @@ export default class AuthManager implements Initializable {
         if(!tokenIntent) {
           throw new Error("An error occured when refreshing an access token");
         }
+
+        tokenStorage.saveAccessToken(tokenIntent, newToken);
        }
      );
   
