@@ -70,13 +70,6 @@ export default class ObjectManager {
       ),
     );
     this.manageableClasses.set(
-      TwitchEventListener.name,
-      new TwitchEventListener(
-        (this.manageableClasses.get(SocketServer.name) as SocketServer).getSocketIO(),
-        this.manageableClasses.get(TwitchClient.name) as TwitchClient,
-      ),
-    );
-    this.manageableClasses.set(
       HttpServer.name,
       new HttpServer(
         config.httpServerPort,
@@ -91,6 +84,13 @@ export default class ObjectManager {
         (
           this.manageableClasses.get(HttpServer.name) as HttpServer
         ).getHttpServer(),
+      ),
+    );
+    this.manageableClasses.set(
+      TwitchEventListener.name,
+      new TwitchEventListener(
+        (this.manageableClasses.get(SocketServer.name) as SocketServer).getSocketIO(),
+        this.manageableClasses.get(TwitchClient.name) as TwitchClient,
       ),
     );
     this.manageableClasses.set(
