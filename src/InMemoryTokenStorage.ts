@@ -4,7 +4,7 @@ import TokenUtil, { TokenIntent } from "./TokenUtil";
 import { readFile, writeFile, readdir } from "fs/promises";
 
 export default class InMemoryTokenStorage implements TokenStorage {
-    private readonly TOKEN_DIRECTORY_PATH = "./access-tokens";
+    private readonly DIRECTORY_PATH_TO_TOKENS = "./access-tokens";
 
     constructor(private readonly tokenUtil: TokenUtil) {
 
@@ -13,7 +13,7 @@ export default class InMemoryTokenStorage implements TokenStorage {
     public async getAllAccessTokens(): Promise<{ tokenIntent: TokenIntent; accessToken: AccessToken; }[]> {
         const tokens: { tokenIntent: TokenIntent; accessToken: AccessToken; }[] = []
 
-        const files = await readdir(this.TOKEN_DIRECTORY_PATH);
+        const files = await readdir(this.DIRECTORY_PATH_TO_TOKENS);
 
         for await (const fileName of files) {
             const tokenIntent: string | undefined = fileName.split(".")[0];
@@ -38,7 +38,7 @@ export default class InMemoryTokenStorage implements TokenStorage {
         const encryptedToken = this.tokenUtil.encryptPlainToken(accessToken);
 
         await writeFile(
-            `${this.TOKEN_DIRECTORY_PATH}/${tokenIntent}.txt`,
+            `${this.DIRECTORY_PATH_TO_TOKENS}/${tokenIntent}.txt`,
             encryptedToken,
             { encoding: "utf-8" }
         );
