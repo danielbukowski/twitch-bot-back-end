@@ -1,8 +1,0 @@
-package-lock.json
-package.json
-tsconfig.json
-nodemon.json
-prettier.config.js
-node_modules/
-dist/
-.prettierrc
