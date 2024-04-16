@@ -1,7 +1,8 @@
-import { AccessToken, RefreshingAuthProvider } from "@twurple/auth";
-import { Initializable } from "./ObjectManager";
-import TokenUtil, { TokenIntent } from "./TokenUtil";
-import TokenStorageFactory from "./TokenStorageFactory";
+import { type AccessToken, RefreshingAuthProvider } from "@twurple/auth";
+import type { Initializable } from "./ObjectManager";
+import type TokenStorageFactory from "./TokenStorageFactory";
+import type TokenUtil from "./TokenUtil";
+import type { TokenIntent } from "./TokenUtil";
 
 export interface TokenStorage {
 	getAllAccessTokens(): Promise<

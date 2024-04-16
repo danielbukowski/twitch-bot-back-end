@@ -1,6 +1,6 @@
-import { Namespace, Server as SocketIO } from "socket.io";
-import { Initializable } from "./ObjectManager";
-import YoutubeClient from "./YoutubeClient";
+import type { Namespace, Server as SocketIO } from "socket.io";
+import type { Initializable } from "./ObjectManager";
+import type YoutubeClient from "./YoutubeClient";
 
 export class SongRequestError extends Error {
 	public constructor(message: string) {

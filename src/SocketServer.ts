@@ -1,6 +1,6 @@
+import type { Server } from "node:http";
 import { Server as SocketIO } from "socket.io";
-import { Initializable } from "./ObjectManager";
-import { Server } from "node:http";
+import type { Initializable } from "./ObjectManager";
 
 export default class SocketServer implements Initializable {
 	private io: SocketIO;

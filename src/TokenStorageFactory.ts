@@ -1,7 +1,7 @@
-import { TokenStorage } from "./AuthManager";
+import type { TokenStorage } from "./AuthManager";
 import InMemoryTokenStorage from "./InMemoryTokenStorage";
-import { Initializable } from "./ObjectManager";
-import TokenUtil from "./TokenUtil";
+import type { Initializable } from "./ObjectManager";
+import type TokenUtil from "./TokenUtil";
 
 export default class TokenStorageFactory implements Initializable {
 	private tokenStorage!: TokenStorage;

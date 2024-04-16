@@ -1,13 +1,14 @@
-import { RefreshingAuthProvider } from "@twurple/auth";
-import { ChatClient, ChatMessage, ChatUser } from "@twurple/chat";
-import { Initializable } from "./ObjectManager";
-import YoutubeClient from "./YoutubeClient";
-import { VideoDetail } from "./YoutubeClient";
+import type { RefreshingAuthProvider } from "@twurple/auth";
+import { ChatClient, type ChatMessage, ChatUser } from "@twurple/chat";
 import { Duration } from "luxon";
-import SongRequestManager, { Song } from "./SongRequestManager";
+import type { UserRole } from "./ConfigInitializer";
+import type { Initializable } from "./ObjectManager";
+import type SongRequestManager from "./SongRequestManager";
+import type { Song } from "./SongRequestManager";
 import { SongRequestError } from "./SongRequestManager";
-import TwitchClient from "./TwitchClient";
-import { UserRole } from "./ConfigInitializer";
+import type TwitchClient from "./TwitchClient";
+import type YoutubeClient from "./YoutubeClient";
+import type { VideoDetail } from "./YoutubeClient";
 
 function HasRole(roles: UserRole[]) {
 	return function actualDecorator(
@@ -263,7 +264,7 @@ export default class TwitchChat implements Initializable {
 		const newVolume: number | undefined =
 			await this.songRequestManager.changeSongVolume(volumeValue);
 
-		if (newVolume == undefined) return;
+		if (newVolume === undefined) return;
 
 		this.chatClient.say(
 			channel,
@@ -281,12 +282,12 @@ export default class TwitchChat implements Initializable {
 			return;
 		}
 
-		let response: string = `Current ${
+		let response = `Current ${
 			first3SongsInQueue.length === 1 ? "song" : "songs"
 		} in the queue: `;
 
 		for (let index = 0; index < first3SongsInQueue.length; index++) {
-			let song = first3SongsInQueue[index];
+			const song = first3SongsInQueue[index];
 			response += `#${index + 1} '${
 				song.title
 			}' https://www.youtube.com/watch?v=${song.videoId} added by @${
@@ -303,49 +304,50 @@ export default class TwitchChat implements Initializable {
 		queuePosition: number,
 		songTitle: string,
 	): string {
-		if (queueDuration === 0) {
+    let duration = queueDuration;
+		if (duration === 0) {
 			return `'${songTitle}' added to the queue at #${queuePosition} position! (playing in ~ now)`;
 		}
 
-		const hours = Math.floor(queueDuration / 3600);
+		const hours = Math.floor(duration / 3600);
 		if (hours >= 1) {
-			queueDuration %= 3600;
+			duration %= 3600;
 		}
 
-		const minutes = Math.floor(queueDuration / 60);
+		const minutes = Math.floor(duration / 60);
 		if (minutes >= 1) {
-			queueDuration %= 60;
+			duration %= 60;
 		}
 
-		const seconds = queueDuration;
+		const seconds = duration;
 
-		let times: string[] = [];
+		const time: string[] = [];
 
 		if (hours > 0) {
 			if (hours === 1) {
-				times.push("1 hour");
+				time.push("1 hour");
 			} else {
-				times.push(`${hours} hours`);
+				time.push(`${hours} hours`);
 			}
 		}
 
 		if (minutes > 0) {
 			if (minutes === 1) {
-				times.push("1 minute");
+				time.push("1 minute");
 			} else {
-				times.push(`${minutes} minutes`);
+				time.push(`${minutes} minutes`);
 			}
 		}
 
 		if (seconds > 0) {
 			if (seconds === 1) {
-				times.push("1 second");
+				time.push("1 second");
 			} else {
-				times.push(`${seconds} seconds`);
+				time.push(`${seconds} seconds`);
 			}
 		}
 
-		return `'${songTitle}' added to the queue at #${queuePosition} position! (playing in ~ ${times.join(
+		return `'${songTitle}' added to the queue at #${queuePosition} position! (playing in ~ ${time.join(
 			" and ",
 		)})`;
 	}

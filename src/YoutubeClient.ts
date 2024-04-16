@@ -1,6 +1,6 @@
 import axios from "axios";
-import { Initializable } from "./ObjectManager";
 import ytdl from "ytdl-core";
+import type { Initializable } from "./ObjectManager";
 
 export interface VideoDetail {
 	snippet: {

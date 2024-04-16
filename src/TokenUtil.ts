@@ -1,14 +1,14 @@
-import { AccessToken } from "@twurple/auth";
-import { Initializable } from "./ObjectManager";
 import {
+	type CipherGCM,
+	type CipherGCMTypes,
+	type DecipherGCM,
 	createCipheriv,
+	createDecipheriv,
 	pbkdf2Sync,
 	randomBytes,
-	CipherGCM,
-	CipherGCMTypes,
-	createDecipheriv,
-	DecipherGCM,
-} from "crypto";
+} from "node:crypto";
+import type { AccessToken } from "@twurple/auth";
+import type { Initializable } from "./ObjectManager";
 
 export type TokenIntent = "events" | "chat";
 
@@ -50,11 +50,11 @@ export default class TokenUtil implements Initializable {
 	public checkUseOfScopes(scopes: string[]): TokenIntent | undefined {
 		if (this.areArrayEqual(scopes, this.scopesForChat)) {
 			return "chat";
-		} else if (this.areArrayEqual(scopes, this.scopesForEvents)) {
+		} 
+    if (this.areArrayEqual(scopes, this.scopesForEvents)) {
 			return "events";
-		} else {
-			return undefined;
-		}
+		} 
+		return undefined;
 	}
 
 	public encryptPlainToken(plainToken: AccessToken): string {
@@ -86,20 +86,20 @@ export default class TokenUtil implements Initializable {
 	}
 
 	public decryptToken(encryptedToken: string): AccessToken {
-		let saltNonceCipertextAndTag: Uint8Array = Buffer.from(
+		const saltNonceCipertextAndTag: Uint8Array = Buffer.from(
 			encryptedToken,
 			"base64",
 		);
 
-		let salt: Uint8Array = saltNonceCipertextAndTag.slice(
+		const salt: Uint8Array = saltNonceCipertextAndTag.slice(
 			0,
 			this.PBKDF2_SALT_SIZE,
 		);
-		let ciphertextAndNonce: Uint8Array = saltNonceCipertextAndTag.slice(
+		const ciphertextAndNonce: Uint8Array = saltNonceCipertextAndTag.slice(
 			this.PBKDF2_SALT_SIZE,
 		);
 
-		let key: Uint8Array = pbkdf2Sync(
+		const key: Uint8Array = pbkdf2Sync(
 			Buffer.from(this.encryptionPassphrase, "utf8"),
 			salt,
 			this.PBKDF2_ITERATIONS,
@@ -107,16 +107,19 @@ export default class TokenUtil implements Initializable {
 			this.PBKDF2_NAME,
 		);
 
-		let iv: Uint8Array = ciphertextAndNonce.slice(0, this.ALGORITHM_NONCE_SIZE);
-		let ciphertext: Uint8Array = ciphertextAndNonce.slice(
+		const iv: Uint8Array = ciphertextAndNonce.slice(
+			0,
+			this.ALGORITHM_NONCE_SIZE,
+		);
+		const ciphertext: Uint8Array = ciphertextAndNonce.slice(
 			this.ALGORITHM_NONCE_SIZE,
 			ciphertextAndNonce.length - this.ALGORITHM_TAG_SIZE,
 		);
-		let tag: Uint8Array = ciphertextAndNonce.slice(
+		const tag: Uint8Array = ciphertextAndNonce.slice(
 			ciphertext.length + this.ALGORITHM_NONCE_SIZE,
 		);
 
-		let cipher: DecipherGCM = createDecipheriv(this.ALGORITHM_NAME, key, iv);
+		const cipher: DecipherGCM = createDecipheriv(this.ALGORITHM_NAME, key, iv);
 
 		cipher.setAuthTag(tag);
 		return JSON.parse(

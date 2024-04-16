@@ -1,8 +1,8 @@
+import type { UserIdResolvable } from "@twurple/api";
 import { EventSubWsListener } from "@twurple/eventsub-ws";
-import { Initializable } from "./ObjectManager";
-import { Namespace, Server as SocketIO } from "socket.io";
-import TwitchClient from "./TwitchClient";
-import { UserIdResolvable } from "@twurple/api";
+import type { Namespace, Server as SocketIO } from "socket.io";
+import type { Initializable } from "./ObjectManager";
+import type TwitchClient from "./TwitchClient";
 export default class TwitchEventListener implements Initializable {
 	private eventSub!: EventSubWsListener;
 

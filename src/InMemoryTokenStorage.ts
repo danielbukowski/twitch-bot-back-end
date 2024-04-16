@@ -1,7 +1,8 @@
-import { AccessToken } from "@twurple/auth";
-import { TokenStorage } from "./AuthManager";
-import TokenUtil, { TokenIntent } from "./TokenUtil";
-import { readFile, writeFile, readdir } from "fs/promises";
+import { readFile,readdir,writeFile}from"node:fs/promises";
+import type{ AccessToken }from "@twurple/auth";
+import type { TokenStorage } from "./AuthManager";
+import type TokenUtil from "./TokenUtil";
+import type { TokenIntent } from "./TokenUtil";
 
 export default class InMemoryTokenStorage implements TokenStorage {
 	private readonly DIRECTORY_PATH_TO_TOKENS = "./access-tokens";

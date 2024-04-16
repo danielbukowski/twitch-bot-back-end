@@ -1,5 +1,5 @@
-import ObjectManager from "./ObjectManager";
 import ConfigInitializer from "./ConfigInitializer";
+import ObjectManager from "./ObjectManager";
 
 const configInitializer = new ConfigInitializer();
 const objectManager = new ObjectManager(configInitializer);

@@ -1,12 +1,17 @@
-import express, { NextFunction, Request, Response } from "express";
-import { Initializable } from "./ObjectManager";
-import { createServer, Server } from "node:http";
+import { type Server, createServer } from "node:http";
+import type { AccessToken } from "@twurple/auth";
 import cors from "cors";
-import TokenUtil, { TokenIntent } from "./TokenUtil";
-import { AccessToken } from "@twurple/auth";
-import TwitchClient from "./TwitchClient";
+import express, {
+	type NextFunction,
+	type Request,
+	type Response,
+} from "express";
 import { TokenStorage } from "./AuthManager";
-import TokenStorageFactory from "./TokenStorageFactory";
+import type { Initializable } from "./ObjectManager";
+import type TokenStorageFactory from "./TokenStorageFactory";
+import type TokenUtil from "./TokenUtil";
+import type { TokenIntent } from "./TokenUtil";
+import type TwitchClient from "./TwitchClient";
 
 export default class HttpServer implements Initializable {
 	private app = express();

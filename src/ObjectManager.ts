@@ -1,5 +1,5 @@
 import AuthManager from "./AuthManager";
-import ConfigInitializer from "./ConfigInitializer";
+import type ConfigInitializer from "./ConfigInitializer";
 import HttpServer from "./HttpServer";
 import SocketServer from "./SocketServer";
 import SongRequestManager from "./SongRequestManager";
