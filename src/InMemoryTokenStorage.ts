@@ -1,5 +1,5 @@
-import { readFile,readdir,writeFile}from"node:fs/promises";
-import type{ AccessToken }from "@twurple/auth";
+import { readFile, readdir, writeFile } from "node:fs/promises";
+import type { AccessToken } from "@twurple/auth";
 import type { TokenStorage } from "./AuthManager";
 import type TokenUtil from "./TokenUtil";
 import type { TokenIntent } from "./TokenUtil";

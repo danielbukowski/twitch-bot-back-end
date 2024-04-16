@@ -50,10 +50,10 @@ export default class TokenUtil implements Initializable {
 	public checkUseOfScopes(scopes: string[]): TokenIntent | undefined {
 		if (this.areArrayEqual(scopes, this.scopesForChat)) {
 			return "chat";
-		} 
-    if (this.areArrayEqual(scopes, this.scopesForEvents)) {
+		}
+		if (this.areArrayEqual(scopes, this.scopesForEvents)) {
 			return "events";
-		} 
+		}
 		return undefined;
 	}
 

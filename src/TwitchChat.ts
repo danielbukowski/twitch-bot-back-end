@@ -304,7 +304,7 @@ export default class TwitchChat implements Initializable {
 		queuePosition: number,
 		songTitle: string,
 	): string {
-    let duration = queueDuration;
+		let duration = queueDuration;
 		if (duration === 0) {
 			return `'${songTitle}' added to the queue at #${queuePosition} position! (playing in ~ now)`;
 		}
