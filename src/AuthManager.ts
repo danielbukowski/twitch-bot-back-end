@@ -4,58 +4,65 @@ import TokenUtil, { TokenIntent } from "./TokenUtil";
 import TokenStorageFactory from "./TokenStorageFactory";
 
 export interface TokenStorage {
-  getAllAccessTokens(): Promise<Array<{tokenIntent: TokenIntent, accessToken: AccessToken}>>;
-  saveAccessToken(tokenIntent: TokenIntent, accessToken: AccessToken): Promise<void>;
+	getAllAccessTokens(): Promise<
+		Array<{ tokenIntent: TokenIntent; accessToken: AccessToken }>
+	>;
+	saveAccessToken(
+		tokenIntent: TokenIntent,
+		accessToken: AccessToken,
+	): Promise<void>;
 }
 
 export default class AuthManager implements Initializable {
-  private authProvider: RefreshingAuthProvider;
+	private authProvider: RefreshingAuthProvider;
 
-  constructor(
-    private readonly clientId: string,
-    private readonly clientSecret: string,
-    private readonly tokenUtil: TokenUtil,
-    private readonly tokenStorageFactory: TokenStorageFactory
-  ) {
-    this.authProvider = new RefreshingAuthProvider({
-      clientId,
-      clientSecret,
-    });
-  }
+	constructor(
+		private readonly clientId: string,
+		private readonly clientSecret: string,
+		private readonly tokenUtil: TokenUtil,
+		private readonly tokenStorageFactory: TokenStorageFactory,
+	) {
+		this.authProvider = new RefreshingAuthProvider({
+			clientId,
+			clientSecret,
+		});
+	}
 
-  public getAuthProvider(): RefreshingAuthProvider {
-    return this.authProvider;
-  }
+	public getAuthProvider(): RefreshingAuthProvider {
+		return this.authProvider;
+	}
 
-  public async init(): Promise<void> {
-    console.log("Initializing the AuthManager...");
+	public async init(): Promise<void> {
+		console.log("Initializing the AuthManager...");
 
-    const tokenStorage = this.tokenStorageFactory.getTokenStorage();
-    
-    const tokens: {
-      tokenIntent: TokenIntent;
-      accessToken: AccessToken;
-    }[] = await tokenStorage.getAllAccessTokens();
+		const tokenStorage = this.tokenStorageFactory.getTokenStorage();
 
+		const tokens: {
+			tokenIntent: TokenIntent;
+			accessToken: AccessToken;
+		}[] = await tokenStorage.getAllAccessTokens();
 
-    for (const token of tokens) {
-      await this.authProvider.addUserForToken(token.accessToken, [token.tokenIntent]);
-    }
+		for (const token of tokens) {
+			await this.authProvider.addUserForToken(token.accessToken, [
+				token.tokenIntent,
+			]);
+		}
 
-    this.authProvider.onRefresh(
-      async (userId: string, newToken: AccessToken) => {
-        const scopesOfNewToken = newToken.scope;
+		this.authProvider.onRefresh(
+			async (userId: string, newToken: AccessToken) => {
+				const scopesOfNewToken = newToken.scope;
 
-        const tokenIntent: TokenIntent | undefined = this.tokenUtil.checkUseOfScopes(scopesOfNewToken);
+				const tokenIntent: TokenIntent | undefined =
+					this.tokenUtil.checkUseOfScopes(scopesOfNewToken);
 
-        if(!tokenIntent) {
-          throw new Error("An error occured when refreshing an access token");
-        }
+				if (!tokenIntent) {
+					throw new Error("An error occured when refreshing an access token");
+				}
 
-        tokenStorage.saveAccessToken(tokenIntent, newToken);
-       }
-     );
-  
-    console.log("Initialized the AuthManager!");
-  }
+				tokenStorage.saveAccessToken(tokenIntent, newToken);
+			},
+		);
+
+		console.log("Initialized the AuthManager!");
+	}
 }
