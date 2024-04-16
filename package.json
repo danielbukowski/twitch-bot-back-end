@@ -8,7 +8,7 @@
     "start": "npm run build && node dist/Main.js",
     "dev": "npx nodemon",
     "lint": "eslint . --ext .ts",
-    "prettier": "prettier . --write --ignore-unknown"
+    "format": "npx @biomejs/biome format --write ./src"
   },
   "author": "Daniel Bukowski",
   "license": "MIT",
