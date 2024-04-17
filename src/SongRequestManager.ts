@@ -126,11 +126,28 @@ export default class SongRequestManager implements Initializable {
 
 	public async sendSongFromQueue(): Promise<void> {
 		const song: Song | undefined = this.removeSongFromQueue();
-		if (!song) return;
+		if (!song) {
+			this.getSongRequestNamespace().emit("song-request-message", {
+				type: "PLAY_NEXT_SONG",
+				error: {
+					message: "EMPTY_QUEUE",
+				},
+			});
+			return;
+		}
 
 		const audioData: string | undefined =
 			await this.youTubeClient.downloadYouTubeAudio(song.videoId);
-		if (!audioData) return;
+
+		if (!audioData) {
+			this.getSongRequestNamespace().emit("song-request-message", {
+				type: "PLAY_NEXT_SONG",
+				error: {
+					message: "DOWNLOADING_ERROR",
+				},
+			});
+			return;
+		}
 
 		this.getSongRequestNamespace().emit("song-request-message", {
 			type: "PLAY_NEXT_SONG",
