@@ -117,12 +117,15 @@ export default class TwitchChat implements Initializable {
 
 		this.chatClient.onMessage(
 			async (channel: string, user: string, text: string, msg: ChatMessage) => {
-				text = text.trim();
+				const message = text.trim();
 
-				if (!text.startsWith(this.COMMAND_PREFIX) || user === this.chatbotName)
+				if (
+					!message.startsWith(this.COMMAND_PREFIX) ||
+					user === this.chatbotName
+				)
 					return;
 
-				const [commandName, ...commandParameters] = text.split(" ");
+				const [commandName, ...commandParameters] = message.split(" ");
 
 				const userInfo: ChatUser = msg.userInfo;
 
