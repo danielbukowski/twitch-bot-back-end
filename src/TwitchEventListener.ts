@@ -11,6 +11,7 @@ export default class TwitchEventListener implements Initializable {
 		private readonly twitchClient: TwitchClient,
 	) {}
 
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	private getTwitchEventNamespace(): Namespace<any> {
 		return this.socketIO.of("twitch-alerts");
 	}

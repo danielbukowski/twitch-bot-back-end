@@ -25,6 +25,7 @@ export default class SongRequestManager implements Initializable {
 		private readonly socketIO: SocketIO,
 	) {}
 
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	private getSongRequestNamespace(): Namespace<any> {
 		return this.socketIO.of("/song-request");
 	}

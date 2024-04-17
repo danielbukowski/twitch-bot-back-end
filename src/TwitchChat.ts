@@ -12,9 +12,11 @@ import type { VideoDetail } from "./YoutubeClient";
 
 function HasRole(roles: UserRole[]) {
 	return function actualDecorator(
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		decoratedMethod: any,
 		context: ClassMethodDecoratorContext,
 	) {
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		return function (this: any, ...args: any[]) {
 			const userInfo: ChatUser = args[args.length - 1];
 
