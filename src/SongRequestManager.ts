@@ -158,6 +158,36 @@ export default class SongRequestManager implements Initializable {
 		});
 	}
 
+	public async getUserTheHighestSongInQueue(username: string): Promise<{
+		title: string;
+		playingIn: number;
+	}> {
+		if (!this.songQueue.length) {
+			throw new SongRequestError("The queue is empty");
+		}
+
+		const songIndex: number = this.songQueue.findIndex(
+			(s) => s.addedBy === username,
+		);
+
+		const song: Song | undefined = this.songQueue.at(songIndex);
+
+		if (!song) {
+			throw new SongRequestError("No song has been found in the queue");
+		}
+
+		let durationFromTheSongIndex = this.getFirstNSongsFromQueue(songIndex)
+			.map((s) => s.durationInSeconds)
+			.reduce((acc, s) => acc + s, 0);
+
+		durationFromTheSongIndex += await this.getDurationOfCurrentPlayingSong();
+
+		return {
+			title: song.title,
+			playingIn: durationFromTheSongIndex,
+		};
+	}
+
 	public removeSongFromQueue(): Song | undefined {
 		return this.songQueue.shift();
 	}
