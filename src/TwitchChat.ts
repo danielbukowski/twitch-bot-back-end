@@ -153,7 +153,7 @@ export default class TwitchChat implements Initializable {
 						this.handleSrQueueCommand(channel, userInfo);
 						break;
 					case `${this.COMMAND_PREFIX}srplay`:
-						this.handleSrPlay(userInfo);
+						this.handleSrPlayCommand(userInfo);
 						break;
 					default:
 						break;
@@ -163,7 +163,7 @@ export default class TwitchChat implements Initializable {
 	}
 
 	@HasRole(["Broadcaster"])
-	private handleSrPlay(userInfo: ChatUser): void {
+	private handleSrPlayCommand(userInfo: ChatUser): void {
 		this.songRequestManager.playSong();
 	}
 
