@@ -155,6 +155,9 @@ export default class TwitchChat implements Initializable {
 					case `${this.COMMAND_PREFIX}srplay`:
 						this.handleSrPlayCommand(userInfo);
 						break;
+					case `${this.COMMAND_PREFIX}whenmysong`:
+						await this.handleWhenMySongCommand(channel, userInfo);
+						break;
 					default:
 						break;
 				}
@@ -175,6 +178,35 @@ export default class TwitchChat implements Initializable {
 	@HasRole(["Broadcaster"])
 	private handleSrPauseCommand(userInfo: ChatUser): void {
 		this.songRequestManager.pauseSong();
+	}
+
+	@HasRole([])
+	public async handleWhenMySongCommand(
+		channel: string,
+		userInfo: ChatUser,
+	): Promise<void> {
+		try {
+			const song = await this.songRequestManager.getUserTheHighestSongInQueue(
+				userInfo.userName,
+			);
+
+			const unitOfTimes: string[] = this.convertDurationInSecondsToUnitsOfTime(
+				song.playingIn,
+			);
+
+			this.chatClient.say(
+				channel,
+				`You song '${song.title}' will be played in ~ ${
+					!unitOfTimes.length ? "now" : unitOfTimes.join(" and ")
+				}`,
+			);
+		} catch (e: unknown) {
+			if (e instanceof SongRequestError) {
+				this.chatClient.say(channel, e.message);
+			} else if (e instanceof Error) {
+				this.chatClient.say(channel, "Something went wrong :/");
+			}
+		}
 	}
 
 	@HasRole([])
