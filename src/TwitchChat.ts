@@ -134,7 +134,7 @@ export default class TwitchChat implements Initializable {
 						this.chatClient.say(channel, `Hello @${user}`);
 						break;
 					case `${this.COMMAND_PREFIX}sr`:
-						this.handleSrCommand(channel, user, commandParameters, userInfo);
+						this.handleSrCommand(channel, commandParameters, userInfo);
 						break;
 					case `${this.COMMAND_PREFIX}srskipsong`:
 						this.handleSrSkipSongCommand(userInfo);
@@ -180,7 +180,6 @@ export default class TwitchChat implements Initializable {
 	@HasRole([])
 	private async handleSrCommand(
 		channel: string,
-		user: string,
 		commandParameters: string[],
 		userInfo: ChatUser,
 	): Promise<void> {
@@ -210,41 +209,45 @@ export default class TwitchChat implements Initializable {
 			if (videoId === undefined)
 				throw new SongRequestError("Sorry, but I Could not find your song :(");
 
-			const songDetails: VideoDetail | undefined =
+			const songDetail: VideoDetail | undefined =
 				await this.youtubeClient.getVideoDetailsById(videoId);
 
-			if (songDetails === undefined)
+			if (songDetail === undefined)
 				throw new SongRequestError("Sorry, but I cannot add this song :(");
 
 			if (
-				Number.parseInt(songDetails.statistics.viewCount) < this.MIN_VIDEO_VIEWS
+				Number.parseInt(songDetail.statistics.viewCount) < this.MIN_VIDEO_VIEWS
 			)
 				throw new SongRequestError("Your song has not enough views!");
 
-			const videoDurationInSeconds: number = Duration.fromISO(
-				songDetails.contentDetails.duration,
+			const durationInSeconds: number = Duration.fromISO(
+				songDetail.contentDetails.duration,
 			).as("seconds");
 
-			if (videoDurationInSeconds > this.MAX_VIDEO_DURATION_IN_SECONDS)
+			if (durationInSeconds > this.MAX_VIDEO_DURATION_IN_SECONDS)
 				throw new SongRequestError("Your song is too long :(");
 
 			const songsDurationInSeconds: number =
 				await this.songRequestManager.getDurationOfSongs();
 
+			const title = songDetail.snippet.title;
+
 			const positionInQueue: number = this.songRequestManager.addSongToQueue({
-				videoId: videoId,
-				title: songDetails.snippet.title,
-				durationInSeconds: videoDurationInSeconds,
-				addedBy: user,
+				videoId,
+				title,
+				durationInSeconds,
+				addedBy: userInfo.userName,
 			});
+
+			const unitsOfTime: string[] = this.convertDurationInSecondsToUnitsOfTime(
+				songsDurationInSeconds,
+			);
 
 			this.chatClient.say(
 				channel,
-				this.getMessageDetailsOfSuccessfullyAddedSong(
-					songsDurationInSeconds,
-					positionInQueue,
-					songDetails.snippet.title,
-				),
+				`'${title}' added to the queue at #${positionInQueue} position! (playing in ~ ${
+					!unitsOfTime.length ? "now" : unitsOfTime.join(" and ")
+				})`,
 			);
 		} catch (e: unknown) {
 			if (e instanceof SongRequestError) {
@@ -304,14 +307,13 @@ export default class TwitchChat implements Initializable {
 		this.chatClient.say(channel, response);
 	}
 
-	private getMessageDetailsOfSuccessfullyAddedSong(
-		queueDuration: number,
-		queuePosition: number,
-		songTitle: string,
-	): string {
-		let duration = queueDuration;
-		if (duration === 0) {
-			return `'${songTitle}' added to the queue at #${queuePosition} position! (playing in ~ now)`;
+	private convertDurationInSecondsToUnitsOfTime(
+		durationInSeconds: number,
+	): string[] {
+		let duration: number = durationInSeconds;
+
+		if (!duration) {
+			return [];
 		}
 
 		const hours = Math.floor(duration / 3600);
@@ -326,34 +328,31 @@ export default class TwitchChat implements Initializable {
 
 		const seconds = duration;
 
-		const time: string[] = [];
+		const unitsOfTime: string[] = [];
 
 		if (hours > 0) {
 			if (hours === 1) {
-				time.push("1 hour");
+				unitsOfTime.push("1 hour");
 			} else {
-				time.push(`${hours} hours`);
+				unitsOfTime.push(`${hours} hours`);
 			}
 		}
 
 		if (minutes > 0) {
 			if (minutes === 1) {
-				time.push("1 minute");
+				unitsOfTime.push("1 minute");
 			} else {
-				time.push(`${minutes} minutes`);
+				unitsOfTime.push(`${minutes} minutes`);
 			}
 		}
 
 		if (seconds > 0) {
 			if (seconds === 1) {
-				time.push("1 second");
+				unitsOfTime.push("1 second");
 			} else {
-				time.push(`${seconds} seconds`);
+				unitsOfTime.push(`${seconds} seconds`);
 			}
 		}
-
-		return `'${songTitle}' added to the queue at #${queuePosition} position! (playing in ~ ${time.join(
-			" and ",
-		)})`;
+		return unitsOfTime;
 	}
 }
