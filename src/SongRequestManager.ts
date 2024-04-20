@@ -173,7 +173,7 @@ export default class SongRequestManager implements Initializable {
 		const song: Song | undefined = this.songQueue.at(songIndex);
 
 		if (!song) {
-			throw new SongRequestError("No song has been found in the queue");
+			throw new SongRequestError("Can't find any your song in the queue");
 		}
 
 		let durationFromTheSongIndex = this.getFirstNSongsFromQueue(songIndex)
