@@ -158,6 +158,9 @@ export default class TwitchChat implements Initializable {
 					case `${this.COMMAND_PREFIX}whenmysong`:
 						await this.handleWhenMySongCommand(channel, userInfo);
 						break;
+					case `${this.COMMAND_PREFIX}wrongsong`:
+						this.handleWrongSongCommand(channel, userInfo);
+						break;
 					default:
 						break;
 				}
@@ -178,6 +181,30 @@ export default class TwitchChat implements Initializable {
 	@HasRole(["Broadcaster"])
 	private handleSrPauseCommand(userInfo: ChatUser): void {
 		this.songRequestManager.pauseSong();
+	}
+
+	@HasRole([])
+	public handleWrongSongCommand(channel: string, userInfo: ChatUser) {
+		try {
+			const deletedSong =
+				this.songRequestManager.deleteUserTheLatestSongInQueue(
+					userInfo.userName,
+				);
+
+			this.chatClient.say(
+				channel,
+				`Your song '${deletedSong.title}' has been succesfully deleted!`,
+			);
+		} catch (e: unknown) {
+			if (e instanceof SongRequestError) {
+				this.chatClient.say(channel, e.message);
+			} else if (e instanceof Error) {
+				this.chatClient.say(
+					channel,
+					"Something went wrong when trying to delete your song :/",
+				);
+			}
+		}
 	}
 
 	@HasRole([])
