@@ -188,6 +188,18 @@ export default class SongRequestManager implements Initializable {
 		};
 	}
 
+	public deleteUserTheHighestSongInQueue(username: string): Song {
+		const songIndex: number = this.songQueue.findIndex(
+			(s) => s.addedBy === username,
+		);
+
+		if (songIndex === -1) {
+			throw new SongRequestError("Can't find any your song in the queue");
+		}
+
+		return this.songQueue.splice(songIndex, 1)[0];
+	}
+
 	public removeSongFromQueue(): Song | undefined {
 		return this.songQueue.shift();
 	}
