@@ -158,7 +158,7 @@ export default class SongRequestManager implements Initializable {
 		});
 	}
 
-	public async getUserTheHighestSongInQueue(username: string): Promise<{
+	public async getTheHighestSongDetailByUsername(username: string): Promise<{
 		title: string;
 		playingIn: number;
 	}> {
@@ -188,7 +188,7 @@ export default class SongRequestManager implements Initializable {
 		};
 	}
 
-	public deleteUserTheLatestSongInQueue(username: string): Song {
+	public deleteTheLatestSongByUsername(username: string): Song {
 		const songIndex: number = this.songQueue.findLastIndex(
 			(s) => s.addedBy === username,
 		);

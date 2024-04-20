@@ -186,10 +186,9 @@ export default class TwitchChat implements Initializable {
 	@HasRole([])
 	public handleWrongSongCommand(channel: string, userInfo: ChatUser) {
 		try {
-			const deletedSong =
-				this.songRequestManager.deleteUserTheLatestSongInQueue(
-					userInfo.userName,
-				);
+			const deletedSong = this.songRequestManager.deleteTheLatestSongByUsername(
+				userInfo.userName,
+			);
 
 			this.chatClient.say(
 				channel,
@@ -213,9 +212,10 @@ export default class TwitchChat implements Initializable {
 		userInfo: ChatUser,
 	): Promise<void> {
 		try {
-			const song = await this.songRequestManager.getUserTheHighestSongInQueue(
-				userInfo.userName,
-			);
+			const song =
+				await this.songRequestManager.getTheHighestSongDetailByUsername(
+					userInfo.userName,
+				);
 
 			const unitOfTimes: string[] = this.convertDurationInSecondsToUnitsOfTime(
 				song.playingIn,
