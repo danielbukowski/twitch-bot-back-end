@@ -12,6 +12,7 @@ import type TokenStorageFactory from "./TokenStorageFactory";
 import type TokenUtil from "./TokenUtil";
 import type { TokenIntent } from "./TokenUtil";
 import type TwitchClient from "./TwitchClient";
+import helmet from "helmet";
 
 export default class HttpServer implements Initializable {
 	private app = express();
@@ -31,6 +32,8 @@ export default class HttpServer implements Initializable {
 
 	public async init(): Promise<void> {
 		console.log("Initializing the HttpServer...");
+
+		this.app.use(helmet());
 
 		this.app.use(
 			cors({
