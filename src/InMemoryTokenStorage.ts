@@ -20,8 +20,8 @@ export default class InMemoryTokenStorage implements TokenStorage {
 			const tokenIntent: string | undefined = fileName.split(".")[0];
 
 			if (
-				!tokenIntent &&
-				(tokenIntent === "chat" || tokenIntent === "events")
+				!tokenIntent ||
+				!(tokenIntent === "chat" || tokenIntent === "events")
 			) {
 				continue;
 			}
