@@ -414,4 +414,23 @@ export default class TwitchChat implements Initializable {
 		}
 		return unitsOfTime;
 	}
+
+	public getUserRole(userInfo: ChatUser): UserRole | "Normal" {
+		const roles: UserRole[] = [
+			"Mod",
+			"Subscriber",
+			"Vip",
+			"Broadcaster",
+			"Artist",
+			"Founder",
+		];
+
+		for (const roleName of roles) {
+			if (userInfo[`is${roleName}`]) {
+				return roleName;
+			}
+		}
+
+		return "Normal";
+	}
 }
