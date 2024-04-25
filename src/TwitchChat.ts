@@ -1,7 +1,7 @@
 import type { RefreshingAuthProvider } from "@twurple/auth";
 import { ChatClient, type ChatMessage, ChatUser } from "@twurple/chat";
 import { Duration } from "luxon";
-import type { UserRole } from "./ConfigInitializer";
+import type { UserType } from "./ConfigInitializer";
 import type { Initializable } from "./ObjectManager";
 import type SongRequestManager from "./SongRequestManager";
 import type { Song } from "./SongRequestManager";
@@ -10,7 +10,7 @@ import type TwitchClient from "./TwitchClient";
 import type YoutubeClient from "./YoutubeClient";
 import type { VideoDetail } from "./YoutubeClient";
 
-function HasRole(roles: UserRole[]) {
+function HasRole(roles: UserType[]) {
 	return function actualDecorator(
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		decoratedMethod: any,
@@ -415,8 +415,8 @@ export default class TwitchChat implements Initializable {
 		return unitsOfTime;
 	}
 
-	public getUserRole(userInfo: ChatUser): UserRole | "Normal" {
-		const roles: UserRole[] = [
+	public getUserRole(userInfo: ChatUser): UserType | "Normal" {
+		const roles: UserType[] = [
 			"Mod",
 			"Subscriber",
 			"Vip",

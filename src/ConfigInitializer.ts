@@ -12,7 +12,7 @@ interface Config {
 	tokenStorageType: string;
 }
 
-export type UserRole =
+export type UserType =
 	| "Mod"
 	| "Subscriber"
 	| "Vip"
