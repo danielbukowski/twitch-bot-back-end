@@ -161,7 +161,7 @@ export default class TwitchChat implements Initializable {
 						this.handleStartSongRequestCommand(userInfo);
 						break;
 					case `${this.COMMAND_PREFIX}whenmysong`:
-						await this.handleWhenMySongCommand(channel, userInfo);
+						await this.handleDisplayInfoAboutMySongCommand(channel, userInfo);
 						break;
 					case `${this.COMMAND_PREFIX}wrongsong`:
 						this.handleWrongSongCommand(channel, userInfo);
@@ -212,7 +212,7 @@ export default class TwitchChat implements Initializable {
 	}
 
 	@HasRole([])
-	public async handleWhenMySongCommand(
+	public async handleDisplayInfoAboutMySongCommand(
 		channel: string,
 		userInfo: ChatUser,
 	): Promise<void> {
