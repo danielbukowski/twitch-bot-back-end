@@ -42,6 +42,7 @@ export default class InMemoryTokenStorage implements TokenStorage {
 
 		return tokens;
 	}
+
 	public async saveAccessToken(
 		tokenIntent: TokenIntent,
 		accessToken: AccessToken,
