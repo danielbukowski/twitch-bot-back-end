@@ -6,7 +6,6 @@ import express, {
 	type Request,
 	type Response,
 } from "express";
-import { TokenStorage } from "./AuthManager";
 import type { Initializable } from "./ObjectManager";
 import type TokenStorageFactory from "./TokenStorageFactory";
 import type TokenUtil from "./TokenUtil";
