@@ -150,7 +150,7 @@ export default class TwitchChat implements Initializable {
 						);
 						break;
 					case `${this.COMMAND_PREFIX}srq`:
-						this.handleSrQueueCommand(channel, userInfo);
+						this.handleDisplaySongRequestQueueCommand(channel, userInfo);
 						break;
 					case `${this.COMMAND_PREFIX}srplay`:
 						this.handleSrPlayCommand(userInfo);
@@ -340,7 +340,10 @@ export default class TwitchChat implements Initializable {
 	}
 
 	@HasRole([])
-	private handleSrQueueCommand(channel: string, userInfo: ChatUser): void {
+	private handleDisplaySongRequestQueueCommand(
+		channel: string,
+		userInfo: ChatUser,
+	): void {
 		const first3SongsInQueue: Song[] =
 			this.songRequestManager.getFirstNSongsFromQueue(3);
 
