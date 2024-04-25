@@ -9,6 +9,7 @@ import { SongRequestError } from "./SongRequestManager";
 import type TwitchClient from "./TwitchClient";
 import type YoutubeClient from "./YoutubeClient";
 import type { VideoDetail } from "./YoutubeClient";
+import ytdl from "ytdl-core";
 
 function HasRole(roles: UserType[]) {
 	return function actualDecorator(
@@ -255,14 +256,8 @@ export default class TwitchChat implements Initializable {
 		try {
 			let videoId: string | undefined;
 
-			if (songRequestParameters.startsWith("https://www.youtube.com/watch")) {
-				const regExpToSplitUrlParameters: RegExp = /[?=&]/;
-				const splitVideoLink: string[] = songRequestParameters.split(
-					regExpToSplitUrlParameters,
-				);
-
-				videoId =
-					splitVideoLink[splitVideoLink.findIndex((v) => v === "v") + 1];
+			if (ytdl.validateURL(songRequestParameters)) {
+				videoId = ytdl.getURLVideoID(songRequestParameters);
 			} else {
 				videoId = await this.youtubeClient.getVideoIdByName(
 					songRequestParameters,
