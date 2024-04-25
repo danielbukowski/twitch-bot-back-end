@@ -134,7 +134,11 @@ export default class TwitchChat implements Initializable {
 						this.chatClient.say(channel, `Hello @${user}`);
 						break;
 					case `${this.COMMAND_PREFIX}sr`:
-						this.handleSrCommand(channel, commandParameters, userInfo);
+						this.handleAddSongToQueueCommand(
+							channel,
+							commandParameters,
+							userInfo,
+						);
 						break;
 					case `${this.COMMAND_PREFIX}srskipsong`:
 						this.handleSrSkipSongCommand(userInfo);
@@ -237,7 +241,7 @@ export default class TwitchChat implements Initializable {
 	}
 
 	@HasRole([])
-	private async handleSrCommand(
+	private async handleAddSongToQueueCommand(
 		channel: string,
 		commandParameters: string[],
 		userInfo: ChatUser,
