@@ -143,7 +143,7 @@ export default class TwitchChat implements Initializable {
 						this.handleSrPauseCommand(userInfo);
 						break;
 					case `${this.COMMAND_PREFIX}srvolume`:
-						await this.handleSrVolumeCommand(
+						await this.handleChangeSongRequestVolumeCommand(
 							commandParameters,
 							channel,
 							userInfo,
@@ -318,7 +318,7 @@ export default class TwitchChat implements Initializable {
 	}
 
 	@HasRole(["Broadcaster", "Mod"])
-	private async handleSrVolumeCommand(
+	private async handleChangeSongRequestVolumeCommand(
 		commandParameters: string[],
 		channel: string,
 		userInfo: ChatUser,
