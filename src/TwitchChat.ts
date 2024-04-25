@@ -141,7 +141,7 @@ export default class TwitchChat implements Initializable {
 						);
 						break;
 					case `${this.COMMAND_PREFIX}srskipsong`:
-						this.handleSrSkipSongCommand(userInfo);
+						this.handleSkipSongCommand(userInfo);
 						break;
 					case `${this.COMMAND_PREFIX}srpause`:
 						this.handleSrPauseCommand(userInfo);
@@ -178,7 +178,7 @@ export default class TwitchChat implements Initializable {
 	}
 
 	@HasRole(["Broadcaster", "Mod"])
-	private handleSrSkipSongCommand(userInfo: ChatUser): void {
+	private handleSkipSongCommand(userInfo: ChatUser): void {
 		this.songRequestManager.skipSong();
 	}
 
