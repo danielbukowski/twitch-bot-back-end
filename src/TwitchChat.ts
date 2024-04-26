@@ -42,6 +42,13 @@ function HasRole(roles: UserType[]) {
 	};
 }
 
+export type BasicCommand = (
+	chatClient: ChatClient,
+	channelName: string,
+	commandParameters: string[],
+	userInfo: ChatUser,
+) => Promise<unknown>;
+
 export default class TwitchChat implements Initializable {
 	private readonly COMMAND_PREFIX: string = "!";
 	private readonly MIN_VIDEO_VIEWS: number = 18_000;
