@@ -164,7 +164,7 @@ export default class TwitchChat implements Initializable {
 						await this.handleDisplayInfoAboutMySongCommand(channel, userInfo);
 						break;
 					case `${this.COMMAND_PREFIX}wrongsong`:
-						this.handleWrongSongCommand(channel, userInfo);
+						this.handleDeleteMyEarliestSongFromQueueCommand(channel, userInfo);
 						break;
 					default:
 						break;
@@ -189,9 +189,12 @@ export default class TwitchChat implements Initializable {
 	}
 
 	@HasRole([])
-	public handleWrongSongCommand(channel: string, userInfo: ChatUser) {
+	public handleDeleteMyEarliestSongFromQueueCommand(
+		channel: string,
+		userInfo: ChatUser,
+	) {
 		try {
-			const deletedSong = this.songRequestManager.deleteTheLatestSongByUsername(
+			const deletedSong = this.songRequestManager.deleteUserTheEaliestSong(
 				userInfo.userName,
 			);
 

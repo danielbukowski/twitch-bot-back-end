@@ -202,7 +202,7 @@ export default class SongRequestManager implements Initializable {
 		};
 	}
 
-	public deleteTheLatestSongByUsername(username: string): Song {
+	public deleteUserTheEaliestSong(username: string): Song {
 		const songIndex: number = this.songQueue.findLastIndex(
 			(s) => s.addedBy === username,
 		);
