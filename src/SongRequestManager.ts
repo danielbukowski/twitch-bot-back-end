@@ -167,6 +167,7 @@ export default class SongRequestManager implements Initializable {
 			type: "PLAY_NEXT_SONG",
 			data: {
 				title: song.title,
+				addedBy: song.addedBy,
 				audio: audioData,
 			},
 		});
