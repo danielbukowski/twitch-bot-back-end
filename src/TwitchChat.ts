@@ -11,7 +11,7 @@ import type YoutubeClient from "./YoutubeClient";
 import type { VideoDetail } from "./YoutubeClient";
 import ytdl from "ytdl-core";
 
-function HasRole(roles: UserType[]) {
+export function HasRole(roles: UserType[]) {
 	return function actualDecorator(
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		decoratedMethod: any,
