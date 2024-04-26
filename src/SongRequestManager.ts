@@ -110,22 +110,22 @@ export default class SongRequestManager implements Initializable {
 		return this.songQueue.slice(0, n);
 	}
 
-	private async getDurationOfCurrentPlayingSong(): Promise<number> {
-		try {
-			const sockets = await this.getSongRequestNamespace().fetchSockets();
+	public async getInfoAboutCurrentlyPlayingSong(): Promise<
+		Omit<Song, "videoId">
+	> {
+		const socket = (await this.getSongRequestNamespace().fetchSockets())[0];
 
-			const response: {
-				durationInSeconds: number;
-			} = await sockets[0]
-				.timeout(this.REQUEST_TIMEOUT)
-				.emitWithAck("song-request-message", {
-					type: "SONG_DURATION",
-				});
-
-			return response.durationInSeconds;
-		} catch (e: unknown) {
-			return 0;
+		if (!socket) {
+			throw new Error("No one is connected to the song request!");
 		}
+
+		const response: Omit<Song, "videoId"> = await socket
+			.timeout(this.REQUEST_TIMEOUT)
+			.emitWithAck("song-request-message", {
+				type: "SONG_DURATION",
+			});
+
+		return response;
 	}
 
 	public async getDurationOfSongs(): Promise<number> {
@@ -133,7 +133,8 @@ export default class SongRequestManager implements Initializable {
 			.map((s) => s.durationInSeconds)
 			.reduce((acc, s) => acc + s, 0);
 
-		queueDurationInSeconds += await this.getDurationOfCurrentPlayingSong();
+		queueDurationInSeconds += (await this.getInfoAboutCurrentlyPlayingSong())
+			.durationInSeconds;
 
 		return queueDurationInSeconds;
 	}
@@ -195,7 +196,8 @@ export default class SongRequestManager implements Initializable {
 			.map((s) => s.durationInSeconds)
 			.reduce((acc, s) => acc + s, 0);
 
-		durationFromTheSongIndex += await this.getDurationOfCurrentPlayingSong();
+		durationFromTheSongIndex += (await this.getInfoAboutCurrentlyPlayingSong())
+			.durationInSeconds;
 
 		return {
 			title: song.title,
