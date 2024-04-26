@@ -180,22 +180,18 @@ export default class TwitchChat implements Initializable {
 		);
 	}
 
-	@HasRole(["Broadcaster"])
 	private handleStartSongRequestCommand(userInfo: ChatUser): void {
 		this.songRequestManager.playSong();
 	}
 
-	@HasRole(["Broadcaster", "Mod"])
 	private handleSkipSongCommand(userInfo: ChatUser): void {
 		this.songRequestManager.skipSong();
 	}
 
-	@HasRole(["Broadcaster"])
 	private handlePauseSongRequestCommand(userInfo: ChatUser): void {
 		this.songRequestManager.pauseSong();
 	}
 
-	@HasRole([])
 	public handleDeleteMyEarliestSongFromQueueCommand(
 		channel: string,
 		userInfo: ChatUser,
@@ -221,7 +217,6 @@ export default class TwitchChat implements Initializable {
 		}
 	}
 
-	@HasRole([])
 	public async handleDisplayInfoAboutMySongCommand(
 		channel: string,
 		userInfo: ChatUser,
@@ -251,7 +246,6 @@ export default class TwitchChat implements Initializable {
 		}
 	}
 
-	@HasRole([])
 	private async handleAddSongToQueueCommand(
 		channel: string,
 		commandParameters: string[],
@@ -326,7 +320,6 @@ export default class TwitchChat implements Initializable {
 		}
 	}
 
-	@HasRole(["Broadcaster", "Mod"])
 	private async handleChangeSongRequestVolumeCommand(
 		commandParameters: string[],
 		channel: string,
@@ -348,7 +341,6 @@ export default class TwitchChat implements Initializable {
 		);
 	}
 
-	@HasRole([])
 	private handleDisplaySongRequestQueueCommand(
 		channel: string,
 		userInfo: ChatUser,
