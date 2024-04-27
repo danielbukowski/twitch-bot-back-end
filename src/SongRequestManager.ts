@@ -263,4 +263,53 @@ export default class SongRequestManager implements Initializable {
 	public removeSongFromQueue(): Song | undefined {
 		return this.songQueue.shift();
 	}
+
+	private convertDurationInSecondsToUnitsOfTime(
+		durationInSeconds: number,
+	): string[] {
+		let duration: number = durationInSeconds;
+
+		if (!duration) {
+			return [];
+		}
+
+		const hours = Math.floor(duration / 3600);
+		if (hours >= 1) {
+			duration %= 3600;
+		}
+
+		const minutes = Math.floor(duration / 60);
+		if (minutes >= 1) {
+			duration %= 60;
+		}
+
+		const seconds = duration;
+
+		const unitsOfTime: string[] = [];
+
+		if (hours > 0) {
+			if (hours === 1) {
+				unitsOfTime.push("1 hour");
+			} else {
+				unitsOfTime.push(`${hours} hours`);
+			}
+		}
+
+		if (minutes > 0) {
+			if (minutes === 1) {
+				unitsOfTime.push("1 minute");
+			} else {
+				unitsOfTime.push(`${minutes} minutes`);
+			}
+		}
+
+		if (seconds > 0) {
+			if (seconds === 1) {
+				unitsOfTime.push("1 second");
+			} else {
+				unitsOfTime.push(`${seconds} seconds`);
+			}
+		}
+		return unitsOfTime;
+	}
 }
