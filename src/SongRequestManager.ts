@@ -21,6 +21,18 @@ export interface Song {
 
 export default class SongRequestManager implements Initializable {
 	private readonly REQUEST_TIMEOUT = 1_400;
+	private readonly SONG_DURATION_FOR_USER_TYPE: Record<
+		UserType | "Normal",
+		number
+	> = {
+		Mod: 2137,
+		Subscriber: 2137,
+		Vip: 2137,
+		Broadcaster: 2137,
+		Artist: 2137,
+		Founder: 2137,
+		Normal: 2137,
+	};
 	private readonly SONG_VIEWS_FOR_USER_TYPE: Record<
 		UserType | "Normal",
 		number
