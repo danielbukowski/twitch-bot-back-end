@@ -91,7 +91,13 @@ export default class SongRequestManager implements Initializable {
 		});
 	}
 
-	public skipSong(): void {
+	@HasRole(["Broadcaster", "Mod"])
+	public async skipSong(
+		chatClient: ChatClient,
+		channelName: string,
+		commandParameters: string[],
+		userInfo: ChatUser,
+	): Promise<void> {
 		this.getSongRequestNamespace().emit("song-request-message", {
 			type: "SKIP_SONG",
 		});

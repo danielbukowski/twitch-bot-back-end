@@ -184,11 +184,6 @@ export default class TwitchChat implements Initializable {
 		);
 	}
 
-
-	private handleSkipSongCommand(userInfo: ChatUser): void {
-		this.songRequestManager.skipSong();
-	}
-
 	private handlePauseSongRequestCommand(userInfo: ChatUser): void {
 		this.songRequestManager.pauseSong();
 	}
