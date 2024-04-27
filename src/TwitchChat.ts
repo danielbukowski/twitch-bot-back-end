@@ -60,6 +60,8 @@ export default class TwitchChat implements Initializable {
 	private chatClient!: ChatClient;
 	private chatbotName!: string;
 
+	private availableCommands = new Map<string, BasicCommand>();
+
 	public constructor(
 		private readonly authProvider: RefreshingAuthProvider,
 		private readonly youtubeClient: YoutubeClient,
@@ -139,46 +141,28 @@ export default class TwitchChat implements Initializable {
 
 				const [commandName, ...commandParameters] = message.split(" ");
 
-				const userInfo: ChatUser = msg.userInfo;
+				const command: BasicCommand | undefined = this.availableCommands.get(
+					commandName.toLowerCase(),
+				);
 
-				switch (commandName.toLowerCase()) {
-					case `${this.COMMAND_PREFIX}hello`:
-						this.chatClient.say(channel, `Hello @${user}`);
-						break;
-					case `${this.COMMAND_PREFIX}sr`:
-						this.handleAddSongToQueueCommand(
+				if (command === undefined) return;
+
+				try {
+					await command(
+						this.chatClient,
+						channel,
+						commandParameters,
+						msg.userInfo,
+					);
+				} catch (e: unknown) {
+					if (e instanceof SongRequestError) {
+						this.chatClient.say(channel, e.message);
+					} else if (e instanceof Error) {
+						this.chatClient.say(
 							channel,
-							commandParameters,
-							userInfo,
+							`I can't do that @${msg.userInfo.userName}, something went wrong :/`,
 						);
-						break;
-					case `${this.COMMAND_PREFIX}srskipsong`:
-						this.handleSkipSongCommand(userInfo);
-						break;
-					case `${this.COMMAND_PREFIX}srpause`:
-						this.handlePauseSongRequestCommand(userInfo);
-						break;
-					case `${this.COMMAND_PREFIX}srvolume`:
-						await this.handleChangeSongRequestVolumeCommand(
-							commandParameters,
-							channel,
-							userInfo,
-						);
-						break;
-					case `${this.COMMAND_PREFIX}srq`:
-						this.handleDisplaySongRequestQueueCommand(channel, userInfo);
-						break;
-					case `${this.COMMAND_PREFIX}srplay`:
-						this.handleStartSongRequestCommand(userInfo);
-						break;
-					case `${this.COMMAND_PREFIX}whenmysong`:
-						await this.handleDisplayInfoAboutMySongCommand(channel, userInfo);
-						break;
-					case `${this.COMMAND_PREFIX}wrongsong`:
-						this.handleDeleteMyEarliestSongFromQueueCommand(channel, userInfo);
-						break;
-					default:
-						break;
+					}
 				}
 			},
 		);
