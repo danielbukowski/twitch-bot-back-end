@@ -2,8 +2,11 @@ import type { Namespace, Server as SocketIO } from "socket.io";
 import type { Initializable } from "./ObjectManager";
 import type YoutubeClient from "./YoutubeClient";
 import type { UserType } from "./ConfigInitializer";
-import { type BasicCommand, HasRole } from "./TwitchChat";
+import TwitchChat, { type BasicCommand, HasRole } from "./TwitchChat";
 import type { ChatClient, ChatUser } from "@twurple/chat";
+import { Duration } from "luxon/src/duration";
+import type { VideoDetail } from "./YoutubeClient";
+import ytdl from "ytdl-core";
 
 export class SongRequestError extends Error {
 	public constructor(message: string) {
@@ -288,6 +291,75 @@ export default class SongRequestManager implements Initializable {
 		response = response.slice(0, -2);
 
 		chatClient.say(channelName, response);
+	}
+
+	@HasRole([])
+	public async addUserSongToQueue(
+		chatClient: ChatClient,
+		channelName: string,
+		commandParameters: string[],
+		userInfo: ChatUser,
+	): Promise<void> {
+		const joinedRequestParameters: string = commandParameters.join(" ");
+
+		if (!joinedRequestParameters) {
+			return;
+		}
+
+		let videoId: string | undefined;
+
+		if (ytdl.validateURL(joinedRequestParameters)) {
+			videoId = ytdl.getURLVideoID(joinedRequestParameters);
+		} else {
+			videoId = await this.youTubeClient.getVideoIdByName(
+				joinedRequestParameters,
+			);
+		}
+
+		if (!videoId)
+			throw new SongRequestError("Sorry, but I Could not find your song :(");
+
+		const songDetail: VideoDetail | undefined =
+			await this.youTubeClient.getVideoDetailsById(videoId);
+
+		if (!songDetail)
+			throw new SongRequestError("Sorry, but I cannot add this song :(");
+
+		const userType = TwitchChat.getUserRole(userInfo);
+
+		if (
+			Number.parseInt(songDetail.statistics.viewCount) <
+			this.MINIMAL_SONG_VIEWS_FOR_USER_TYPE[userType]
+		)
+			throw new SongRequestError("Your song has not enough views!");
+
+		const durationInSeconds: number = Duration.fromISO(
+			songDetail.contentDetails.duration,
+		).as("seconds");
+
+		if (durationInSeconds >= this.MAXIMUM_SONG_DURATION_FOR_USER_TYPE[userType])
+			throw new SongRequestError("Your song is too long :(");
+
+		const songsDurationInSeconds: number = await this.getDurationOfSongs();
+		const songTitle = songDetail.snippet.title;
+
+		const positionInQueue: number = this.addSongToQueue({
+			videoId,
+			title: songTitle,
+			durationInSeconds,
+			addedBy: userInfo.userName,
+		});
+
+		const unitsOfTime: string[] = this.convertDurationInSecondsToUnitsOfTime(
+			songsDurationInSeconds,
+		);
+
+		chatClient.say(
+			channelName,
+			`'${songTitle}' added to the queue at #${positionInQueue} position! (playing in ~ ${
+				!unitsOfTime.length ? "now" : unitsOfTime.join(" and ")
+			})`,
+		);
 	}
 
 	@HasRole([])
