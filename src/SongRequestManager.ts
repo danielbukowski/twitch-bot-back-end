@@ -85,7 +85,13 @@ export default class SongRequestManager implements Initializable {
 		});
 	}
 
-	public pauseSong(): void {
+	@HasRole(["Broadcaster"])
+	public async pauseSongRequest(
+		chatClient: ChatClient,
+		channelName: string,
+		commandParameters: string[],
+		userInfo: ChatUser,
+	): Promise<void> {
 		this.getSongRequestNamespace().emit("song-request-message", {
 			type: "PAUSE",
 		});

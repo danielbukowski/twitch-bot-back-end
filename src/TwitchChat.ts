@@ -184,9 +184,6 @@ export default class TwitchChat implements Initializable {
 		);
 	}
 
-	private handlePauseSongRequestCommand(userInfo: ChatUser): void {
-		this.songRequestManager.pauseSong();
-	}
 
 	public handleDeleteMyEarliestSongFromQueueCommand(
 		channel: string,
