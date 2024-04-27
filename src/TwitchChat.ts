@@ -42,6 +42,10 @@ export function HasRole(roles: UserType[]) {
 	};
 }
 
+export interface CommandContainer {
+	getCommands(): Map<string, BasicCommand>;
+}
+
 export type BasicCommand = (
 	chatClient: ChatClient,
 	channelName: string,
