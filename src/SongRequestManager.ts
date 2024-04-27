@@ -73,7 +73,13 @@ export default class SongRequestManager implements Initializable {
 		return this.songQueue.push(song);
 	}
 
-	public playSong(): void {
+	@HasRole(["Broadcaster"])
+	public async playSongRequest(
+		chatClient: ChatClient,
+		channelName: string,
+		commandParameters: string[],
+		userInfo: ChatUser,
+	): Promise<void> {
 		this.getSongRequestNamespace().emit("song-request-message", {
 			type: "PLAY",
 		});
