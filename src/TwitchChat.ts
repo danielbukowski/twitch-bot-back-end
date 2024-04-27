@@ -184,7 +184,7 @@ export default class TwitchChat implements Initializable {
 		);
 	}
 
-	public getUserRole(userInfo: ChatUser): UserType | "Normal" {
+	public static getUserRole(userInfo: ChatUser): UserType | "Normal" {
 		const roles: UserType[] = [
 			"Mod",
 			"Subscriber",
