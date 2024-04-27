@@ -1,15 +1,10 @@
 import type { RefreshingAuthProvider } from "@twurple/auth";
 import { ChatClient, type ChatMessage, ChatUser } from "@twurple/chat";
-import { Duration } from "luxon";
 import type { UserType } from "./ConfigInitializer";
 import type { Initializable } from "./ObjectManager";
 import type SongRequestManager from "./SongRequestManager";
-import type { Song } from "./SongRequestManager";
 import { SongRequestError } from "./SongRequestManager";
 import type TwitchClient from "./TwitchClient";
-import type YoutubeClient from "./YoutubeClient";
-import type { VideoDetail } from "./YoutubeClient";
-import ytdl from "ytdl-core";
 
 export function HasRole(roles: UserType[]) {
 	return function actualDecorator(
