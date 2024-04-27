@@ -184,35 +184,6 @@ export default class TwitchChat implements Initializable {
 		);
 	}
 
-	public async handleDisplayInfoAboutMySongCommand(
-		channel: string,
-		userInfo: ChatUser,
-	): Promise<void> {
-		try {
-			const song =
-				await this.songRequestManager.getTheHighestSongDetailByUsername(
-					userInfo.userName,
-				);
-
-			const unitOfTimes: string[] = this.convertDurationInSecondsToUnitsOfTime(
-				song.playingIn,
-			);
-
-			this.chatClient.say(
-				channel,
-				`You song '${song.title}' will be played in ~ ${
-					!unitOfTimes.length ? "now" : unitOfTimes.join(" and ")
-				}`,
-			);
-		} catch (e: unknown) {
-			if (e instanceof SongRequestError) {
-				this.chatClient.say(channel, e.message);
-			} else if (e instanceof Error) {
-				this.chatClient.say(channel, "Something went wrong :/");
-			}
-		}
-	}
-
 	private async handleAddSongToQueueCommand(
 		channel: string,
 		commandParameters: string[],

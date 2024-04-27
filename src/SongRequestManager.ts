@@ -204,16 +204,21 @@ export default class SongRequestManager implements Initializable {
 		});
 	}
 
-	public async getTheHighestSongDetailByUsername(username: string): Promise<{
-		title: string;
-		playingIn: number;
-	}> {
+	@HasRole([])
+	public async displaySongDetailsOfTheLatestAddedSongByUser(
+		chatClient: ChatClient,
+		channelName: string,
+		commandParameters: string[],
+		userInfo: ChatUser,
+	): Promise<void> {
+		const userName = userInfo.userName;
+
 		if (!this.songQueue.length) {
 			throw new SongRequestError("The queue is empty");
 		}
 
 		const songIndex: number = this.songQueue.findIndex(
-			(s) => s.addedBy === username,
+			(s) => s.addedBy === userName,
 		);
 
 		const song: Song | undefined = this.songQueue.at(songIndex);
@@ -222,17 +227,21 @@ export default class SongRequestManager implements Initializable {
 			throw new SongRequestError("Can't find any your song in the queue");
 		}
 
-		let durationFromTheSongIndex = this.getFirstNSongsFromQueue(songIndex)
+		let playingIn = this.getFirstNSongsFromQueue(songIndex)
 			.map((s) => s.durationInSeconds)
 			.reduce((acc, s) => acc + s, 0);
-
-		durationFromTheSongIndex += (await this.getInfoAboutCurrentlyPlayingSong())
+		playingIn += (await this.getInfoAboutCurrentlyPlayingSong())
 			.durationInSeconds;
 
-		return {
-			title: song.title,
-			playingIn: durationFromTheSongIndex,
-		};
+		const unitOfTimes: string[] =
+			this.convertDurationInSecondsToUnitsOfTime(playingIn);
+
+		chatClient.say(
+			channelName,
+			`@${userName} your song '${song.title}' will be played in ~ ${
+				!unitOfTimes.length ? "now" : unitOfTimes.join(" and ")
+			}`,
+		);
 	}
 
 	@HasRole([])
