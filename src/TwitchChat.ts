@@ -184,32 +184,6 @@ export default class TwitchChat implements Initializable {
 		);
 	}
 
-
-	public handleDeleteMyEarliestSongFromQueueCommand(
-		channel: string,
-		userInfo: ChatUser,
-	) {
-		try {
-			const deletedSong = this.songRequestManager.deleteUserTheEaliestSong(
-				userInfo.userName,
-			);
-
-			this.chatClient.say(
-				channel,
-				`Your song '${deletedSong.title}' has been succesfully deleted!`,
-			);
-		} catch (e: unknown) {
-			if (e instanceof SongRequestError) {
-				this.chatClient.say(channel, e.message);
-			} else if (e instanceof Error) {
-				this.chatClient.say(
-					channel,
-					"Something went wrong when trying to delete your song :/",
-				);
-			}
-		}
-	}
-
 	public async handleDisplayInfoAboutMySongCommand(
 		channel: string,
 		userInfo: ChatUser,

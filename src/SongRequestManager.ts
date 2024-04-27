@@ -235,16 +235,29 @@ export default class SongRequestManager implements Initializable {
 		};
 	}
 
-	public deleteUserTheEaliestSong(username: string): Song {
+	@HasRole([])
+	public async deleteUserTheEarliestAddedSong(
+		chatClient: ChatClient,
+		channelName: string,
+		commandParameters: string[],
+		userInfo: ChatUser,
+	): Promise<void> {
+		const userName = userInfo.userName;
+
 		const songIndex: number = this.songQueue.findLastIndex(
-			(s) => s.addedBy === username,
+			(song) => song.addedBy === userName,
 		);
 
 		if (songIndex === -1) {
 			throw new SongRequestError("Can't find any your song in the queue");
 		}
 
-		return this.songQueue.splice(songIndex, 1)[0];
+		const deletedSong = this.songQueue.splice(songIndex, 1)[0];
+
+		chatClient.say(
+			channelName,
+			`Your song '${deletedSong.title}' has been succesfully deleted! @${userName}`,
+		);
 	}
 
 	public removeSongFromQueue(): Song | undefined {
