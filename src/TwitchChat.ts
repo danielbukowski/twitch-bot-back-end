@@ -258,36 +258,6 @@ export default class TwitchChat implements Initializable {
 		}
 	}
 
-	private handleDisplaySongRequestQueueCommand(
-		channel: string,
-		userInfo: ChatUser,
-	): void {
-		const first3SongsInQueue: Song[] =
-			this.songRequestManager.getFirstNSongsFromQueue(3);
-
-		if (!first3SongsInQueue.length) {
-			this.chatClient.say(channel, "No songs have been found in the queue :(");
-			return;
-		}
-
-		let response = `Current ${
-			first3SongsInQueue.length === 1 ? "song" : "songs"
-		} in the queue: `;
-
-		for (let index = 0; index < first3SongsInQueue.length; index++) {
-			const song = first3SongsInQueue[index];
-			response += `#${index + 1} '${
-				song.title
-			}' https://www.youtube.com/watch?v=${song.videoId} added by @${
-				song.addedBy
-			}, `;
-		}
-		response = response.slice(0, -2);
-
-		this.chatClient.say(channel, response);
-	}
-
-
 	public getUserRole(userInfo: ChatUser): UserType | "Normal" {
 		const roles: UserType[] = [
 			"Mod",

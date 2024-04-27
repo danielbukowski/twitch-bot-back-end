@@ -245,6 +245,40 @@ export default class SongRequestManager implements Initializable {
 	}
 
 	@HasRole([])
+	public async displaySongRequestQueue(
+		chatClient: ChatClient,
+		channelName: string,
+		commandParameters: string[],
+		userInfo: ChatUser,
+	): Promise<void> {
+		const first3SongsInQueue: Song[] = this.getFirstNSongsFromQueue(3);
+
+		if (!first3SongsInQueue.length) {
+			chatClient.say(
+				channelName,
+				`@${userInfo.userName} no songs have been found in the queue :(`,
+			);
+			return;
+		}
+
+		let response = `Current ${
+			first3SongsInQueue.length === 1 ? "song" : "songs"
+		} in the queue: `;
+
+		for (let index = 0; index < first3SongsInQueue.length; index++) {
+			const song = first3SongsInQueue[index];
+			response += `#${index + 1} '${
+				song.title
+			}' https://www.youtube.com/watch?v=${song.videoId} added by @${
+				song.addedBy
+			}, `;
+		}
+		response = response.slice(0, -2);
+
+		chatClient.say(channelName, response);
+	}
+
+	@HasRole([])
 	public async deleteUserTheEarliestAddedSong(
 		chatClient: ChatClient,
 		channelName: string,
