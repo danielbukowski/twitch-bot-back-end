@@ -324,27 +324,6 @@ export default class TwitchChat implements Initializable {
 		}
 	}
 
-	private async handleChangeSongRequestVolumeCommand(
-		commandParameters: string[],
-		channel: string,
-		userInfo: ChatUser,
-	): Promise<void> {
-		const volumeValue: string = commandParameters[0];
-		const regExpToVolume: RegExp = /^[+-]?(\d{1,2}|100)$/;
-
-		if (!volumeValue || !volumeValue.match(regExpToVolume)) return;
-
-		const newVolume: number | undefined =
-			await this.songRequestManager.changeSongVolume(volumeValue);
-
-		if (newVolume === undefined) return;
-
-		this.chatClient.say(
-			channel,
-			`The volume has been set to ${newVolume * 100}%`,
-		);
-	}
-
 	private handleDisplaySongRequestQueueCommand(
 		channel: string,
 		userInfo: ChatUser,

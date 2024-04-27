@@ -2,6 +2,8 @@ import type { Namespace, Server as SocketIO } from "socket.io";
 import type { Initializable } from "./ObjectManager";
 import type YoutubeClient from "./YoutubeClient";
 import type { UserType } from "./ConfigInitializer";
+import { type BasicCommand, HasRole } from "./TwitchChat";
+import type { ChatClient, ChatUser } from "@twurple/chat";
 
 export class SongRequestError extends Error {
 	public constructor(message: string) {
@@ -89,21 +91,31 @@ export default class SongRequestManager implements Initializable {
 		});
 	}
 
-	public async changeSongVolume(
-		volumeValue: string,
-	): Promise<number | undefined> {
-		try {
-			const response = await this.getSongRequestNamespace()
-				.timeout(this.REQUEST_TIMEOUT)
-				.emitWithAck("song-request-message", {
-					type: "CHANGE_VOLUME",
-					volumeValue,
-				});
+	@HasRole(["Broadcaster", "Mod"])
+	public async ChangeSongRequestVolume(
+		chatClient: ChatClient,
+		channelName: string,
+		commandParameters: string[],
+		userInfo: ChatUser,
+	): Promise<void> {
+		const volume: string = commandParameters[0];
+		const regExpToVolume: RegExp = /^[+-]?(\d{1,2}|100)$/;
 
-			return response[0].newVolume;
-		} catch (e: unknown) {
-			return undefined;
-		}
+		if (!volume || !volume.match(regExpToVolume)) return;
+
+		const response = await this.getSongRequestNamespace()
+			.timeout(this.REQUEST_TIMEOUT)
+			.emitWithAck("song-request-message", {
+				type: "CHANGE_VOLUME",
+				volumeValue: volume,
+			});
+
+		const newVolume = response[0].newVolume;
+
+		chatClient.say(
+			channelName,
+			`The volume has been set to ${newVolume * 100}%`,
+		);
 	}
 
 	public getFirstNSongsFromQueue(n: number): Song[] {
