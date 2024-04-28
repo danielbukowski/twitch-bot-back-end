@@ -106,12 +106,12 @@ export default class SongRequestManager
 		console.log("Initialized the SongRequestManager!");
 	}
 
-	public addSongToQueue(song: Song): number {
+	private addSongToQueue(song: Song): number {
 		return this.songQueue.push(song);
 	}
 
 	@HasRole(["Broadcaster"])
-	public async playSongRequest(
+	private async playSongRequest(
 		chatClient: ChatClient,
 		channelName: string,
 		commandParameters: string[],
@@ -123,7 +123,7 @@ export default class SongRequestManager
 	}
 
 	@HasRole(["Broadcaster"])
-	public async pauseSongRequest(
+	private async pauseSongRequest(
 		chatClient: ChatClient,
 		channelName: string,
 		commandParameters: string[],
@@ -135,7 +135,7 @@ export default class SongRequestManager
 	}
 
 	@HasRole(["Broadcaster", "Mod"])
-	public async skipSong(
+	private async skipSong(
 		chatClient: ChatClient,
 		channelName: string,
 		commandParameters: string[],
@@ -147,7 +147,7 @@ export default class SongRequestManager
 	}
 
 	@HasRole(["Broadcaster", "Mod"])
-	public async changeSongRequestVolume(
+	private async changeSongRequestVolume(
 		chatClient: ChatClient,
 		channelName: string,
 		commandParameters: string[],
@@ -173,11 +173,11 @@ export default class SongRequestManager
 		);
 	}
 
-	public getFirstNSongsFromQueue(n: number): Song[] {
+	private getFirstNSongsFromQueue(n: number): Song[] {
 		return this.songQueue.slice(0, n);
 	}
 
-	public async getInfoAboutCurrentlyPlayingSong(): Promise<
+	private async getInfoAboutCurrentlyPlayingSong(): Promise<
 		Omit<Song, "videoId">
 	> {
 		const socket = (await this.getSongRequestNamespace().fetchSockets())[0];
@@ -195,7 +195,7 @@ export default class SongRequestManager
 		return response;
 	}
 
-	public async getDurationOfSongs(): Promise<number> {
+	private async getDurationOfSongs(): Promise<number> {
 		let queueDurationInSeconds: number = this.songQueue
 			.map((s) => s.durationInSeconds)
 			.reduce((acc, s) => acc + s, 0);
@@ -206,7 +206,7 @@ export default class SongRequestManager
 		return queueDurationInSeconds;
 	}
 
-	public async sendSongFromQueue(): Promise<void> {
+	private async sendSongFromQueue(): Promise<void> {
 		const song: Song | undefined = this.removeSongFromQueue();
 		if (!song) {
 			this.getSongRequestNamespace().emit("song-request-message", {
@@ -242,7 +242,7 @@ export default class SongRequestManager
 	}
 
 	@HasRole([])
-	public async displayInfoAboutCurrentlyPlayingSong(
+	private async displayInfoAboutCurrentlyPlayingSong(
 		chatClient: ChatClient,
 		channelName: string,
 		commandParameters: string[],
@@ -257,7 +257,7 @@ export default class SongRequestManager
 	}
 
 	@HasRole([])
-	public async displaySongDetailsOfTheLatestAddedSongByUser(
+	private async displaySongDetailsOfTheLatestAddedSongByUser(
 		chatClient: ChatClient,
 		channelName: string,
 		commandParameters: string[],
@@ -299,7 +299,7 @@ export default class SongRequestManager
 	}
 
 	@HasRole([])
-	public async displaySongRequestQueue(
+	private async displaySongRequestQueue(
 		chatClient: ChatClient,
 		channelName: string,
 		commandParameters: string[],
@@ -333,7 +333,7 @@ export default class SongRequestManager
 	}
 
 	@HasRole([])
-	public async addUserSongToQueue(
+	private async addUserSongToQueue(
 		chatClient: ChatClient,
 		channelName: string,
 		commandParameters: string[],
@@ -412,7 +412,7 @@ export default class SongRequestManager
 	}
 
 	@HasRole([])
-	public async deleteUserTheEarliestAddedSong(
+	private async deleteUserTheEarliestAddedSong(
 		chatClient: ChatClient,
 		channelName: string,
 		commandParameters: string[],
@@ -438,7 +438,7 @@ export default class SongRequestManager
 		);
 	}
 
-	public removeSongFromQueue(): Song | undefined {
+	private removeSongFromQueue(): Song | undefined {
 		return this.songQueue.shift();
 	}
 
