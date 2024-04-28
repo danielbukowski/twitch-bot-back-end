@@ -167,7 +167,7 @@ export default class SongRequestManager implements Initializable {
 		const response: Omit<Song, "videoId"> = await socket
 			.timeout(this.REQUEST_TIMEOUT)
 			.emitWithAck("song-request-message", {
-				type: "SONG_DURATION",
+				type: "GET_SONG_INFO",
 			});
 
 		return response;
