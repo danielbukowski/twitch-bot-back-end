@@ -74,9 +74,12 @@ export default class HttpServer implements Initializable {
 						.getTokenStorage()
 						.saveAccessToken(tokenIntent, accessToken);
 
-					res.sendStatus(200);
+					res.redirect(
+						301,
+						`${this.frontendOrigin}/oauth2-flow?result=success`,
+					);
 				} catch (e: unknown) {
-					next(e);
+					res.redirect(301, `${this.frontendOrigin}/oauth2-flow?result=error`);
 				}
 			},
 		);
