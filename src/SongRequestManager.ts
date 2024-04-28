@@ -147,7 +147,7 @@ export default class SongRequestManager
 	}
 
 	@HasRole(["Broadcaster", "Mod"])
-	public async ChangeSongRequestVolume(
+	public async changeSongRequestVolume(
 		chatClient: ChatClient,
 		channelName: string,
 		commandParameters: string[],
