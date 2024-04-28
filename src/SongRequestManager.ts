@@ -2,7 +2,11 @@ import type { Namespace, Server as SocketIO } from "socket.io";
 import type { Initializable } from "./ObjectManager";
 import type YoutubeClient from "./YoutubeClient";
 import type { UserType } from "./ConfigInitializer";
-import TwitchChat, { type BasicCommand, HasRole } from "./TwitchChat";
+import TwitchChat, {
+	type BasicCommand,
+	HasRole,
+	type CommandContainer,
+} from "./TwitchChat";
 import type { ChatClient, ChatUser } from "@twurple/chat";
 import { Duration } from "luxon/src/duration";
 import type { VideoDetail } from "./YoutubeClient";
@@ -22,7 +26,9 @@ export interface Song {
 	addedBy: string;
 }
 
-export default class SongRequestManager implements Initializable {
+export default class SongRequestManager
+	implements Initializable, CommandContainer
+{
 	private readonly REQUEST_TIMEOUT = 1_400;
 	private readonly MAXIMUM_SONG_DURATION_FOR_USER_TYPE: Record<
 		UserType | "Normal",
@@ -55,6 +61,22 @@ export default class SongRequestManager implements Initializable {
 		private readonly youTubeClient: YoutubeClient,
 		private readonly socketIO: SocketIO,
 	) {}
+
+	public getCommands(): Map<string, BasicCommand> {
+		const commands = new Map<string, BasicCommand>();
+
+		commands.set("srplay", this.playSongRequest);
+		commands.set("srpause", this.pauseSongRequest);
+		commands.set("skipsong", this.skipSong);
+		commands.set("volume", this.changeSongRequestVolume);
+		commands.set("song", this.displayInfoAboutCurrentlyPlayingSong);
+		commands.set("mysong", this.displaySongDetailsOfTheLatestAddedSongByUser);
+		commands.set("srq", this.displaySongRequestQueue);
+		commands.set("sr", this.addUserSongToQueue);
+		commands.set("wrongsong", this.deleteUserTheEarliestAddedSong);
+
+		return commands;
+	}
 
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	private getSongRequestNamespace(): Namespace<any> {
