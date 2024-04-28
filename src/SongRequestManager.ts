@@ -220,6 +220,21 @@ export default class SongRequestManager implements Initializable {
 	}
 
 	@HasRole([])
+	public async displayInfoAboutCurrentlyPlayingSong(
+		chatClient: ChatClient,
+		channelName: string,
+		commandParameters: string[],
+		userInfo: ChatUser,
+	): Promise<void> {
+		const response = await this.getInfoAboutCurrentlyPlayingSong();
+
+		chatClient.say(
+			channelName,
+			`@${userInfo.userName} the currently playing song "${response.title}" was added by @${response.addedBy}`,
+		);
+	}
+
+	@HasRole([])
 	public async displaySongDetailsOfTheLatestAddedSongByUser(
 		chatClient: ChatClient,
 		channelName: string,
