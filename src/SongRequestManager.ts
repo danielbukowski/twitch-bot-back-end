@@ -110,6 +110,128 @@ export default class SongRequestManager
 		return this.songQueue.push(song);
 	}
 
+	private removeSongFromQueue(): Song | undefined {
+		return this.songQueue.shift();
+	}
+
+	private getFirstNSongsFromQueue(n: number): Song[] {
+		return this.songQueue.slice(0, n);
+	}
+
+	private async getInfoAboutCurrentlyPlayingSong(): Promise<
+		Omit<Song, "videoId">
+	> {
+		const socket = (await this.getSongRequestNamespace().fetchSockets())[0];
+
+		if (!socket) {
+			throw new Error("No one is connected to the song request!");
+		}
+
+		const response: Omit<Song, "videoId"> = await socket
+			.timeout(this.REQUEST_TIMEOUT)
+			.emitWithAck("song-request-message", {
+				type: "GET_SONG_INFO",
+			});
+
+		return response;
+	}
+
+	private async getDurationOfSongs(): Promise<number> {
+		let queueDurationInSeconds: number = this.songQueue
+			.map((s) => s.durationInSeconds)
+			.reduce((acc, s) => acc + s, 0);
+
+		queueDurationInSeconds += (await this.getInfoAboutCurrentlyPlayingSong())
+			.durationInSeconds;
+
+		return queueDurationInSeconds;
+	}
+
+	private convertDurationInSecondsToUnitsOfTime(
+		durationInSeconds: number,
+	): string[] {
+		let duration: number = durationInSeconds;
+
+		if (!duration) {
+			return [];
+		}
+
+		const hours = Math.floor(duration / 3600);
+		if (hours >= 1) {
+			duration %= 3600;
+		}
+
+		const minutes = Math.floor(duration / 60);
+		if (minutes >= 1) {
+			duration %= 60;
+		}
+
+		const seconds = duration;
+
+		const unitsOfTime: string[] = [];
+
+		if (hours > 0) {
+			if (hours === 1) {
+				unitsOfTime.push("1 hour");
+			} else {
+				unitsOfTime.push(`${hours} hours`);
+			}
+		}
+
+		if (minutes > 0) {
+			if (minutes === 1) {
+				unitsOfTime.push("1 minute");
+			} else {
+				unitsOfTime.push(`${minutes} minutes`);
+			}
+		}
+
+		if (seconds > 0) {
+			if (seconds === 1) {
+				unitsOfTime.push("1 second");
+			} else {
+				unitsOfTime.push(`${seconds} seconds`);
+			}
+		}
+		return unitsOfTime;
+	}
+
+	private async sendSongFromQueue(): Promise<void> {
+		const song: Song | undefined = this.removeSongFromQueue();
+
+		if (!song) {
+			this.getSongRequestNamespace().emit("song-request-message", {
+				type: "PLAY_NEXT_SONG",
+				error: {
+					message: "EMPTY_QUEUE",
+				},
+			});
+			return;
+		}
+
+		const audioData: string | undefined =
+			await this.youTubeClient.downloadYouTubeAudio(song.videoId);
+
+		if (!audioData) {
+			this.getSongRequestNamespace().emit("song-request-message", {
+				type: "PLAY_NEXT_SONG",
+				error: {
+					message: "DOWNLOADING_ERROR",
+				},
+			});
+			return;
+		}
+
+		this.getSongRequestNamespace().emit("song-request-message", {
+			type: "PLAY_NEXT_SONG",
+			data: {
+				title: song.title,
+				addedBy: song.addedBy,
+				audio: audioData,
+			},
+		});
+	}
+
 	@HasRole(["Broadcaster"])
 	private async playSongRequest(
 		chatClient: ChatClient,
@@ -171,74 +293,6 @@ export default class SongRequestManager
 			channelName,
 			`@${userInfo.userName} the volume has been set to ${newVolume * 100}%`,
 		);
-	}
-
-	private getFirstNSongsFromQueue(n: number): Song[] {
-		return this.songQueue.slice(0, n);
-	}
-
-	private async getInfoAboutCurrentlyPlayingSong(): Promise<
-		Omit<Song, "videoId">
-	> {
-		const socket = (await this.getSongRequestNamespace().fetchSockets())[0];
-
-		if (!socket) {
-			throw new Error("No one is connected to the song request!");
-		}
-
-		const response: Omit<Song, "videoId"> = await socket
-			.timeout(this.REQUEST_TIMEOUT)
-			.emitWithAck("song-request-message", {
-				type: "GET_SONG_INFO",
-			});
-
-		return response;
-	}
-
-	private async getDurationOfSongs(): Promise<number> {
-		let queueDurationInSeconds: number = this.songQueue
-			.map((s) => s.durationInSeconds)
-			.reduce((acc, s) => acc + s, 0);
-
-		queueDurationInSeconds += (await this.getInfoAboutCurrentlyPlayingSong())
-			.durationInSeconds;
-
-		return queueDurationInSeconds;
-	}
-
-	private async sendSongFromQueue(): Promise<void> {
-		const song: Song | undefined = this.removeSongFromQueue();
-		if (!song) {
-			this.getSongRequestNamespace().emit("song-request-message", {
-				type: "PLAY_NEXT_SONG",
-				error: {
-					message: "EMPTY_QUEUE",
-				},
-			});
-			return;
-		}
-
-		const audioData: string | undefined =
-			await this.youTubeClient.downloadYouTubeAudio(song.videoId);
-
-		if (!audioData) {
-			this.getSongRequestNamespace().emit("song-request-message", {
-				type: "PLAY_NEXT_SONG",
-				error: {
-					message: "DOWNLOADING_ERROR",
-				},
-			});
-			return;
-		}
-
-		this.getSongRequestNamespace().emit("song-request-message", {
-			type: "PLAY_NEXT_SONG",
-			data: {
-				title: song.title,
-				addedBy: song.addedBy,
-				audio: audioData,
-			},
-		});
 	}
 
 	@HasRole([])
@@ -436,58 +490,5 @@ export default class SongRequestManager
 			channelName,
 			`@${userName} your song '${deletedSong.title}' has been succesfully deleted!`,
 		);
-	}
-
-	private removeSongFromQueue(): Song | undefined {
-		return this.songQueue.shift();
-	}
-
-	private convertDurationInSecondsToUnitsOfTime(
-		durationInSeconds: number,
-	): string[] {
-		let duration: number = durationInSeconds;
-
-		if (!duration) {
-			return [];
-		}
-
-		const hours = Math.floor(duration / 3600);
-		if (hours >= 1) {
-			duration %= 3600;
-		}
-
-		const minutes = Math.floor(duration / 60);
-		if (minutes >= 1) {
-			duration %= 60;
-		}
-
-		const seconds = duration;
-
-		const unitsOfTime: string[] = [];
-
-		if (hours > 0) {
-			if (hours === 1) {
-				unitsOfTime.push("1 hour");
-			} else {
-				unitsOfTime.push(`${hours} hours`);
-			}
-		}
-
-		if (minutes > 0) {
-			if (minutes === 1) {
-				unitsOfTime.push("1 minute");
-			} else {
-				unitsOfTime.push(`${minutes} minutes`);
-			}
-		}
-
-		if (seconds > 0) {
-			if (seconds === 1) {
-				unitsOfTime.push("1 second");
-			} else {
-				unitsOfTime.push(`${seconds} seconds`);
-			}
-		}
-		return unitsOfTime;
 	}
 }
