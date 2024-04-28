@@ -2,7 +2,6 @@ import type { RefreshingAuthProvider } from "@twurple/auth";
 import { ChatClient, type ChatMessage, ChatUser } from "@twurple/chat";
 import type { UserType } from "./ConfigInitializer";
 import type { Initializable } from "./ObjectManager";
-import type SongRequestManager from "./SongRequestManager";
 import { SongRequestError } from "./SongRequestManager";
 import type TwitchClient from "./TwitchClient";
 
@@ -59,14 +58,9 @@ export default class TwitchChat implements Initializable {
 
 	public constructor(
 		private readonly authProvider: RefreshingAuthProvider,
-		private readonly youtubeClient: YoutubeClient,
-		private readonly songRequestManager: SongRequestManager,
 		private readonly twitchClient: TwitchClient,
-	) {
-		this.authProvider = authProvider;
-		this.youtubeClient = youtubeClient;
-		this.songRequestManager = songRequestManager;
-	}
+		private readonly commandContainers: Array<CommandContainer>,
+	) {}
 
 	public async init(): Promise<void> {
 		console.log("Initializing the TwitchChat...");

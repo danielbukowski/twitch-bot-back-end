@@ -92,11 +92,8 @@ export default class ObjectManager {
 				(
 					this.manageableClasses.get(AuthManager.name) as AuthManager
 				).getAuthProvider(),
-				this.manageableClasses.get(YoutubeClient.name) as YoutubeClient,
-				this.manageableClasses.get(
-					SongRequestManager.name,
-				) as SongRequestManager,
 				this.manageableClasses.get(TwitchClient.name) as TwitchClient,
+				[],
 			),
 		);
 		this.manageableClasses.set(
