@@ -8,7 +8,7 @@ import express, {
 } from "express";
 import type { Initializable } from "./ObjectManager";
 import type TokenStorageFactory from "./TokenStorageFactory";
-import type TokenUtil from "./TokenUtil";
+import TokenUtil from "./TokenUtil";
 import type { TokenIntent } from "./TokenUtil";
 import type TwitchClient from "./TwitchClient";
 import helmet from "helmet";
@@ -60,7 +60,7 @@ export default class HttpServer implements Initializable {
 					const accessToken: AccessToken =
 						await this.twitchClient.exchangeCodeToAccessToken(code);
 					const tokenIntent: TokenIntent | undefined =
-						this.tokenUtil.checkUseOfScopes(accessToken.scope);
+						TokenUtil.checkUseOfScopes(accessToken.scope);
 
 					if (!tokenIntent) {
 						res.status(400).json({

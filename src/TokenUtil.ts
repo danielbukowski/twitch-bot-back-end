@@ -21,11 +21,11 @@ export default class TokenUtil implements Initializable {
 	private readonly PBKDF2_SALT_SIZE: number = 18;
 	private readonly PBKDF2_ITERATIONS: number = 33217;
 
-	private readonly scopesForChat: ReadonlyArray<string> = [
+	private static readonly scopesForChat: ReadonlyArray<string> = [
 		"chat:edit",
 		"chat:read",
 	];
-	private readonly scopesForEvents: ReadonlyArray<string> = [
+	private static readonly scopesForEvents: ReadonlyArray<string> = [
 		"moderator:read:followers",
 		"channel:read:subscriptions",
 	];
@@ -37,7 +37,7 @@ export default class TokenUtil implements Initializable {
 		console.log("Initialized the TokenUtil!");
 	}
 
-	private areArrayEqual(
+	private static areArrayEqual(
 		array1: ReadonlyArray<string>,
 		array2: ReadonlyArray<string>,
 	): boolean {
@@ -47,11 +47,11 @@ export default class TokenUtil implements Initializable {
 		);
 	}
 
-	public checkUseOfScopes(scopes: string[]): TokenIntent | undefined {
-		if (this.areArrayEqual(scopes, this.scopesForChat)) {
+	public static checkUseOfScopes(scopes: string[]): TokenIntent | undefined {
+		if (TokenUtil.areArrayEqual(scopes, TokenUtil.scopesForChat)) {
 			return "chat";
 		}
-		if (this.areArrayEqual(scopes, this.scopesForEvents)) {
+		if (TokenUtil.areArrayEqual(scopes, TokenUtil.scopesForEvents)) {
 			return "events";
 		}
 		return undefined;

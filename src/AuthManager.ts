@@ -1,7 +1,7 @@
 import { type AccessToken, RefreshingAuthProvider } from "@twurple/auth";
 import type { Initializable } from "./ObjectManager";
 import type TokenStorageFactory from "./TokenStorageFactory";
-import type TokenUtil from "./TokenUtil";
+import TokenUtil from "./TokenUtil";
 import type { TokenIntent } from "./TokenUtil";
 
 export interface TokenStorage {
@@ -54,7 +54,7 @@ export default class AuthManager implements Initializable {
 				const scopesOfNewToken = newToken.scope;
 
 				const tokenIntent: TokenIntent | undefined =
-					this.tokenUtil.checkUseOfScopes(scopesOfNewToken);
+					TokenUtil.checkUseOfScopes(scopesOfNewToken);
 
 				if (!tokenIntent) {
 					throw new Error("An error occured when refreshing an access token");
