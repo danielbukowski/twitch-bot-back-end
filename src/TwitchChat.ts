@@ -49,8 +49,6 @@ export type BasicCommand = (
 
 export default class TwitchChat implements Initializable {
 	private readonly COMMAND_PREFIX: string = "!";
-	private readonly MIN_VIDEO_VIEWS: number = 18_000;
-	private readonly MAX_VIDEO_DURATION_IN_SECONDS: number = 360;
 	private chatClient!: ChatClient;
 	private chatbotName!: string;
 
