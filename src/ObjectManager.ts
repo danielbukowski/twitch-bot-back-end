@@ -5,7 +5,7 @@ import SocketServer from "./SocketServer";
 import SongRequestManager from "./SongRequestManager";
 import TokenStorageFactory from "./TokenStorageFactory";
 import TokenUtil from "./TokenUtil";
-import TwitchChat from "./TwitchChat";
+import TwitchChat, { type CommandContainer } from "./TwitchChat";
 import TwitchClient from "./TwitchClient";
 import TwitchEventListener from "./TwitchEventListener";
 import YoutubeClient from "./YoutubeClient";
@@ -15,100 +15,73 @@ export interface Initializable {
 }
 
 export default class ObjectManager {
-	private manageableClasses: Map<string, Initializable> = new Map();
-
-	public constructor(private readonly configInitializer: ConfigInitializer) {
-		const config = configInitializer.getConfig();
-
-		this.manageableClasses.set(
-			TokenUtil.name,
-			new TokenUtil(config.encryptionPassphrase),
-		);
-		this.manageableClasses.set(
-			TokenStorageFactory.name,
-			new TokenStorageFactory(
-				config.tokenStorageType,
-				this.manageableClasses.get(TokenUtil.name) as TokenUtil,
-			),
-		);
-		this.manageableClasses.set(
-			AuthManager.name,
-			new AuthManager(
-				config.twitchAppClientId,
-				config.twitchAppClientSecret,
-				this.manageableClasses.get(TokenUtil.name) as TokenUtil,
-				this.manageableClasses.get(
-					TokenStorageFactory.name,
-				) as TokenStorageFactory,
-			),
-		);
-		this.manageableClasses.set(
-			YoutubeClient.name,
-			new YoutubeClient(config.youtubeApiKey),
-		);
-		this.manageableClasses.set(
-			TwitchClient.name,
-			new TwitchClient(
-				(
-					this.manageableClasses.get(AuthManager.name) as AuthManager
-				).getAuthProvider(),
-				config.twitchAppClientId,
-				config.twitchAppClientSecret,
-				config.oauth2RedirectUri,
-			),
-		);
-		this.manageableClasses.set(
-			HttpServer.name,
-			new HttpServer(
-				config.httpServerPort,
-				this.manageableClasses.get(TwitchClient.name) as TwitchClient,
-				config.frontendOrigin,
-				this.manageableClasses.get(
-					TokenStorageFactory.name,
-				) as TokenStorageFactory,
-			),
-		);
-		this.manageableClasses.set(
-			SocketServer.name,
-			new SocketServer(
-				(
-					this.manageableClasses.get(HttpServer.name) as HttpServer
-				).getHttpServer(),
-			),
-		);
-		this.manageableClasses.set(
-			SongRequestManager.name,
-			new SongRequestManager(
-				this.manageableClasses.get(YoutubeClient.name) as YoutubeClient,
-				(
-					this.manageableClasses.get(SocketServer.name) as SocketServer
-				).getSocketIO(),
-			),
-		);
-		this.manageableClasses.set(
-			TwitchChat.name,
-			new TwitchChat(
-				(
-					this.manageableClasses.get(AuthManager.name) as AuthManager
-				).getAuthProvider(),
-				this.manageableClasses.get(TwitchClient.name) as TwitchClient,
-				[],
-			),
-		);
-		this.manageableClasses.set(
-			TwitchEventListener.name,
-			new TwitchEventListener(
-				(
-					this.manageableClasses.get(SocketServer.name) as SocketServer
-				).getSocketIO(),
-				this.manageableClasses.get(TwitchClient.name) as TwitchClient,
-			),
-		);
-	}
+	constructor(private readonly configInitializer: ConfigInitializer) {}
 
 	public async initializeClasses(): Promise<void> {
+		const config = this.configInitializer.getConfig();
+		const manageableClasses: Initializable[] = [];
+		const commandContainers: CommandContainer[] = [];
+
+		const tokenUtil = new TokenUtil(config.encryptionPassphrase);
+		manageableClasses.push(tokenUtil);
+
+		const tokenStorageFactory = new TokenStorageFactory(
+			config.tokenStorageType,
+			tokenUtil,
+		);
+		manageableClasses.push(tokenStorageFactory);
+
+		const authManager = new AuthManager(
+			config.twitchAppClientId,
+			config.twitchAppClientSecret,
+			tokenStorageFactory,
+		);
+		manageableClasses.push(authManager);
+
+		const youTubeClient = new YoutubeClient(config.youTubeApiKey);
+		manageableClasses.push(youTubeClient);
+
+		const twitchClient = new TwitchClient(
+			authManager.getAuthProvider(),
+			config.twitchAppClientId,
+			config.twitchAppClientSecret,
+			config.oauth2RedirectUri,
+		);
+		manageableClasses.push(twitchClient);
+
+		const httpServer = new HttpServer(
+			config.httpServerPort,
+			twitchClient,
+			config.frontendOrigin,
+			tokenStorageFactory,
+		);
+		manageableClasses.push(httpServer);
+
+		const socketServer = new SocketServer(httpServer.getHttpServer());
+		manageableClasses.push(socketServer);
+
+		const songRequestManager = new SongRequestManager(
+			youTubeClient,
+			socketServer.getSocketIO(),
+		);
+		manageableClasses.push(songRequestManager);
+		commandContainers.push(songRequestManager);
+
+		const twitchEventListener = new TwitchEventListener(
+			socketServer.getSocketIO(),
+			twitchClient,
+		);
+		manageableClasses.push(twitchEventListener);
+
+		const twitchChat = new TwitchChat(
+			authManager.getAuthProvider(),
+			twitchClient,
+			commandContainers,
+		);
+		manageableClasses.push(twitchChat);
+
 		try {
-			for (const manageableClass of this.manageableClasses.values()) {
+			for (const manageableClass of manageableClasses) {
 				await manageableClass.init();
 			}
 		} catch (e: unknown) {
