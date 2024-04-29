@@ -19,7 +19,6 @@ export default class HttpServer implements Initializable {
 
 	constructor(
 		private readonly port: string,
-		private readonly tokenUtil: TokenUtil,
 		private readonly twitchClient: TwitchClient,
 		private readonly frontendOrigin: string,
 		private readonly tokenStorageFactory: TokenStorageFactory,

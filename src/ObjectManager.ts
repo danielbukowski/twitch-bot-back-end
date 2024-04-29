@@ -61,7 +61,6 @@ export default class ObjectManager {
 			HttpServer.name,
 			new HttpServer(
 				config.httpServerPort,
-				this.manageableClasses.get(TokenUtil.name) as TokenUtil,
 				this.manageableClasses.get(TwitchClient.name) as TwitchClient,
 				config.frontendOrigin,
 				this.manageableClasses.get(
