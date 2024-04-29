@@ -8,7 +8,7 @@ import TwitchChat, {
 	type CommandContainer,
 } from "./TwitchChat";
 import type { ChatClient, ChatUser } from "@twurple/chat";
-import { Duration } from "luxon/src/duration";
+import { Duration } from "luxon";
 import type { VideoDetail } from "./YoutubeClient";
 import ytdl from "ytdl-core";
 
