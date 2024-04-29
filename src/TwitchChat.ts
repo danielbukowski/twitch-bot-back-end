@@ -93,6 +93,12 @@ export default class TwitchChat implements Initializable {
 				authIntents: ["chat"],
 			});
 
+			for (const container of this.commandContainers) {
+				for (const [k, v] of container.getCommands().entries()) {
+					this.availableCommands.set(`${this.COMMAND_PREFIX}${k}`, v);
+				}
+			}
+
 			this.setChatListeners();
 			this.chatClient.connect();
 
