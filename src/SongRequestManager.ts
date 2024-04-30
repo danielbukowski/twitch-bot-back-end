@@ -66,15 +66,18 @@ export default class SongRequestManager
 	public getCommands(): Map<string, BasicCommand> {
 		const commands = new Map<string, BasicCommand>();
 
-		commands.set("srplay", this.playSongRequest);
-		commands.set("srpause", this.pauseSongRequest);
-		commands.set("skipsong", this.skipSong);
-		commands.set("volume", this.changeSongRequestVolume);
-		commands.set("song", this.displayInfoAboutCurrentlyPlayingSong);
-		commands.set("mysong", this.displaySongDetailsOfTheLatestAddedSongByUser);
-		commands.set("srq", this.displaySongRequestQueue);
-		commands.set("sr", this.addUserSongToQueue);
-		commands.set("wrongsong", this.deleteUserTheEarliestAddedSong);
+		commands.set("srplay", this.playSongRequest.bind(this));
+		commands.set("srpause", this.pauseSongRequest.bind(this));
+		commands.set("skipsong", this.skipSong.bind(this));
+		commands.set("volume", this.changeSongRequestVolume.bind(this));
+		commands.set("song", this.displayInfoAboutCurrentlyPlayingSong.bind(this));
+		commands.set(
+			"mysong",
+			this.displaySongDetailsOfTheLatestAddedSongByUser.bind(this),
+		);
+		commands.set("srq", this.displaySongRequestQueue.bind(this));
+		commands.set("sr", this.addUserSongToQueue.bind(this));
+		commands.set("wrongsong", this.deleteUserTheEarliestAddedSong.bind(this));
 
 		return commands;
 	}
