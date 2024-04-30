@@ -14,12 +14,12 @@ export interface VideoDetail {
 	};
 }
 
-export default class YoutubeClient implements Initializable {
+export default class YouTubeClient implements Initializable {
 	constructor(private readonly youtubeApiKey: string) {}
 
 	public async init(): Promise<void> {
-		console.log("Initializing the YoutubeClient...");
-		console.log("Initialized the YoutubeClient!");
+		console.log("Initializing the YouTubeClient...");
+		console.log("Initialized the YouTubeClient!");
 	}
 
 	public async getVideoIdByName(name: string): Promise<string | undefined> {

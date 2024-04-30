@@ -1,6 +1,5 @@
 import type { Namespace, Server as SocketIO } from "socket.io";
 import type { Initializable } from "./ObjectManager";
-import type YoutubeClient from "./YoutubeClient";
 import type { UserType } from "./ConfigInitializer";
 import TwitchChat, {
 	type BasicCommand,
@@ -9,8 +8,10 @@ import TwitchChat, {
 } from "./TwitchChat";
 import type { ChatClient, ChatUser } from "@twurple/chat";
 import { Duration } from "luxon";
-import type { VideoDetail } from "./YoutubeClient";
 import ytdl from "ytdl-core";
+// biome-ignore lint/style/useImportType: <soemthing is wrong with this>
+import YouTubeClient from "./YouTubeClient";
+import type { VideoDetail } from "./YouTubeClient";
 
 export class SongRequestError extends Error {
 	public constructor(message: string) {
@@ -58,7 +59,7 @@ export default class SongRequestManager
 	private songQueue: Song[] = [];
 
 	constructor(
-		private readonly youTubeClient: YoutubeClient,
+		private readonly youTubeClient: YouTubeClient,
 		private readonly socketIO: SocketIO,
 	) {}
 

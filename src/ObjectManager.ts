@@ -8,7 +8,7 @@ import TokenUtil from "./TokenUtil";
 import TwitchChat, { type CommandContainer } from "./TwitchChat";
 import TwitchClient from "./TwitchClient";
 import TwitchEventListener from "./TwitchEventListener";
-import YoutubeClient from "./YoutubeClient";
+import YouTubeClient from "./YouTubeClient";
 
 export interface Initializable {
 	init(): Promise<void>;
@@ -38,7 +38,7 @@ export default class ObjectManager {
 		);
 		manageableClasses.push(authManager);
 
-		const youTubeClient = new YoutubeClient(config.youTubeApiKey);
+		const youTubeClient = new YouTubeClient(config.youTubeApiKey);
 		manageableClasses.push(youTubeClient);
 
 		const twitchClient = new TwitchClient(
