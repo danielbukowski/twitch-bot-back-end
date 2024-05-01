@@ -9,7 +9,6 @@ interface Config {
 	encryptionPassphrase: string;
 	oauth2RedirectUri: string;
 	frontendOrigin: string;
-	tokenStorageType: string;
 }
 
 export type UserType =
@@ -32,7 +31,6 @@ export default class ConfigInitializer {
 			encryptionPassphrase: process.env.ENCRYPTION_PASSPHRASE || "",
 			oauth2RedirectUri: process.env.OAUTH2_REDIRECT_URI || "",
 			frontendOrigin: process.env.FRONTEND_ORIGIN || "",
-			tokenStorageType: process.env.TOKEN_STORAGE_TYPE || "IN_MEMORY",
 		};
 	}
 
