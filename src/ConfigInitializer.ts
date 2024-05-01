@@ -1,14 +1,14 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-interface Config {
-	twitchAppClientId: string;
-	twitchAppClientSecret: string;
-	httpServerPort: string;
-	youTubeApiKey: string;
-	encryptionPassphrase: string;
-	oauth2RedirectUri: string;
-	frontendOrigin: string;
+interface EnvironmentVariables {
+	TWITCH_APP_CLIENT_ID: string;
+	TWITCH_APP_CLIENT_SECRET: string;
+	HTTP_SERVER_PORT: string;
+	YOUTUBE_API_KEY: string;
+	ENCRYPTION_PASSPHRASE: string;
+	OAUTH2_REDIRECT_URI: string;
+	FRONTEND_ORIGIN: string;
 }
 
 export type UserType =
@@ -20,35 +20,38 @@ export type UserType =
 	| "Founder";
 
 export default class ConfigInitializer {
-	private config: Readonly<Config>;
+	private environmentVariables: Readonly<EnvironmentVariables>;
 
 	constructor() {
-		this.config = {
-			twitchAppClientId: process.env.TWITCH_CLIENT_ID || "",
-			twitchAppClientSecret: process.env.TWITCH_CLIENT_SECRET || "",
-			httpServerPort: process.env.HTTP_SERVER_PORT || "",
-			youTubeApiKey: process.env.YOUTUBE_API_KEY || "",
-			encryptionPassphrase: process.env.ENCRYPTION_PASSPHRASE || "",
-			oauth2RedirectUri: process.env.OAUTH2_REDIRECT_URI || "",
-			frontendOrigin: process.env.FRONTEND_ORIGIN || "",
+		this.environmentVariables = {
+			TWITCH_APP_CLIENT_ID: process.env.TWITCH_APP_CLIENT_ID || "",
+			TWITCH_APP_CLIENT_SECRET: process.env.TWITCH_APP_CLIENT_SECRET || "",
+			HTTP_SERVER_PORT: process.env.HTTP_SERVER_PORT || "",
+			YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY || "",
+			ENCRYPTION_PASSPHRASE: process.env.ENCRYPTION_PASSPHRASE || "",
+			OAUTH2_REDIRECT_URI: process.env.OAUTH2_REDIRECT_URI || "",
+			FRONTEND_ORIGIN: process.env.FRONTEND_ORIGIN || "",
 		};
 	}
 
-	public getConfig(): Config {
-		return this.config;
+	public getEnvironmentVariables(): EnvironmentVariables {
+		return this.environmentVariables;
 	}
 
-	public checkConfigurationVariables(): void {
-		console.log("Checking configuration variables...");
+	public checkEnvironmentVariables(): void {
+		console.log("Checking the environment variables...");
 
-		for (const key in this.config) {
-			const value = this.config[key as keyof Config];
+		for (const key in this.environmentVariables) {
+			const value =
+				this.environmentVariables[key as keyof EnvironmentVariables];
 			if (!value)
 				throw new Error(
-					`The ${key as keyof Config} environment variable is not set :C`,
+					`The ${
+						key as keyof EnvironmentVariables
+					} environment variable is not set :C`,
 				);
 		}
 
-		console.log("The configuration variables are checked!");
+		console.log("The environment variables are checked!");
 	}
 }

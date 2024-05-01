@@ -18,41 +18,41 @@ export default class ObjectManager {
 	constructor(private readonly configInitializer: ConfigInitializer) {}
 
 	public async initializeClasses(): Promise<void> {
-		const config = this.configInitializer.getConfig();
+		const environmentVariables =
+			this.configInitializer.getEnvironmentVariables();
 		const manageableClasses: Initializable[] = [];
 		const commandContainers: CommandContainer[] = [];
 
-		const tokenUtil = new TokenUtil(config.encryptionPassphrase);
+		const tokenUtil = new TokenUtil(environmentVariables.ENCRYPTION_PASSPHRASE);
 		manageableClasses.push(tokenUtil);
 
-		const tokenStorageFactory = new TokenStorageFactory(
-			config.tokenStorageType,
-			tokenUtil,
-		);
+		const tokenStorageFactory = new TokenStorageFactory("IN_MEMORY", tokenUtil);
 		manageableClasses.push(tokenStorageFactory);
 
 		const authManager = new AuthManager(
-			config.twitchAppClientId,
-			config.twitchAppClientSecret,
+			environmentVariables.TWITCH_APP_CLIENT_ID,
+			environmentVariables.TWITCH_APP_CLIENT_SECRET,
 			tokenStorageFactory,
 		);
 		manageableClasses.push(authManager);
 
-		const youTubeClient = new YouTubeClient(config.youTubeApiKey);
+		const youTubeClient = new YouTubeClient(
+			environmentVariables.YOUTUBE_API_KEY,
+		);
 		manageableClasses.push(youTubeClient);
 
 		const twitchClient = new TwitchClient(
 			authManager.getAuthProvider(),
-			config.twitchAppClientId,
-			config.twitchAppClientSecret,
-			config.oauth2RedirectUri,
+			environmentVariables.TWITCH_APP_CLIENT_ID,
+			environmentVariables.TWITCH_APP_CLIENT_SECRET,
+			environmentVariables.OAUTH2_REDIRECT_URI,
 		);
 		manageableClasses.push(twitchClient);
 
 		const httpServer = new HttpServer(
-			config.httpServerPort,
+			environmentVariables.HTTP_SERVER_PORT,
 			twitchClient,
-			config.frontendOrigin,
+			environmentVariables.FRONTEND_ORIGIN,
 			tokenStorageFactory,
 		);
 		manageableClasses.push(httpServer);
