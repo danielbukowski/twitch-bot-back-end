@@ -2,7 +2,7 @@ import axios from "axios";
 import ytdl from "ytdl-core";
 import type { Initializable } from "./ObjectManager";
 
-export interface VideoDetail {
+export interface SongDetails {
 	snippet: {
 		title: string;
 	};
@@ -49,9 +49,9 @@ export default class YouTubeClient implements Initializable {
 
 	public async getVideoDetailsById(
 		videoId: string,
-	): Promise<VideoDetail | undefined> {
+	): Promise<SongDetails | undefined> {
 		try {
-			const response = await axios.get<{ items: VideoDetail[] }>(
+			const response = await axios.get<{ items: SongDetails[] }>(
 				"https://www.googleapis.com/youtube/v3/videos",
 				{
 					params: {
