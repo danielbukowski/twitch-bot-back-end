@@ -9,9 +9,8 @@ import TwitchChat, {
 import type { ChatClient, ChatUser } from "@twurple/chat";
 import { Duration } from "luxon";
 import ytdl from "ytdl-core";
-// biome-ignore lint/style/useImportType: <soemthing is wrong with this>
-import YouTubeClient from "./YouTubeClient";
-import type { VideoDetail } from "./YouTubeClient";
+import type YouTubeClient from "./YouTubeClient";
+import type { SongDetails } from "./YouTubeClient";
 
 export class SongRequestError extends Error {
 	public constructor(message: string) {
@@ -30,30 +29,32 @@ export interface Song {
 export default class SongRequestManager
 	implements Initializable, CommandContainer
 {
-	private readonly REQUEST_TIMEOUT = 1_400;
+	private readonly REQUEST_TIMEOUT: number = 1_400;
+	private readonly MINUTE: number = 60;
+	private readonly HOUR: number = 3_600;
 	private readonly MAXIMUM_SONG_DURATION_FOR_USER_TYPE: Record<
 		UserType | "Normal",
 		number
 	> = {
-		Mod: 2137,
-		Subscriber: 2137,
-		Vip: 2137,
-		Broadcaster: 2137,
-		Artist: 2137,
-		Founder: 2137,
-		Normal: 2137,
+		Mod: this.MINUTE * 8,
+		Subscriber: this.MINUTE * 6,
+		Vip: this.MINUTE * 8,
+		Broadcaster: this.HOUR * 2,
+		Artist: this.MINUTE * 8,
+		Founder: this.MINUTE * 8,
+		Normal: this.MINUTE * 3,
 	};
-	private readonly MINIMAL_SONG_VIEWS_FOR_USER_TYPE: Record<
+	private readonly MINIMUM_SONG_VIEWS_FOR_USER_TYPE: Record<
 		UserType | "Normal",
 		number
 	> = {
-		Mod: 2137,
-		Subscriber: 2137,
-		Vip: 2137,
-		Broadcaster: 2137,
-		Artist: 2137,
-		Founder: 2137,
-		Normal: 2137,
+		Mod: 2_000,
+		Subscriber: 15_000,
+		Vip: 4_000,
+		Broadcaster: 0,
+		Artist: 2_000,
+		Founder: 10_000,
+		Normal: 20_000,
 	};
 
 	private songQueue: Song[] = [];
@@ -295,7 +296,7 @@ export default class SongRequestManager
 
 		chatClient.say(
 			channelName,
-			`@${userInfo.userName} the volume has been set to ${newVolume * 100}%`,
+			`@${userInfo.userName}, the volume has been set to ${newVolume * 100}%`,
 		);
 	}
 
@@ -310,7 +311,7 @@ export default class SongRequestManager
 
 		chatClient.say(
 			channelName,
-			`@${userInfo.userName} the currently playing song "${response.title}" was added by @${response.addedBy}`,
+			`@${userInfo.userName}, the currently playing song "${response.title}" was added by @${response.addedBy}`,
 		);
 	}
 
@@ -324,7 +325,7 @@ export default class SongRequestManager
 		const userName = userInfo.userName;
 
 		if (!this.songQueue.length) {
-			throw new SongRequestError(`@${userName} the queue is empty`);
+			throw new SongRequestError(`@${userName}, the queue is empty`);
 		}
 
 		const songIndex: number = this.songQueue.findIndex(
@@ -335,7 +336,7 @@ export default class SongRequestManager
 
 		if (!song) {
 			throw new SongRequestError(
-				`@${userName} can't find any your song in the queue`,
+				`@${userName}, I can't find any your song in the queue`,
 			);
 		}
 
@@ -350,7 +351,7 @@ export default class SongRequestManager
 
 		chatClient.say(
 			channelName,
-			`@${userName} your song '${song.title}' will be played in ~ ${
+			`@${userName}, your song '${song.title}' will be played in ~ ${
 				!unitOfTimes.length ? "now" : unitOfTimes.join(" and ")
 			}`,
 		);
@@ -368,12 +369,12 @@ export default class SongRequestManager
 		if (!first3SongsInQueue.length) {
 			chatClient.say(
 				channelName,
-				`@${userInfo.userName} no songs have been found in the queue :(`,
+				`@${userInfo.userName}, no songs have been found in the queue :(`,
 			);
 			return;
 		}
 
-		let response = `@${userInfo.userName} current ${
+		let response = `@${userInfo.userName}, current ${
 			first3SongsInQueue.length === 1 ? "song" : "songs"
 		} in the queue: `;
 
@@ -415,38 +416,38 @@ export default class SongRequestManager
 
 		if (!videoId)
 			throw new SongRequestError(
-				`@${userInfo.userName} I couldn't find your song :(`,
+				`@${userInfo.userName}, I couldn't find your song :(`,
 			);
 
-		const songDetail: VideoDetail | undefined =
+		const songDetails: SongDetails | undefined =
 			await this.youTubeClient.getVideoDetailsById(videoId);
 
-		if (!songDetail)
+		if (!songDetails)
 			throw new SongRequestError(
-				`@${userInfo.userName} I can't add this song :(`,
+				`@${userInfo.userName}, I can't add this song :(`,
 			);
 
-		const userType = TwitchChat.getUserRole(userInfo);
+		const userType: UserType | "Normal" = TwitchChat.getUserRole(userInfo);
+		const songViews: number = Number.parseInt(songDetails.statistics.viewCount);
+		const userMinimumViews: number =
+			this.MINIMUM_SONG_VIEWS_FOR_USER_TYPE[userType];
 
-		if (
-			Number.parseInt(songDetail.statistics.viewCount) <
-			this.MINIMAL_SONG_VIEWS_FOR_USER_TYPE[userType]
-		)
+		if (songViews < userMinimumViews)
 			throw new SongRequestError(
-				`@${userInfo.userName} your song has not enough views!`,
+				`@${userInfo.userName}, your song has not enough views! You need a song with at least ${userMinimumViews} views :/`,
 			);
 
 		const durationInSeconds: number = Duration.fromISO(
-			songDetail.contentDetails.duration,
+			songDetails.contentDetails.duration,
 		).as("seconds");
 
 		if (durationInSeconds >= this.MAXIMUM_SONG_DURATION_FOR_USER_TYPE[userType])
 			throw new SongRequestError(
-				`@${userInfo.userName} your song is too long :(`,
+				`@${userInfo.userName}, your song is too long :(`,
 			);
 
 		const songsDurationInSeconds: number = await this.getDurationOfSongs();
-		const songTitle = songDetail.snippet.title;
+		const songTitle = songDetails.snippet.title;
 
 		const positionInQueue: number = this.addSongToQueue({
 			videoId,
@@ -463,7 +464,7 @@ export default class SongRequestManager
 			channelName,
 			`@${
 				userInfo.userName
-			} added your song '${songTitle}' to the queue at #${positionInQueue} position! (playing in ~ ${
+			}, I added your song '${songTitle}' to the queue at #${positionInQueue} position! (playing in ~ ${
 				!unitsOfTime.length ? "now" : unitsOfTime.join(" and ")
 			})`,
 		);
@@ -484,7 +485,7 @@ export default class SongRequestManager
 
 		if (songIndex === -1) {
 			throw new SongRequestError(
-				`@${userName} I can't find your song in the queue`,
+				`@${userName}, I can't find your song in the queue`,
 			);
 		}
 
@@ -492,7 +493,7 @@ export default class SongRequestManager
 
 		chatClient.say(
 			channelName,
-			`@${userName} your song '${deletedSong.title}' has been succesfully deleted!`,
+			`@${userName}, your song '${deletedSong.title}' has been succesfully deleted!`,
 		);
 	}
 }
