@@ -236,7 +236,7 @@ export default class SongRequestManager
 		});
 	}
 
-	@HasRole(["Broadcaster"])
+	@HasRole(["Broadcaster", "Mod"])
 	private async playSongRequest(
 		chatClient: ChatClient,
 		channelName: string,
@@ -248,7 +248,7 @@ export default class SongRequestManager
 		});
 	}
 
-	@HasRole(["Broadcaster"])
+	@HasRole(["Broadcaster", "Mod"])
 	private async pauseSongRequest(
 		chatClient: ChatClient,
 		channelName: string,
