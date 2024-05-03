@@ -45,7 +45,7 @@ export type BasicCommand = (
 	channelName: string,
 	commandParameters: string[],
 	userInfo: ChatUser,
-) => Promise<unknown>;
+) => Promise<void>;
 
 export default class TwitchChat implements Initializable {
 	private readonly COMMAND_PREFIX: string = "!";
