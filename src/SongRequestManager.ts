@@ -305,6 +305,14 @@ export default class SongRequestManager
 	): Promise<void> {
 		const response = await this.getInfoAboutCurrentlyPlayingSong();
 
+		if (!response.title) {
+			chatClient.say(
+				channelName,
+				`@${userInfo.userName}, no song is currently playing!`,
+			);
+			return;
+		}
+
 		chatClient.say(
 			channelName,
 			`@${userInfo.userName}, the currently playing song "${response.title}" was added by @${response.addedBy}`,
