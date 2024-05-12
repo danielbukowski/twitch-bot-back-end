@@ -126,19 +126,14 @@ export default class SongRequestManager
 	private async getInfoAboutCurrentlyPlayingSong(): Promise<
 		Omit<Song, "videoId">
 	> {
-		const socket = (await this.getSongRequestNamespace().fetchSockets())[0];
+		const response: Array<Omit<Song, "videoId">> =
+			await this.getSongRequestNamespace()
+				.timeout(this.REQUEST_TIMEOUT)
+				.emitWithAck("song-request-message", {
+					type: "GET_SONG_INFO",
+				});
 
-		if (!socket) {
-			throw new Error("No one is connected to the song request!");
-		}
-
-		const response: Omit<Song, "videoId"> = await socket
-			.timeout(this.REQUEST_TIMEOUT)
-			.emitWithAck("song-request-message", {
-				type: "GET_SONG_INFO",
-			});
-
-		return response;
+		return response[0];
 	}
 
 	private async getDurationOfSongs(): Promise<number> {
