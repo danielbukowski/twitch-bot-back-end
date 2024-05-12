@@ -280,12 +280,13 @@ export default class SongRequestManager
 
 		if (!volume || !volume.match(regExpToVolume)) return;
 
-		const response = await this.getSongRequestNamespace()
-			.timeout(this.REQUEST_TIMEOUT)
-			.emitWithAck("song-request-message", {
-				type: "CHANGE_VOLUME",
-				volumeValue: volume,
-			});
+		const response: Array<{ newVolume: number }> =
+			await this.getSongRequestNamespace()
+				.timeout(this.REQUEST_TIMEOUT)
+				.emitWithAck("song-request-message", {
+					type: "CHANGE_VOLUME",
+					volumeValue: volume,
+				});
 
 		const newVolume = response[0].newVolume;
 
