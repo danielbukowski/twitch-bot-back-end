@@ -1,6 +1,7 @@
 import axios from "axios";
 import ytdl from "ytdl-core";
 import type { Initializable } from "./ObjectManager";
+import Logger from "./Logger";
 
 export interface SongDetails {
 	snippet: {
@@ -18,8 +19,8 @@ export default class YouTubeClient implements Initializable {
 	constructor(private readonly youtubeApiKey: string) {}
 
 	public async init(): Promise<void> {
-		console.log("Initializing the YouTubeClient...");
-		console.log("Initialized the YouTubeClient!");
+		Logger.info("Initializing the YouTubeClient...");
+		Logger.info("Initialized the YouTubeClient!");
 	}
 
 	public async getVideoIdByName(name: string): Promise<string | undefined> {

@@ -3,6 +3,7 @@ import type { Initializable } from "./ObjectManager";
 import type TokenStorageFactory from "./TokenStorageFactory";
 import TokenUtil from "./TokenUtil";
 import type { TokenIntent } from "./TokenUtil";
+import Logger from "./Logger";
 
 export interface TokenStorage {
 	getAllAccessTokens(): Promise<
@@ -33,7 +34,7 @@ export default class AuthManager implements Initializable {
 	}
 
 	public async init(): Promise<void> {
-		console.log("Initializing the AuthManager...");
+		Logger.info("Initializing the AuthManager...");
 
 		const tokenStorage = this.tokenStorageFactory.getTokenStorage();
 
@@ -63,6 +64,6 @@ export default class AuthManager implements Initializable {
 			},
 		);
 
-		console.log("Initialized the AuthManager!");
+		Logger.info("Initialized the AuthManager!");
 	}
 }

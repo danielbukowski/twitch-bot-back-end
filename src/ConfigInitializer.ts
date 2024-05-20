@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import Logger from "./Logger";
 dotenv.config();
 
 interface EnvironmentVariables {
@@ -39,7 +40,7 @@ export default class ConfigInitializer {
 	}
 
 	public checkEnvironmentVariables(): void {
-		console.log("Checking the environment variables...");
+		Logger.info("Checking the environment variables...");
 
 		for (const key in this.environmentVariables) {
 			const value =
@@ -52,6 +53,6 @@ export default class ConfigInitializer {
 				);
 		}
 
-		console.log("The environment variables are checked!");
+		Logger.info("The environment variables are checked!");
 	}
 }

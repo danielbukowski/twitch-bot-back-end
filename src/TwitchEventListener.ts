@@ -3,6 +3,7 @@ import { EventSubWsListener } from "@twurple/eventsub-ws";
 import type { Namespace, Server as SocketIO } from "socket.io";
 import type { Initializable } from "./ObjectManager";
 import type TwitchClient from "./TwitchClient";
+import Logger from "./Logger";
 export default class TwitchEventListener implements Initializable {
 	private eventSub!: EventSubWsListener;
 
@@ -17,7 +18,7 @@ export default class TwitchEventListener implements Initializable {
 	}
 
 	public async init(): Promise<void> {
-		console.log("Initializing the TwitchEventListener...");
+		Logger.info("Initializing the TwitchEventListener...");
 
 		try {
 			const broadcasterId: UserIdResolvable = await this.twitchClient
@@ -39,11 +40,11 @@ export default class TwitchEventListener implements Initializable {
 			this.setEventListeners(broadcasterId);
 			this.eventSub.start();
 
-			console.log("Initialized the TwitchEventListener!");
+			Logger.info("Initialized the TwitchEventListener!");
 		} catch (e: unknown) {
 			if (e instanceof Error) {
-				console.log(
-					`\x1b[31mFailed to initialize the TwitchEventListener class, reason: ${e.message}\x1b[0m`,
+				Logger.error(
+					`Failed to initialize the TwitchEventListener class, reason: ${e.message}`,
 				);
 			}
 		}

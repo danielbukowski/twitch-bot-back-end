@@ -1,5 +1,6 @@
 import type { TokenStorage } from "./AuthManager";
 import InMemoryTokenStorage from "./InMemoryTokenStorage";
+import Logger from "./Logger";
 import type { Initializable } from "./ObjectManager";
 import type TokenUtil from "./TokenUtil";
 
@@ -16,7 +17,7 @@ export default class TokenStorageFactory implements Initializable {
 	}
 
 	public async init(): Promise<void> {
-		console.log("Initializing the TokenStorageFactory...");
+		Logger.info("Initializing the TokenStorageFactory...");
 
 		switch (this.tokenStorageType) {
 			case "IN_MEMORY":
@@ -28,6 +29,6 @@ export default class TokenStorageFactory implements Initializable {
 				);
 		}
 
-		console.log("Initialized the TokenStorageFactory!");
+		Logger.info("Initialized the TokenStorageFactory!");
 	}
 }

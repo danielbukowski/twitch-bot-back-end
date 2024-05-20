@@ -1,6 +1,7 @@
 import type { Server } from "node:http";
 import { Server as SocketIO } from "socket.io";
 import type { Initializable } from "./ObjectManager";
+import Logger from "./Logger";
 
 export default class SocketServer implements Initializable {
 	private io: SocketIO;
@@ -14,14 +15,14 @@ export default class SocketServer implements Initializable {
 	}
 
 	public async init(): Promise<void> {
-		console.log("Initializing the SocketClient...");
+		Logger.info("Initializing the SocketServer...");
 
 		this.io.on("connection", (socket) => {
-			console.log(
+			Logger.trace(
 				`A user has connected to the websocket with ID: ${socket.id}`,
 			);
 		});
 
-		console.log("Initialized the SocketClient!");
+		Logger.info("Initialized the SocketServer!");
 	}
 }

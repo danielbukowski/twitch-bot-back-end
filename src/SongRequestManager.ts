@@ -11,6 +11,7 @@ import { Duration } from "luxon";
 import ytdl from "ytdl-core";
 import type YouTubeClient from "./YouTubeClient";
 import type { SongDetails } from "./YouTubeClient";
+import Logger from "./Logger";
 
 export class SongRequestError extends Error {
 	public constructor(message: string) {
@@ -89,7 +90,7 @@ export default class SongRequestManager
 	}
 
 	public async init(): Promise<void> {
-		console.log("Initializing the SongRequestManager...");
+		Logger.info("Initializing the SongRequestManager...");
 
 		this.getSongRequestNamespace().on("connection", (socket) => {
 			socket.on(
@@ -108,7 +109,7 @@ export default class SongRequestManager
 			);
 		});
 
-		console.log("Initialized the SongRequestManager!");
+		Logger.info("Initialized the SongRequestManager!");
 	}
 
 	private addSongToQueue(song: Song): number {

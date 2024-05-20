@@ -9,6 +9,7 @@ import {
 } from "node:crypto";
 import type { AccessToken } from "@twurple/auth";
 import type { Initializable } from "./ObjectManager";
+import Logger from "./Logger";
 
 export type TokenIntent = "events" | "chat";
 
@@ -33,8 +34,8 @@ export default class TokenUtil implements Initializable {
 	public constructor(private readonly encryptionPassphrase: string) {}
 
 	public async init(): Promise<void> {
-		console.log("Initializing the TokenUtil...");
-		console.log("Initialized the TokenUtil!");
+		Logger.info("Initializing the TokenUtil...");
+		Logger.info("Initialized the TokenUtil!");
 	}
 
 	private static areArrayEqual(

@@ -5,6 +5,7 @@ import {
 	exchangeCode,
 } from "@twurple/auth";
 import type { Initializable } from "./ObjectManager";
+import Logger from "./Logger";
 
 export default class TwitchClient implements Initializable {
 	private apiClient: ApiClient;
@@ -25,8 +26,8 @@ export default class TwitchClient implements Initializable {
 	}
 
 	public async init(): Promise<void> {
-		console.log("Initializing the TwitchClient...");
-		console.log("Initialized the TwitchClient!");
+		Logger.info("Initializing the TwitchClient...");
+		Logger.info("Initialized the TwitchClient!");
 	}
 
 	public async exchangeCodeToAccessToken(code: string): Promise<AccessToken> {

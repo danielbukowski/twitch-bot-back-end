@@ -12,6 +12,7 @@ import TokenUtil from "./TokenUtil";
 import type { TokenIntent } from "./TokenUtil";
 import type TwitchClient from "./TwitchClient";
 import helmet from "helmet";
+import Logger from "./Logger";
 
 export default class HttpServer implements Initializable {
 	private app = express();
@@ -29,7 +30,7 @@ export default class HttpServer implements Initializable {
 	}
 
 	public async init(): Promise<void> {
-		console.log("Initializing the HttpServer...");
+		Logger.info("Initializing the HttpServer...");
 
 		this.app.use(helmet());
 
@@ -86,10 +87,12 @@ export default class HttpServer implements Initializable {
 		this.app.use(this.errorHandler);
 
 		this.httpServer.listen(this.port, () => {
-			console.log(`Server is running at http://localhost:${this.port}`);
+			Logger.info(
+				`The HTTP Server is running at http://localhost:${this.port}`,
+			);
 		});
 
-		console.log("Initialized the HttpServer!");
+		Logger.info("Initialized the HttpServer!");
 	}
 
 	private errorHandler(

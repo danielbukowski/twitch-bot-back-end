@@ -4,6 +4,7 @@ import type { UserType } from "./ConfigInitializer";
 import type { Initializable } from "./ObjectManager";
 import { SongRequestError } from "./SongRequestManager";
 import type TwitchClient from "./TwitchClient";
+import Logger from "./Logger";
 
 export function HasRole(roles: UserType[]) {
 	return function actualDecorator(
@@ -61,7 +62,7 @@ export default class TwitchChat implements Initializable {
 	) {}
 
 	public async init(): Promise<void> {
-		console.log("Initializing the TwitchChat...");
+		Logger.info("Initializing the TwitchChat...");
 
 		try {
 			this.chatbotName = await this.twitchClient
@@ -102,11 +103,11 @@ export default class TwitchChat implements Initializable {
 			this.setChatListeners();
 			this.chatClient.connect();
 
-			console.log("Initialized the TwitchChat!");
+			Logger.info("Initialized the TwitchChat!");
 		} catch (e: unknown) {
 			if (e instanceof Error) {
-				console.log(
-					`\x1b[31mFailed to initialize the TwitchChat class, reason: ${e.message}\x1b[0m`,
+				Logger.error(
+					`Failed to initialize the TwitchChat class, reason: ${e.message}`,
 				);
 			}
 		}
@@ -118,7 +119,7 @@ export default class TwitchChat implements Initializable {
 		});
 
 		this.chatClient.onJoin((channel: string, user: string) => {
-			console.log("I have connected to the chat! :)");
+			Logger.info("Connected to the Twitch chat! :)");
 			this.chatClient.say(channel, "I have connected to the chat! :)");
 		});
 
