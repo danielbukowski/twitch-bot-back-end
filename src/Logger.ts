@@ -3,7 +3,7 @@ const { combine, timestamp, colorize, printf } = format;
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export default class Logger {
-	private static readonly LOG_FILENAME = "app.log";
+	private static readonly LOG_FILENAME = "app-combined.log";
 	private static readonly LOG_DIRECTORY = "./logs";
 	private static readonly LOGGER_CONFIG = {
 		levels: { FATAL: 0, ERROR: 1, WARN: 2, INFO: 3, DEBUG: 4, TRACE: 5 },
@@ -18,7 +18,7 @@ export default class Logger {
 	} as const;
 	private static readonly DEFAULT_FORMAT = printf(
 		({ level, message, timestamp }) => {
-			return `${timestamp} [${level}] - ${message}`;
+			return `[${timestamp}] [${level}]:  ${message}`;
 		},
 	);
 
@@ -30,7 +30,6 @@ export default class Logger {
 			new transports.File({
 				dirname: Logger.LOG_DIRECTORY,
 				filename: Logger.LOG_FILENAME,
-				lazy: false,
 			}),
 		],
 	});
