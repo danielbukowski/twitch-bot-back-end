@@ -21,8 +21,9 @@ export default class Logger {
 			return `[${timestamp}] [${level}]:  ${message}`;
 		},
 	);
-
-	private static logger: winston.Logger = createLogger({
+	private static logger: winston.Logger;
+	static {
+		Logger.logger = createLogger({
 		levels: Logger.LOGGER_CONFIG.levels,
 		format: combine(timestamp(), Logger.DEFAULT_FORMAT),
 		level: "INFO",
