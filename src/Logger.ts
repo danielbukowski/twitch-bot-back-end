@@ -24,18 +24,19 @@ export default class Logger {
 		},
 	);
 	private static logger: winston.Logger;
+
 	static {
 		Logger.logger = createLogger({
-		levels: Logger.LOGGER_CONFIG.levels,
-		format: combine(timestamp(), Logger.DEFAULT_FORMAT),
-		level: "INFO",
-		transports: [
-			new transports.File({
-				dirname: Logger.LOG_DIRECTORY,
-				filename: Logger.LOG_FILENAME,
-			}),
-		],
-	});
+			levels: Logger.LOGGER_CONFIG.levels,
+			format: combine(timestamp(), Logger.DEFAULT_FORMAT),
+			level: "INFO",
+			transports: [
+				new transports.File({
+					dirname: Logger.LOG_DIRECTORY,
+					filename: Logger.LOG_FILENAME,
+				}),
+			],
+		});
 
 		winston.addColors(Logger.LOGGER_CONFIG.colors);
 
