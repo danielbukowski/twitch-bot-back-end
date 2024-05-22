@@ -1,5 +1,7 @@
 import winston, { createLogger, transports, format } from "winston";
 const { combine, timestamp, colorize, printf } = format;
+import dotenv from "dotenv";
+dotenv.config();
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export default class Logger {
@@ -35,12 +37,17 @@ export default class Logger {
 		],
 	});
 
-	static {
 		winston.addColors(Logger.LOGGER_CONFIG.colors);
+
+		let levelForConsoleLogs = "INFO";
+
+		if (process.env.NODE_ENV === "development") {
+			levelForConsoleLogs = "TRACE";
+		}
 
 		Logger.logger.add(
 			new winston.transports.Console({
-				level: "TRACE",
+				level: levelForConsoleLogs,
 				format: combine(
 					timestamp(),
 					colorize({ level: true }),
