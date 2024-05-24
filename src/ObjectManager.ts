@@ -3,6 +3,7 @@ import type ConfigInitializer from "./ConfigInitializer";
 import HttpServer from "./HttpServer";
 import SocketServer from "./SocketServer";
 import SongRequestManager from "./SongRequestManager";
+import TextToSpeech from "./TextToSpeech";
 import TokenStorageFactory from "./TokenStorageFactory";
 import TokenUtil from "./TokenUtil";
 import TwitchChat, { type CommandContainer } from "./TwitchChat";
@@ -59,6 +60,11 @@ export default class ObjectManager {
 
 		const socketServer = new SocketServer(httpServer.getHttpServer());
 		manageableClasses.push(socketServer);
+
+		const textToSpeech = new TextToSpeech(socketServer.getSocketIO());
+
+		manageableClasses.push(textToSpeech);
+		commandContainers.push(textToSpeech);
 
 		const songRequestManager = new SongRequestManager(
 			youTubeClient,
