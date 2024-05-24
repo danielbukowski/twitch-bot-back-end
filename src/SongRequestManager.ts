@@ -85,14 +85,14 @@ export default class SongRequestManager
 	}
 
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	private getSongRequestNamespace(): Namespace<any> {
+	private getNamespace(): Namespace<any> {
 		return this.socketIO.of("/song-request");
 	}
 
 	public async init(): Promise<void> {
 		Logger.info("Initializing the SongRequestManager...");
 
-		this.getSongRequestNamespace().on("connection", (socket) => {
+		this.getNamespace().on("connection", (socket) => {
 			socket.on(
 				"request-from-frontend",
 				(request: {
@@ -127,12 +127,11 @@ export default class SongRequestManager
 	private async getInfoAboutCurrentlyPlayingSong(): Promise<
 		Omit<Song, "videoId">
 	> {
-		const response: Array<Omit<Song, "videoId">> =
-			await this.getSongRequestNamespace()
-				.timeout(this.REQUEST_TIMEOUT)
-				.emitWithAck("song-request-message", {
-					type: "GET_SONG_INFO",
-				});
+		const response: Array<Omit<Song, "videoId">> = await this.getNamespace()
+			.timeout(this.REQUEST_TIMEOUT)
+			.emitWithAck("song-request-message", {
+				type: "GET_SONG_INFO",
+			});
 
 		return response[0];
 	}
@@ -201,7 +200,7 @@ export default class SongRequestManager
 		const song: Song | undefined = this.removeSongFromQueue();
 
 		if (!song) {
-			this.getSongRequestNamespace().emit("song-request-message", {
+			this.getNamespace().emit("song-request-message", {
 				type: "PLAY_NEXT_SONG",
 				error: {
 					message: "EMPTY_QUEUE",
@@ -214,7 +213,7 @@ export default class SongRequestManager
 			await this.youTubeClient.downloadYouTubeAudio(song.videoId);
 
 		if (!audioData) {
-			this.getSongRequestNamespace().emit("song-request-message", {
+			this.getNamespace().emit("song-request-message", {
 				type: "PLAY_NEXT_SONG",
 				error: {
 					message: "DOWNLOADING_ERROR",
@@ -223,7 +222,7 @@ export default class SongRequestManager
 			return;
 		}
 
-		this.getSongRequestNamespace().emit("song-request-message", {
+		this.getNamespace().emit("song-request-message", {
 			type: "PLAY_NEXT_SONG",
 			data: {
 				title: song.title,
@@ -240,7 +239,7 @@ export default class SongRequestManager
 		commandParameters: string[],
 		userInfo: ChatUser,
 	): Promise<void> {
-		this.getSongRequestNamespace().emit("song-request-message", {
+		this.getNamespace().emit("song-request-message", {
 			type: "PLAY",
 		});
 	}
@@ -252,7 +251,7 @@ export default class SongRequestManager
 		commandParameters: string[],
 		userInfo: ChatUser,
 	): Promise<void> {
-		this.getSongRequestNamespace().emit("song-request-message", {
+		this.getNamespace().emit("song-request-message", {
 			type: "PAUSE",
 		});
 	}
@@ -264,7 +263,7 @@ export default class SongRequestManager
 		commandParameters: string[],
 		userInfo: ChatUser,
 	): Promise<void> {
-		this.getSongRequestNamespace().emit("song-request-message", {
+		this.getNamespace().emit("song-request-message", {
 			type: "SKIP_SONG",
 		});
 	}
@@ -281,13 +280,12 @@ export default class SongRequestManager
 
 		if (!volume || !volume.match(regExpToVolume)) return;
 
-		const response: Array<{ newVolume: number }> =
-			await this.getSongRequestNamespace()
-				.timeout(this.REQUEST_TIMEOUT)
-				.emitWithAck("song-request-message", {
-					type: "CHANGE_VOLUME",
-					volumeValue: volume,
-				});
+		const response: Array<{ newVolume: number }> = await this.getNamespace()
+			.timeout(this.REQUEST_TIMEOUT)
+			.emitWithAck("song-request-message", {
+				type: "CHANGE_VOLUME",
+				volumeValue: volume,
+			});
 
 		const newVolume = response[0].newVolume;
 
