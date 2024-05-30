@@ -18,7 +18,7 @@ export default class TwitchEventListener implements Initializable {
 	}
 
 	public async init(): Promise<void> {
-		Logger.info("Initializing the TwitchEventListener...");
+		Logger.info(`Initializing the ${this.constructor.name}...`);
 
 		try {
 			const broadcasterId: UserIdResolvable = await this.twitchClient
@@ -40,7 +40,7 @@ export default class TwitchEventListener implements Initializable {
 			this.setEventListeners(broadcasterId);
 			this.eventSub.start();
 
-			Logger.info("Initialized the TwitchEventListener!");
+			Logger.info(`Initialized the ${this.constructor.name}!`);
 		} catch (e: unknown) {
 			if (e instanceof Error) {
 				Logger.error(

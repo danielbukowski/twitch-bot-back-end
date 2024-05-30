@@ -34,7 +34,7 @@ export default class AuthManager implements Initializable {
 	}
 
 	public async init(): Promise<void> {
-		Logger.info("Initializing the AuthManager...");
+		Logger.info(`Initializing the ${this.constructor.name}...`);
 
 		const tokenStorage = this.tokenStorageFactory.getTokenStorage();
 
@@ -64,6 +64,6 @@ export default class AuthManager implements Initializable {
 			},
 		);
 
-		Logger.info("Initialized the AuthManager!");
+		Logger.info(`Initialized the ${this.constructor.name}!`);
 	}
 }

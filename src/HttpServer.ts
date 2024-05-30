@@ -30,7 +30,7 @@ export default class HttpServer implements Initializable {
 	}
 
 	public async init(): Promise<void> {
-		Logger.info("Initializing the HttpServer...");
+		Logger.info(`Initializing the ${this.constructor.name}...`);
 
 		this.app.use(helmet());
 
@@ -92,7 +92,7 @@ export default class HttpServer implements Initializable {
 			);
 		});
 
-		Logger.info("Initialized the HttpServer!");
+		Logger.info(`Initialized the ${this.constructor.name}!`);
 	}
 
 	private errorHandler(

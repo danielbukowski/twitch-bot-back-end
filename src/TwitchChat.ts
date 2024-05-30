@@ -62,7 +62,7 @@ export default class TwitchChat implements Initializable {
 	) {}
 
 	public async init(): Promise<void> {
-		Logger.info("Initializing the TwitchChat...");
+		Logger.info(`Initializing the ${this.constructor.name}...`);
 
 		try {
 			this.chatbotName = await this.twitchClient
@@ -103,7 +103,7 @@ export default class TwitchChat implements Initializable {
 			this.setChatListeners();
 			this.chatClient.connect();
 
-			Logger.info("Initialized the TwitchChat!");
+			Logger.info(`Initialized the ${this.constructor.name}!`);
 		} catch (e: unknown) {
 			if (e instanceof Error) {
 				Logger.error(

@@ -90,7 +90,7 @@ export default class SongRequestManager
 	}
 
 	public async init(): Promise<void> {
-		Logger.info("Initializing the SongRequestManager...");
+		Logger.info(`Initializing the ${this.constructor.name}...`);
 
 		this.getNamespace().on("connection", (socket) => {
 			socket.on(
@@ -109,7 +109,7 @@ export default class SongRequestManager
 			);
 		});
 
-		Logger.info("Initialized the SongRequestManager!");
+		Logger.info(`Initialized the ${this.constructor.name}!`);
 	}
 
 	private addSongToQueue(song: Song): number {

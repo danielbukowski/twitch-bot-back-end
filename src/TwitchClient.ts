@@ -26,8 +26,8 @@ export default class TwitchClient implements Initializable {
 	}
 
 	public async init(): Promise<void> {
-		Logger.info("Initializing the TwitchClient...");
-		Logger.info("Initialized the TwitchClient!");
+		Logger.info(`Initializing the ${this.constructor.name}...`);
+		Logger.info(`Initialized the ${this.constructor.name}!`);
 	}
 
 	public async exchangeCodeToAccessToken(code: string): Promise<AccessToken> {

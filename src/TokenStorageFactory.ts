@@ -17,7 +17,7 @@ export default class TokenStorageFactory implements Initializable {
 	}
 
 	public async init(): Promise<void> {
-		Logger.info("Initializing the TokenStorageFactory...");
+		Logger.info(`Initializing the ${this.constructor.name}...`);
 
 		switch (this.tokenStorageType) {
 			case "IN_MEMORY":
@@ -29,6 +29,6 @@ export default class TokenStorageFactory implements Initializable {
 				);
 		}
 
-		Logger.info("Initialized the TokenStorageFactory!");
+		Logger.info(`Initialized the ${this.constructor.name}!`);
 	}
 }

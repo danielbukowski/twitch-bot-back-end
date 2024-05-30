@@ -15,7 +15,7 @@ export default class SocketServer implements Initializable {
 	}
 
 	public async init(): Promise<void> {
-		Logger.info("Initializing the SocketServer...");
+		Logger.info(`Initializing the ${this.constructor.name}...`);
 
 		this.io.on("connection", (socket) => {
 			Logger.trace(
@@ -23,6 +23,6 @@ export default class SocketServer implements Initializable {
 			);
 		});
 
-		Logger.info("Initialized the SocketServer!");
+		Logger.info(`Initialized the ${this.constructor.name}!`);
 	}
 }

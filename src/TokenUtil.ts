@@ -34,8 +34,8 @@ export default class TokenUtil implements Initializable {
 	public constructor(private readonly encryptionPassphrase: string) {}
 
 	public async init(): Promise<void> {
-		Logger.info("Initializing the TokenUtil...");
-		Logger.info("Initialized the TokenUtil!");
+		Logger.info(`Initializing the ${this.constructor.name}...`);
+		Logger.info(`Initialized the ${this.constructor.name}!`);
 	}
 
 	private static areArrayEqual(
