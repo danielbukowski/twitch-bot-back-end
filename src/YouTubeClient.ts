@@ -78,22 +78,24 @@ export default class YouTubeClient implements Initializable {
 	public async downloadYouTubeAudio(
 		audioId: string,
 	): Promise<string | undefined> {
-		return new Promise((resolve, reject) => {
-			const buffers: Buffer[] = [];
-			ytdl(`https://www.youtube.com/watch?v=${audioId}`, {
-				quality: "highestaudio",
-				filter: "audioonly",
+		const { promise, resolve, reject } = Promise.withResolvers<string | undefined>();
+		const buffers: Buffer[] = [];
+
+		ytdl(`https://www.youtube.com/watch?v=${audioId}`, {
+			quality: "highestaudio",
+			filter: "audioonly",
+		})
+			.on("data", (chunk: Buffer) => {
+				buffers.push(chunk);
 			})
-				.on("data", (chunk: Buffer) => {
-					buffers.push(chunk);
-				})
-				.on("end", () => {
-					const data = Buffer.concat(buffers);
-					resolve(`data:audio/mp3;base64,${data.toString("base64")}`);
-				})
-				.on("error", () => {
-					reject(undefined);
-				});
-		});
+			.on("end", () => {
+				const data = Buffer.concat(buffers);
+				resolve(`data:audio/mp3;base64,${data.toString("base64")}`);
+			})
+			.on("error", () => {
+				reject(undefined);
+			});
+
+		return promise;
 	}
 }
