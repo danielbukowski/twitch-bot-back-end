@@ -11,9 +11,7 @@ const objectManager = new ObjectManager(configInitializer);
 		await objectManager.initializeClasses();
 	} catch (e: unknown) {
 		if (e instanceof Error) {
-			Logger.fatal(
-				`An error occurred when running the application, reason: ${e.message}`,
-			);
+			Logger.fatal("The application has stopped working,", e);
 		}
 		process.exit(1);
 	}

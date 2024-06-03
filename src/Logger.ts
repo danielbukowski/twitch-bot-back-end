@@ -23,12 +23,22 @@ export default class Logger {
 			return `[${timestamp}] [${level}]:  ${message}`;
 		},
 	);
+	private static readonly ERROR_STACK_FORMAT = format((info) => {
+		if (info.stack) {
+			info.message = `${info.message} ${info.stack}`;
+		}
+		return info;
+	});
 	private static logger: winston.Logger;
 
 	static {
 		Logger.logger = createLogger({
 			levels: Logger.LOGGER_CONFIG.levels,
-			format: combine(timestamp(), Logger.DEFAULT_FORMAT),
+			format: combine(
+				timestamp(),
+				Logger.ERROR_STACK_FORMAT(),
+				Logger.DEFAULT_FORMAT,
+			),
 			level: "INFO",
 			transports: [
 				new transports.File({
@@ -58,8 +68,8 @@ export default class Logger {
 		);
 	}
 
-	public static fatal(message: string): void {
-		Logger.logger.log("FATAL", message);
+	public static fatal(message: string, error: Error): void {
+		Logger.logger.log("FATAL", message, { stack: error.stack });
 	}
 
 	public static error(message: string): void {
