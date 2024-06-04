@@ -5,6 +5,7 @@ import type { Initializable } from "./ObjectManager";
 import { SongRequestError } from "./SongRequestManager";
 import type TwitchClient from "./TwitchClient";
 import Logger from "./Logger";
+import { SocketConnectionError } from "./SocketServer";
 
 export function HasRole(roles: UserType[]) {
 	return function actualDecorator(
@@ -149,7 +150,7 @@ export default class TwitchChat implements Initializable {
 						msg.userInfo,
 					);
 				} catch (e: unknown) {
-					if (e instanceof SongRequestError) {
+					if (e instanceof SongRequestError || e instanceof SocketConnectionError) {
 						this.chatClient.say(channel, e.message);
 					} else if (e instanceof Error) {
 						this.chatClient.say(
