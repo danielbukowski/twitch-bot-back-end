@@ -12,6 +12,7 @@ import ytdl from "ytdl-core";
 import type YouTubeClient from "./YouTubeClient";
 import type { SongDetails } from "./YouTubeClient";
 import Logger from "./Logger";
+import { SocketConnectionError } from "./SocketServer";
 
 export class SongRequestError extends Error {
 	public constructor(message: string) {
@@ -127,13 +128,20 @@ export default class SongRequestManager
 	private async getInfoAboutCurrentlyPlayingSong(): Promise<
 		Omit<Song, "videoId">
 	> {
-		const response: Array<Omit<Song, "videoId">> = await this.getNamespace()
-			.timeout(this.REQUEST_TIMEOUT)
-			.emitWithAck("song-request-message", {
-				type: "GET_SONG_INFO",
-			});
+		try {
+			const response: Array<Omit<Song, "videoId">> = await this.getNamespace()
+				.timeout(this.REQUEST_TIMEOUT)
+				.emitWithAck("song-request-message", {
+					type: "GET_SONG_INFO",
+				});
 
-		return response[0];
+			// emitWithAck function does not throw an error when the response is empty
+			if (!response.length) throw new SocketConnectionError("Empty response");
+
+			return response[0];
+		} catch (error) {
+			return {} as Omit<Song, "videoId>">;
+		}
 	}
 
 	private async getDurationOfSongs(): Promise<number> {
