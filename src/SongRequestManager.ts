@@ -158,24 +158,13 @@ export default class SongRequestManager
 	private convertDurationInSecondsToUnitsOfTime(
 		durationInSeconds: number,
 	): string[] {
-		let duration: number = durationInSeconds;
-
-		if (!duration) {
+		if (!durationInSeconds) {
 			return [];
 		}
 
-		const hours = Math.floor(duration / 3600);
-		if (hours >= 1) {
-			duration %= 3600;
-		}
-
-		const minutes = Math.floor(duration / 60);
-		if (minutes >= 1) {
-			duration %= 60;
-		}
-
-		const seconds = duration;
-
+		const seconds = durationInSeconds % this.MINUTE;
+		const minutes = Math.floor((durationInSeconds / this.MINUTE) % this.MINUTE);
+		const hours = Math.floor(durationInSeconds / this.HOUR);
 		const unitsOfTime: string[] = [];
 
 		if (hours > 0) {
