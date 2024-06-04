@@ -3,6 +3,13 @@ import { Server as SocketIO } from "socket.io";
 import type { Initializable } from "./ObjectManager";
 import Logger from "./Logger";
 
+export class SocketConnectionError extends Error {
+	public constructor(message: string) {
+		super(message);
+		this.name = "SocketConnectionError";
+	}
+}
+
 export default class SocketServer implements Initializable {
 	private io: SocketIO;
 
