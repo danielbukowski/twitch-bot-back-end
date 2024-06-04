@@ -36,10 +36,10 @@ export default class TextToSpeech implements Initializable, CommandContainer {
 		commandParameters: string[],
 		userInfo: ChatUser,
 	): Promise<void> {
-		const text = commandParameters.join(" ");
+		const textMessage: string = commandParameters.join(" ");
 
 		this.getNamespace().emit("text-to-speech-message", {
-			text,
+			text: textMessage,
 		});
 	}
 }

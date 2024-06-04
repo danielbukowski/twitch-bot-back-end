@@ -450,7 +450,7 @@ export default class SongRequestManager
 				`@${userInfo.userName}, your song is too long :(`,
 			);
 
-		const songsDurationInSeconds: number = await this.getDurationOfSongs();
+		const songDurationInSeconds: number = await this.getDurationOfSongs();
 		const songTitle = songDetails.snippet.title;
 
 		const positionInQueue: number = this.addSongToQueue({
@@ -461,7 +461,7 @@ export default class SongRequestManager
 		});
 
 		const unitsOfTime: string[] = this.convertDurationInSecondsToUnitsOfTime(
-			songsDurationInSeconds,
+			songDurationInSeconds,
 		);
 
 		chatClient.say(
