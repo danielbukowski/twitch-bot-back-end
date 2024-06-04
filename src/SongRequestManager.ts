@@ -277,19 +277,23 @@ export default class SongRequestManager
 
 		if (!volume || !volume.match(regExpToVolume)) return;
 
-		const response: Array<{ newVolume: number }> = await this.getNamespace()
+		try {
+			const response: Array<{ newVolume: number }> = await this.getNamespace()
 			.timeout(this.REQUEST_TIMEOUT)
 			.emitWithAck("song-request-message", {
 				type: "CHANGE_VOLUME",
 				volumeValue: volume,
 			});
 
-		const newVolume = response[0].newVolume;
-
-		chatClient.say(
-			channelName,
-			`@${userInfo.userName}, the volume has been set to ${newVolume * 100}%`,
-		);
+			const newVolume = response[0].newVolume;
+			
+			chatClient.say(
+				channelName,
+				`@${userInfo.userName}, the volume has been set to ${newVolume * 100}%`,
+			);
+		} catch (e: unknown) {
+			throw new SocketConnectionError("Song requests are not enabled!")
+		}
 	}
 
 	@HasRole([])
