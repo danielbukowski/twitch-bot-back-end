@@ -54,7 +54,7 @@ export default class TwitchEventListener implements Initializable {
 		this.eventSub.onChannelSubscription(broadcasterId, (e) => {
 			const username: string = e.userDisplayName;
 
-			this.getTwitchEventNamespace().emit("twitch-alert-message", {
+			this.getTwitchEventNamespace().emit("payload", {
 				type: "FIRST_SUB",
 				username,
 			});
@@ -64,7 +64,7 @@ export default class TwitchEventListener implements Initializable {
 			const username: string = e.userDisplayName;
 			const subStreakInMonths: number = e.streakMonths ?? 0;
 
-			this.getTwitchEventNamespace().emit("twitch-alert-message", {
+			this.getTwitchEventNamespace().emit("payload", {
 				type: "RE_SUB",
 				username,
 				subStreakInMonths,

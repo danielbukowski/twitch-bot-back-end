@@ -38,7 +38,7 @@ export default class TextToSpeech implements Initializable, CommandContainer {
 	): Promise<void> {
 		const textMessage: string = commandParameters.join(" ");
 
-		this.getNamespace().emit("text-to-speech-message", {
+		this.getNamespace().emit("payload", {
 			text: textMessage,
 		});
 	}

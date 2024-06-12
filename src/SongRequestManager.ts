@@ -131,7 +131,7 @@ export default class SongRequestManager
 		try {
 			const response: Array<Omit<Song, "videoId">> = await this.getNamespace()
 				.timeout(this.REQUEST_TIMEOUT)
-				.emitWithAck("song-request-message", {
+				.emitWithAck("payload", {
 					type: "GET_SONG_INFO",
 				});
 
@@ -197,7 +197,7 @@ export default class SongRequestManager
 		const song: Song | undefined = this.removeSongFromQueue();
 
 		if (!song) {
-			this.getNamespace().emit("song-request-message", {
+			this.getNamespace().emit("payload", {
 				type: "PLAY_NEXT_SONG",
 				error: {
 					message: "EMPTY_QUEUE",
@@ -210,7 +210,7 @@ export default class SongRequestManager
 			await this.youTubeClient.downloadYouTubeAudio(song.videoId);
 
 		if (!audioData) {
-			this.getNamespace().emit("song-request-message", {
+			this.getNamespace().emit("payload", {
 				type: "PLAY_NEXT_SONG",
 				error: {
 					message: "DOWNLOADING_ERROR",
@@ -219,7 +219,7 @@ export default class SongRequestManager
 			return;
 		}
 
-		this.getNamespace().emit("song-request-message", {
+		this.getNamespace().emit("payload", {
 			type: "PLAY_NEXT_SONG",
 			data: {
 				title: song.title,
@@ -236,7 +236,7 @@ export default class SongRequestManager
 		commandParameters: string[],
 		userInfo: ChatUser,
 	): Promise<void> {
-		this.getNamespace().emit("song-request-message", {
+		this.getNamespace().emit("payload", {
 			type: "PLAY",
 		});
 	}
@@ -248,7 +248,7 @@ export default class SongRequestManager
 		commandParameters: string[],
 		userInfo: ChatUser,
 	): Promise<void> {
-		this.getNamespace().emit("song-request-message", {
+		this.getNamespace().emit("payload", {
 			type: "PAUSE",
 		});
 	}
@@ -260,7 +260,7 @@ export default class SongRequestManager
 		commandParameters: string[],
 		userInfo: ChatUser,
 	): Promise<void> {
-		this.getNamespace().emit("song-request-message", {
+		this.getNamespace().emit("payload", {
 			type: "SKIP_SONG",
 		});
 	}
@@ -279,11 +279,11 @@ export default class SongRequestManager
 
 		try {
 			const response: Array<{ newVolume: number }> = await this.getNamespace()
-			.timeout(this.REQUEST_TIMEOUT)
-			.emitWithAck("song-request-message", {
-				type: "CHANGE_VOLUME",
-				volumeValue: volume,
-			});
+				.timeout(this.REQUEST_TIMEOUT)
+				.emitWithAck("payload", {
+					type: "CHANGE_VOLUME",
+					volumeValue: volume,
+				});
 
 			const newVolume = response[0].newVolume;
 			
