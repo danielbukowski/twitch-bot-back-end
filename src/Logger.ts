@@ -19,8 +19,10 @@ export default class Logger {
 		},
 	} as const;
 	private static readonly DEFAULT_FORMAT = printf(
-		({ level, message, timestamp }) => {
-			return `[${timestamp}] [${level}]:  ${message}`;
+		({ timestamp, level, message, details }) => {
+			return `[${timestamp}] [${level}]:  ${message} ${
+				details ? JSON.stringify(details, null, 2) : ""
+			}`;
 		},
 	);
 	private static readonly ERROR_STACK_FORMAT = format((info) => {
@@ -72,23 +74,35 @@ export default class Logger {
 		Logger.logger.log("FATAL", message, { stack: error.stack });
 	}
 
-	public static error(message: string): void {
-		Logger.logger.log("ERROR", message);
+	public static error(message: string, error: Error): void {
+		Logger.logger.log("ERROR", message, { stack: error.stack });
 	}
 
-	public static warn(message: string): void {
-		Logger.logger.log("WARN", message);
+	// biome-ignore lint/suspicious/noExplicitAny:
+	public static warn(message: string, ...meta: any): void {
+		Logger.logger.log("WARN", message, {
+			details: meta[0],
+		});
 	}
 
-	public static info(message: string): void {
-		Logger.logger.log("INFO", message);
+	// biome-ignore lint/suspicious/noExplicitAny:
+	public static info(message: string, ...meta: any): void {
+		Logger.logger.log("INFO", message, {
+			details: meta[0],
+		});
 	}
 
-	public static debug(message: string): void {
-		Logger.logger.log("DEBUG", message);
+	// biome-ignore lint/suspicious/noExplicitAny:
+	public static debug(message: string, ...meta: any): void {
+		Logger.logger.log("DEBUG", message, {
+			details: meta[0],
+		});
 	}
 
-	public static trace(message: string): void {
-		Logger.logger.log("TRACE", message);
+	// biome-ignore lint/suspicious/noExplicitAny:
+	public static trace(message: string, ...meta: any): void {
+		Logger.logger.log("TRACE", message, {
+			details: meta[0],
+		});
 	}
 }
