@@ -22,7 +22,7 @@ export class SongRequestError extends Error {
 }
 
 export interface Song {
-	videoId: string;
+	songId: string;
 	title: string;
 	durationInSeconds: number;
 	addedBy: string;
@@ -207,7 +207,7 @@ export default class SongRequestManager
 		}
 
 		const audioData: string | undefined =
-			await this.youTubeClient.downloadYouTubeAudio(song.videoId);
+			await this.youTubeClient.downloadYouTubeAudio(song.songId);
 
 		if (!audioData) {
 			this.getNamespace().emit("payload", {
@@ -227,6 +227,58 @@ export default class SongRequestManager
 				audio: audioData,
 			},
 		});
+	}
+
+	private async validateSong(
+		userInput: string,
+		userInfo: ChatUser,
+	): Promise<Song> {
+		let songId: string | undefined;
+
+		if (ytdl.validateURL(userInput)) {
+			songId = ytdl.getURLVideoID(userInput);
+		} else {
+			songId = await this.youTubeClient.getSongIdByName(userInput);
+		}
+
+		if (!songId)
+			throw new SongRequestError(
+				`@${userInfo.userName}, I couldn't find your song :(`,
+			);
+
+		const songDetails: SongDetails | undefined =
+			await this.youTubeClient.getSongDetailsById(songId);
+
+		if (!songDetails)
+			throw new SongRequestError(
+				`@${userInfo.userName}, I can't add this song :(`,
+			);
+
+		const userType: UserType | "Normal" = TwitchChat.getUserRole(userInfo);
+		const songViews: number = Number.parseInt(songDetails.statistics.viewCount);
+		const userMinimumViews: number =
+			this.MINIMUM_SONG_VIEWS_FOR_USER_TYPE[userType];
+
+		if (songViews < userMinimumViews)
+			throw new SongRequestError(
+				`@${userInfo.userName}, your song has not enough views! You need a song with at least ${userMinimumViews} views :/`,
+			);
+
+		const durationInSeconds: number = Duration.fromISO(
+			songDetails.contentDetails.duration,
+		).as("seconds");
+
+		if (durationInSeconds >= this.MAXIMUM_SONG_DURATION_FOR_USER_TYPE[userType])
+			throw new SongRequestError(
+				`@${userInfo.userName}, your song is too long :(`,
+			);
+
+		return {
+			songId,
+			title: songDetails.snippet.title,
+			durationInSeconds,
+			addedBy: userInfo.userName,
+		};
 	}
 
 	@HasRole(["Broadcaster", "Mod"])
@@ -386,7 +438,7 @@ export default class SongRequestManager
 			const song = first3SongsInQueue[index];
 			response += `#${index + 1} '${
 				song.title
-			}' https://www.youtube.com/watch?v=${song.videoId} added by @${
+			}' https://www.youtube.com/watch?v=${song.songId} added by @${
 				song.addedBy
 			}, `;
 		}
@@ -408,67 +460,22 @@ export default class SongRequestManager
 			return;
 		}
 
-		let videoId: string | undefined;
-
-		if (ytdl.validateURL(joinedRequestParameters)) {
-			videoId = ytdl.getURLVideoID(joinedRequestParameters);
-		} else {
-			videoId = await this.youTubeClient.getVideoIdByName(
-				joinedRequestParameters,
-			);
-		}
-
-		if (!videoId)
-			throw new SongRequestError(
-				`@${userInfo.userName}, I couldn't find your song :(`,
-			);
-
-		const songDetails: SongDetails | undefined =
-			await this.youTubeClient.getVideoDetailsById(videoId);
-
-		if (!songDetails)
-			throw new SongRequestError(
-				`@${userInfo.userName}, I can't add this song :(`,
-			);
-
-		const userType: UserType | "Normal" = TwitchChat.getUserRole(userInfo);
-		const songViews: number = Number.parseInt(songDetails.statistics.viewCount);
-		const userMinimumViews: number =
-			this.MINIMUM_SONG_VIEWS_FOR_USER_TYPE[userType];
-
-		if (songViews < userMinimumViews)
-			throw new SongRequestError(
-				`@${userInfo.userName}, your song has not enough views! You need a song with at least ${userMinimumViews} views :/`,
-			);
-
-		const durationInSeconds: number = Duration.fromISO(
-			songDetails.contentDetails.duration,
-		).as("seconds");
-
-		if (durationInSeconds >= this.MAXIMUM_SONG_DURATION_FOR_USER_TYPE[userType])
-			throw new SongRequestError(
-				`@${userInfo.userName}, your song is too long :(`,
-			);
+		const song: Song = await this.validateSong(
+			joinedRequestParameters,
+			userInfo,
+		);
 
 		const songDurationInSeconds: number = await this.getDurationOfSongs();
-		const songTitle = songDetails.snippet.title;
-
-		const positionInQueue: number = this.addSongToQueue({
-			videoId,
-			title: songTitle,
-			durationInSeconds,
-			addedBy: userInfo.userName,
-		});
-
+		const positionInQueue: number = this.addSongToQueue(song);
 		const unitsOfTime: string[] = this.convertDurationInSecondsToUnitsOfTime(
 			songDurationInSeconds,
 		);
 
 		chatClient.say(
 			channelName,
-			`@${
-				userInfo.userName
-			}, I added your song '${songTitle}' to the queue at #${positionInQueue} position! (playing in ~ ${
+			`@${userInfo.userName}, I added your song '${
+				song.title
+			}' to the queue at #${positionInQueue} position! (playing in ~ ${
 				!unitsOfTime.length ? "now" : unitsOfTime.join(" and ")
 			})`,
 		);
