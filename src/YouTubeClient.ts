@@ -23,7 +23,7 @@ export default class YouTubeClient implements Initializable {
 		Logger.info(`Initialized the ${this.constructor.name}!`);
 	}
 
-	public async getVideoIdByName(name: string): Promise<string | undefined> {
+	public async getSongIdByName(name: string): Promise<string | undefined> {
 		try {
 			const response = await axios.get<{
 				items: [
@@ -48,7 +48,7 @@ export default class YouTubeClient implements Initializable {
 		}
 	}
 
-	public async getVideoDetailsById(
+	public async getSongDetailsById(
 		videoId: string,
 	): Promise<SongDetails | undefined> {
 		try {
@@ -70,7 +70,7 @@ export default class YouTubeClient implements Initializable {
 				throw new Error("YouTube Data API has returned an empty item list");
 
 			return response.data.items[0];
-		} catch (error) {
+		} catch (error: unknown) {
 			return undefined;
 		}
 	}
