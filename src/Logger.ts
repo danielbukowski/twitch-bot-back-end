@@ -70,12 +70,15 @@ export default class Logger {
 		);
 	}
 
-	public static fatal(message: string, error: Error): void {
-		Logger.logger.log("FATAL", message, { stack: error.stack });
+	public static fatal(message: string, error?: Error): void {
+		Logger.logger.log("FATAL", message, { stack: error?.stack });
 	}
 
-	public static error(message: string, error: Error): void {
-		Logger.logger.log("ERROR", message, { stack: error.stack });
+	// biome-ignore lint/suspicious/noExplicitAny:
+	public static error(message: string, ...meta: any): void {
+		Logger.logger.log("ERROR", message, {
+			details: meta[0],
+		});
 	}
 
 	// biome-ignore lint/suspicious/noExplicitAny:
@@ -100,9 +103,7 @@ export default class Logger {
 	}
 
 	// biome-ignore lint/suspicious/noExplicitAny:
-	public static trace(message: string, ...meta: any): void {
-		Logger.logger.log("TRACE", message, {
-			details: meta[0],
-		});
+	public static trace(message: string): void {
+		Logger.logger.log("TRACE", message);
 	}
 }
