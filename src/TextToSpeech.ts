@@ -36,10 +36,19 @@ export default class TextToSpeech implements Initializable, CommandContainer {
 		commandParameters: string[],
 		userInfo: ChatUser,
 	): Promise<void> {
-		const textMessage: string = commandParameters.join(" ");
+		Logger.trace("Entering playTextToSpeech() method");
+
+		const message: string = commandParameters.join(" ");
 
 		this.getNamespace().emit("payload", {
-			text: textMessage,
+			text: message,
 		});
+		Logger.debug("User sent a TTS message", {
+			userName: userInfo.displayName,
+			userId: userInfo.userId,
+			ttsMessage: message,
+		});
+
+		Logger.trace("Exiting playTextToSpeech() method");
 	}
 }
