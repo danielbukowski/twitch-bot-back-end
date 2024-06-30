@@ -5,7 +5,7 @@
   "main": "dist/Main.js",
   "scripts": {
     "build": "rimraf ./dist && npx tsc",
-    "start": "npm run build && node dist/Main.js",
+    "start": "npm run build && node --env-file=.prod.env dist/Main.js",
     "dev": "npx nodemon",
     "test": "npx jest",
     "lint": "npx @biomejs/biome lint ./src",
