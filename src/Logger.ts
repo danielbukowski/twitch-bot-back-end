@@ -1,7 +1,5 @@
 import winston, { createLogger, transports, format } from "winston";
 const { combine, timestamp, colorize, printf } = format;
-import dotenv from "dotenv";
-dotenv.config();
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export default class Logger {

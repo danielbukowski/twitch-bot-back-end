@@ -1,6 +1,4 @@
-import dotenv from "dotenv";
 import Logger from "./Logger";
-dotenv.config();
 
 interface EnvironmentVariables {
 	TWITCH_APP_CLIENT_ID: string;
