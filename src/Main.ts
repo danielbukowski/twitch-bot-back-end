@@ -10,9 +10,7 @@ const objectManager = new ObjectManager(configInitializer);
 		configInitializer.checkEnvironmentVariables();
 		await objectManager.initializeClasses();
 	} catch (e: unknown) {
-		if (e instanceof Error) {
-			Logger.fatal("The application has stopped working,", e);
-		}
+		Logger.fatal("The application failed to initialize!");
 		process.exit(1);
 	}
 })();
