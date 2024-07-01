@@ -1,7 +1,7 @@
 import type { Server } from "node:http";
 import { Server as SocketIO } from "socket.io";
 import type { Initializable } from "./ObjectManager";
-import Logger from "./Logger";
+import * as Logger from "./Logger";
 
 export class SocketConnectionError extends Error {
 	public constructor(message: string) {

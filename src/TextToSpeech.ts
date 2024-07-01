@@ -6,7 +6,7 @@ import {
 	type CommandContainer,
 } from "./TwitchChat";
 import type { ChatClient, ChatUser } from "@twurple/chat";
-import Logger from "./Logger";
+import * as Logger from "./Logger";
 
 export default class TextToSpeech implements Initializable, CommandContainer {
 	constructor(private readonly socketIO: SocketIO) {}

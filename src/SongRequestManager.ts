@@ -11,7 +11,7 @@ import { Duration } from "luxon";
 import ytdl from "ytdl-core";
 import type YouTubeClient from "./YouTubeClient";
 import type { SongDetails } from "./YouTubeClient";
-import Logger from "./Logger";
+import * as Logger from "./Logger";
 import { SocketConnectionError } from "./SocketServer";
 
 export class SongRequestError extends Error {

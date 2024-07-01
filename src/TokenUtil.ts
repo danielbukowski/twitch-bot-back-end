@@ -9,7 +9,7 @@ import {
 } from "node:crypto";
 import type { AccessToken } from "@twurple/auth";
 import type { Initializable } from "./ObjectManager";
-import Logger from "./Logger";
+import * as Logger from "./Logger";
 
 export type TokenIntent = "events" | "chat";
 

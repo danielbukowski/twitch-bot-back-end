@@ -1,6 +1,6 @@
 import type { TokenStorage } from "./AuthManager";
 import InMemoryTokenStorage from "./InMemoryTokenStorage";
-import Logger from "./Logger";
+import * as Logger from "./Logger";
 import type { Initializable } from "./ObjectManager";
 import type TokenUtil from "./TokenUtil";
 

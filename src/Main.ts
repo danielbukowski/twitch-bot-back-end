@@ -1,5 +1,5 @@
 import ConfigInitializer from "./ConfigInitializer";
-import Logger from "./Logger";
+import * as Logger from "./Logger";
 import ObjectManager from "./ObjectManager";
 
 const configInitializer = new ConfigInitializer();

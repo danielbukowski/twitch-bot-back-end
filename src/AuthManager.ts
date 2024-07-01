@@ -3,7 +3,7 @@ import type { Initializable } from "./ObjectManager";
 import type TokenStorageFactory from "./TokenStorageFactory";
 import TokenUtil from "./TokenUtil";
 import type { TokenIntent } from "./TokenUtil";
-import Logger from "./Logger";
+import * as Logger from "./Logger";
 
 export interface TokenStorage {
 	getAllAccessTokens(): Promise<

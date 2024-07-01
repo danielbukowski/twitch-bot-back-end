@@ -12,7 +12,7 @@ import TokenUtil from "./TokenUtil";
 import type { TokenIntent } from "./TokenUtil";
 import type TwitchClient from "./TwitchClient";
 import helmet from "helmet";
-import Logger from "./Logger";
+import * as Logger from "./Logger";
 
 export default class HttpServer implements Initializable {
 	private app = express();

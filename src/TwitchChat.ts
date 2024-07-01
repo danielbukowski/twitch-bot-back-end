@@ -4,7 +4,7 @@ import type { UserType } from "./ConfigInitializer";
 import type { Initializable } from "./ObjectManager";
 import { SongRequestError } from "./SongRequestManager";
 import type TwitchClient from "./TwitchClient";
-import Logger from "./Logger";
+import * as Logger from "./Logger";
 import { SocketConnectionError } from "./SocketServer";
 
 export function HasRole(roles: UserType[]) {

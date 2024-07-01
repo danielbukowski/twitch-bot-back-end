@@ -3,7 +3,7 @@ import { EventSubWsListener } from "@twurple/eventsub-ws";
 import type { Namespace, Server as SocketIO } from "socket.io";
 import type { Initializable } from "./ObjectManager";
 import type TwitchClient from "./TwitchClient";
-import Logger from "./Logger";
+import * as Logger from "./Logger";
 export default class TwitchEventListener implements Initializable {
 	private eventSub!: EventSubWsListener;
 

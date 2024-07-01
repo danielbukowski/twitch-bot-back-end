@@ -5,7 +5,7 @@ import {
 	exchangeCode,
 } from "@twurple/auth";
 import type { Initializable } from "./ObjectManager";
-import Logger from "./Logger";
+import * as Logger from "./Logger";
 
 export default class TwitchClient implements Initializable {
 	private apiClient: ApiClient;

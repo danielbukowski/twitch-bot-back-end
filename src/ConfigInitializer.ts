@@ -1,4 +1,4 @@
-import Logger from "./Logger";
+import * as Logger from "./Logger";
 
 interface EnvironmentVariables {
 	TWITCH_APP_CLIENT_ID: string;

@@ -1,7 +1,7 @@
 import axios from "axios";
 import ytdl from "ytdl-core";
 import type { Initializable } from "./ObjectManager";
-import Logger from "./Logger";
+import * as Logger from "./Logger";
 
 export interface SongDetails {
 	snippet: {
