@@ -107,9 +107,7 @@ export default class TwitchChat implements Initializable {
 			Logger.info(`Initialized the ${this.constructor.name}!`);
 		} catch (e: unknown) {
 			if (e instanceof Error) {
-				Logger.error(
-					`Failed to initialize the TwitchChat class, reason: ${e.message}`,
-				);
+				Logger.error(e);
 			}
 		}
 	}

@@ -56,13 +56,9 @@ export default class YouTubeClient implements Initializable {
 			});
 
 			return response.data.items[0].id.videoId;
-		} catch (error: unknown) {
-			if (error instanceof Error) {
-				Logger.debug("API call threw error", {
-					errorName: error.name,
-					errorMessage: error.message,
-					stack: error.stack,
-				});
+		} catch (e: unknown) {
+			if (e instanceof Error) {
+				Logger.error(e);
 			}
 			return undefined;
 		} finally {
@@ -104,13 +100,9 @@ export default class YouTubeClient implements Initializable {
 				throw new Error("YouTube Data API returned an empty item list");
 
 			return response.data.items[0];
-		} catch (error: unknown) {
-			if (error instanceof Error) {
-				Logger.debug("API call threw error", {
-					errorName: error.name,
-					errorMessage: error.message,
-					stack: error.stack,
-				});
+		} catch (e: unknown) {
+			if (e instanceof Error) {
+				Logger.error(e);
 			}
 			return undefined;
 		} finally {
@@ -149,15 +141,8 @@ export default class YouTubeClient implements Initializable {
 
 				resolve(`data:audio/mp3;base64,${data.toString("base64")}`);
 			})
-			.on("error", (err) => {
-				Logger.error("Failed to fetch audio from YouTube", {
-					audioId,
-					fetchedChunks: buffers.length,
-					errorMessage: err.message,
-					errorName: err.name,
-					stack: err.stack,
-				});
-
+			.on("error", (e) => {
+				Logger.error(e);
 				reject(undefined);
 			});
 

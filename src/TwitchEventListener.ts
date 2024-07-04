@@ -43,9 +43,7 @@ export default class TwitchEventListener implements Initializable {
 			Logger.info(`Initialized the ${this.constructor.name}!`);
 		} catch (e: unknown) {
 			if (e instanceof Error) {
-				Logger.error(
-					`Failed to initialize the TwitchEventListener class, reason: ${e.message}`,
-				);
+				Logger.error(e);
 			}
 		}
 	}
