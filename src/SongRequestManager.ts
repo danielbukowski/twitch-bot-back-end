@@ -1,6 +1,6 @@
 import type { Namespace, Server as SocketIO } from "socket.io";
 import type { Initializable } from "./ObjectManager";
-import type { UserType } from "./ConfigInitializer";
+import type { UserType } from "./TwitchChat";
 import TwitchChat, {
 	type BasicCommand,
 	HasRole,

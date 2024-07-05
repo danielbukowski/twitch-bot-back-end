@@ -1,11 +1,18 @@
 import type { RefreshingAuthProvider } from "@twurple/auth";
 import { ChatClient, type ChatMessage, ChatUser } from "@twurple/chat";
-import type { UserType } from "./ConfigInitializer";
 import type { Initializable } from "./ObjectManager";
 import { SongRequestError } from "./SongRequestManager";
 import type TwitchClient from "./TwitchClient";
 import * as Logger from "./Logger";
 import { SocketConnectionError } from "./SocketServer";
+
+export type UserType =
+	| "Mod"
+	| "Subscriber"
+	| "Vip"
+	| "Broadcaster"
+	| "Artist"
+	| "Founder";
 
 export function HasRole(roles: UserType[]) {
 	return function actualDecorator(

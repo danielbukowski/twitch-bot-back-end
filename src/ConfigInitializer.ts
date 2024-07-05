@@ -11,14 +11,6 @@ const ENVIRONMENT_VARIABLES_SCHEMA = z.object({
 	FRONTEND_ORIGIN: z.string(),
 });
 
-export type UserType =
-	| "Mod"
-	| "Subscriber"
-	| "Vip"
-	| "Broadcaster"
-	| "Artist"
-	| "Founder";
-
 export default class ConfigInitializer {
 	private environmentVariables!: z.infer<typeof ENVIRONMENT_VARIABLES_SCHEMA>;
 
