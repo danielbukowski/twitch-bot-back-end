@@ -32,6 +32,7 @@ export default class SongRequestManager
 	implements Initializable, CommandContainer
 {
 	private readonly REQUEST_TIMEOUT: number = 1_400;
+	private readonly SONG_QUEUE_CAPACITY: number = 30;
 	private readonly MINUTE: number = 60;
 	private readonly HOUR: number = 3_600;
 	private readonly MAXIMUM_SONG_DURATION_FOR_USER_TYPE: Record<
@@ -457,6 +458,14 @@ export default class SongRequestManager
 		const joinedRequestParameters: string = commandParameters.join(" ");
 
 		if (!joinedRequestParameters) {
+			return;
+		}
+
+		if (this.songQueue.length >= this.SONG_QUEUE_CAPACITY) {
+			chatClient.say(
+				channelName,
+				`@${userInfo.userName}, the song queue is full!`,
+			);
 			return;
 		}
 
