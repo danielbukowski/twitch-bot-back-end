@@ -111,40 +111,38 @@ export default class YouTubeClient implements Initializable {
 	}
 
 	public downloadYouTubeAudio(audioId: string): Promise<string | undefined> {
-		Logger.trace("Entering downloadYouTubeAudio() method");
-		Logger.debug("DownloadYouTubeAudio method's parameters", {
-			parameters: {
-				audioId,
-			},
-		});
-		const { promise, resolve, reject } = Promise.withResolvers<
-			string | undefined
-		>();
-		const buffers: Buffer[] = [];
-
-		ytdl(`https://www.youtube.com/watch?v=${audioId}`, {
-			quality: "highestaudio",
-			filter: "audioonly",
-		})
-			.on("data", (chunk: Buffer) => {
-				buffers.push(chunk);
-			})
-			.on("end", () => {
-				const data = Buffer.concat(buffers);
-
-				Logger.debug("Ended fetching audio chunks", {
+		return new Promise((resolve, reject) => {
+			Logger.trace("Entering downloadYouTubeAudio() method");
+			Logger.debug("DownloadYouTubeAudio method's parameters", {
+				parameters: {
 					audioId,
-					fetchedChunks: buffers.length,
+				},
+			});
+			const buffers: Buffer[] = [];
+
+			ytdl(`https://www.youtube.com/watch?v=${audioId}`, {
+				quality: "highestaudio",
+				filter: "audioonly",
+			})
+				.on("data", (chunk: Buffer) => {
+					buffers.push(chunk);
+				})
+				.on("end", () => {
+					const data = Buffer.concat(buffers);
+
+					Logger.debug("Ended fetching audio chunks", {
+						audioId,
+						fetchedChunks: buffers.length,
+					});
+
+					resolve(`data:audio/mp3;base64,${data.toString("base64")}`);
+				})
+				.on("error", (e) => {
+					Logger.error(e);
+					reject(undefined);
 				});
 
-				resolve(`data:audio/mp3;base64,${data.toString("base64")}`);
-			})
-			.on("error", (e) => {
-				Logger.error(e);
-				reject(undefined);
-			});
-
-		Logger.trace("Exiting downloadYouTubeAudio() method");
-		return promise;
+			Logger.trace("Exiting downloadYouTubeAudio() method");
+		});
 	}
 }
