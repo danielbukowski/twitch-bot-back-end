@@ -155,7 +155,10 @@ export default class TwitchChat implements Initializable {
 						msg.userInfo,
 					);
 				} catch (e: unknown) {
-					if (e instanceof SongRequestError || e instanceof SocketConnectionError) {
+					if (
+						e instanceof SongRequestError ||
+						e instanceof SocketConnectionError
+					) {
 						this.chatClient.say(channel, e.message);
 					} else if (e instanceof Error) {
 						this.chatClient.say(

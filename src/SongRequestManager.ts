@@ -77,11 +77,11 @@ export default class SongRequestManager
 		commands.set("song", this.displayInfoAboutCurrentlyPlayingSong.bind(this));
 		commands.set(
 			"mysong",
-			this.displaySongDetailsOfTheLatestAddedSongByUser.bind(this),
+			this.displaySongDetailsOfTheEarliestAddedSongByUser.bind(this),
 		);
 		commands.set("srq", this.displaySongRequestQueue.bind(this));
 		commands.set("sr", this.addUserSongToQueue.bind(this));
-		commands.set("wrongsong", this.deleteUserTheEarliestAddedSong.bind(this));
+		commands.set("wrongsong", this.deleteUserTheLatestAddedSong.bind(this));
 
 		return commands;
 	}
@@ -339,13 +339,13 @@ export default class SongRequestManager
 				});
 
 			const newVolume = response[0].newVolume;
-			
+
 			chatClient.say(
 				channelName,
 				`@${userInfo.userName}, the volume has been set to ${newVolume * 100}%`,
 			);
 		} catch (e: unknown) {
-			throw new SocketConnectionError("Song requests are not enabled!")
+			throw new SocketConnectionError("Song requests are not enabled!");
 		}
 	}
 
@@ -373,7 +373,7 @@ export default class SongRequestManager
 	}
 
 	@HasRole([])
-	private async displaySongDetailsOfTheLatestAddedSongByUser(
+	private async displaySongDetailsOfTheEarliestAddedSongByUser(
 		chatClient: ChatClient,
 		channelName: string,
 		commandParameters: string[],
@@ -491,7 +491,7 @@ export default class SongRequestManager
 	}
 
 	@HasRole([])
-	private async deleteUserTheEarliestAddedSong(
+	private async deleteUserTheLatestAddedSong(
 		chatClient: ChatClient,
 		channelName: string,
 		commandParameters: string[],
@@ -513,7 +513,7 @@ export default class SongRequestManager
 
 		chatClient.say(
 			channelName,
-			`@${userName}, your song '${deletedSong.title}' has been succesfully deleted!`,
+			`@${userName}, your song '${deletedSong.title}' has been successfully deleted!`,
 		);
 	}
 }

@@ -110,9 +110,7 @@ export default class YouTubeClient implements Initializable {
 		}
 	}
 
-	public async downloadYouTubeAudio(
-		audioId: string,
-	): Promise<string | undefined> {
+	public downloadYouTubeAudio(audioId: string): Promise<string | undefined> {
 		Logger.trace("Entering downloadYouTubeAudio() method");
 		Logger.debug("DownloadYouTubeAudio method's parameters", {
 			parameters: {
