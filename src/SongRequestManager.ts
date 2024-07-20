@@ -8,7 +8,7 @@ import TwitchChat, {
 } from "./TwitchChat";
 import type { ChatClient, ChatUser } from "@twurple/chat";
 import { Duration } from "luxon";
-import ytdl from "ytdl-core";
+import ytdl from "@distube/ytdl-core";
 import type YouTubeClient from "./YouTubeClient";
 import type { SongDetails } from "./YouTubeClient";
 import * as Logger from "./Logger";

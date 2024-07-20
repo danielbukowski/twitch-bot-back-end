@@ -1,5 +1,5 @@
 import axios from "axios";
-import ytdl from "ytdl-core";
+import ytdl from "@distube/ytdl-core";
 import type { Initializable } from "./ObjectManager";
 import * as Logger from "./Logger";
 

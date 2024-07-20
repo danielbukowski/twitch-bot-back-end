@@ -19,6 +19,7 @@
     "url": "https://github.com/danielbukowski/twitch-bot-back-end.git"
   },
   "dependencies": {
+    "@distube/ytdl-core": "^4.13.5",
     "@twurple/api": "^7.0.8",
     "@twurple/auth": "^7.0.8",
     "@twurple/chat": "^7.0.8",
@@ -31,7 +32,6 @@
     "luxon": "^3.4.4",
     "socket.io": "^4.7.4",
     "winston": "^3.13.0",
-    "ytdl-core": "^4.11.5",
     "zod": "^3.23.8"
   },
   "devDependencies": {
