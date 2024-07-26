@@ -110,7 +110,7 @@ export default class YouTubeClient implements Initializable {
 		}
 	}
 
-	public downloadYouTubeAudio(audioId: string): Promise<string | undefined> {
+	public downloadYouTubeAudio(audioId: string): Promise<string> {
 		return new Promise((resolve, reject) => {
 			Logger.trace("Entering downloadYouTubeAudio() method");
 			Logger.debug("DownloadYouTubeAudio method's parameters", {
@@ -139,7 +139,7 @@ export default class YouTubeClient implements Initializable {
 				})
 				.on("error", (e) => {
 					Logger.error(e);
-					reject(undefined);
+					reject(e);
 				});
 
 			Logger.trace("Exiting downloadYouTubeAudio() method");

@@ -207,27 +207,27 @@ export default class SongRequestManager
 			return;
 		}
 
-		const audioData: string | undefined =
-			await this.youTubeClient.downloadYouTubeAudio(song.songId);
+		try {
+			const audioData: string = await this.youTubeClient.downloadYouTubeAudio(
+				song.songId,
+			);
 
-		if (!audioData) {
+			this.getNamespace().emit("payload", {
+				type: "PLAY_NEXT_SONG",
+				data: {
+					title: song.title,
+					addedBy: song.addedBy,
+					audio: audioData,
+				},
+			});
+		} catch (e: unknown) {
 			this.getNamespace().emit("payload", {
 				type: "PLAY_NEXT_SONG",
 				error: {
 					message: "DOWNLOADING_ERROR",
 				},
 			});
-			return;
 		}
-
-		this.getNamespace().emit("payload", {
-			type: "PLAY_NEXT_SONG",
-			data: {
-				title: song.title,
-				addedBy: song.addedBy,
-				audio: audioData,
-			},
-		});
 	}
 
 	private async validateSong(
