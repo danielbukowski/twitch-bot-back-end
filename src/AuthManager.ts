@@ -60,7 +60,7 @@ export default class AuthManager implements Initializable {
 					throw new Error("An error occured when refreshing an access token");
 				}
 
-				tokenStorage.saveAccessToken(tokenIntent, newToken);
+				await tokenStorage.saveAccessToken(tokenIntent, newToken);
 			},
 		);
 
